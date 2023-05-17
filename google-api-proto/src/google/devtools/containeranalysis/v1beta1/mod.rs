@@ -112,6 +112,22 @@ pub mod container_analysis_v1_beta1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Sets the access control policy on the specified note or occurrence.
         /// Requires `containeranalysis.notes.setIamPolicy` or
         /// `containeranalysis.occurrences.setIamPolicy` permission if the resource is
@@ -125,7 +141,7 @@ pub mod container_analysis_v1_beta1_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::SetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -142,7 +158,15 @@ pub mod container_analysis_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1/SetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the access control policy for a note or an occurrence resource.
         /// Requires `containeranalysis.notes.setIamPolicy` or
@@ -157,7 +181,7 @@ pub mod container_analysis_v1_beta1_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::GetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -174,7 +198,15 @@ pub mod container_analysis_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1/GetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the permissions that a caller has on the specified note or
         /// occurrence. Requires list permission on the project (for example,
@@ -188,7 +220,7 @@ pub mod container_analysis_v1_beta1_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::TestIamPermissionsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::iam::v1::TestIamPermissionsResponse,
             >,
@@ -207,13 +239,24 @@ pub mod container_analysis_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1/TestIamPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a summary of the packages within a given resource.
         pub async fn generate_packages_summary(
             &mut self,
             request: impl tonic::IntoRequest<super::GeneratePackagesSummaryRequest>,
-        ) -> Result<tonic::Response<super::PackagesSummaryResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::PackagesSummaryResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -227,7 +270,15 @@ pub mod container_analysis_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1/GeneratePackagesSummary",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.containeranalysis.v1beta1.ContainerAnalysisV1Beta1",
+                        "GeneratePackagesSummary",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

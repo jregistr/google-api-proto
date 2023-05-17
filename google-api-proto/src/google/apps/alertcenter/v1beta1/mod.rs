@@ -548,11 +548,30 @@ pub mod alert_center_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the alerts.
         pub async fn list_alerts(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAlertsRequest>,
-        ) -> Result<tonic::Response<super::ListAlertsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAlertsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -566,14 +585,22 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/ListAlerts",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "ListAlerts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the specified alert. Attempting to get a nonexistent alert returns
         /// `NOT_FOUND` error.
         pub async fn get_alert(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAlertRequest>,
-        ) -> Result<tonic::Response<super::Alert>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Alert>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -587,7 +614,15 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/GetAlert",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "GetAlert",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks the specified alert for deletion. An alert that has been marked for
         /// deletion is removed from Alert Center after 30 days.
@@ -597,7 +632,7 @@ pub mod alert_center_service_client {
         pub async fn delete_alert(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAlertRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -611,7 +646,15 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/DeleteAlert",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "DeleteAlert",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Restores, or "undeletes", an alert that was marked for deletion within the
         /// past 30 days. Attempting to undelete an alert which was marked for deletion
@@ -621,7 +664,7 @@ pub mod alert_center_service_client {
         pub async fn undelete_alert(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeleteAlertRequest>,
-        ) -> Result<tonic::Response<super::Alert>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Alert>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -635,7 +678,15 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/UndeleteAlert",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "UndeleteAlert",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates new feedback for an alert. Attempting to create a feedback for
         /// a non-existent alert returns `NOT_FOUND` error. Attempting to create a
@@ -644,7 +695,7 @@ pub mod alert_center_service_client {
         pub async fn create_alert_feedback(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAlertFeedbackRequest>,
-        ) -> Result<tonic::Response<super::AlertFeedback>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AlertFeedback>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -658,14 +709,25 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/CreateAlertFeedback",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "CreateAlertFeedback",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all the feedback for an alert. Attempting to list feedbacks for
         /// a non-existent alert returns `NOT_FOUND` error.
         pub async fn list_alert_feedback(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAlertFeedbackRequest>,
-        ) -> Result<tonic::Response<super::ListAlertFeedbackResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAlertFeedbackResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -679,14 +741,22 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/ListAlertFeedback",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "ListAlertFeedback",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the metadata of an alert. Attempting to get metadata for
         /// a non-existent alert returns `NOT_FOUND` error.
         pub async fn get_alert_metadata(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAlertMetadataRequest>,
-        ) -> Result<tonic::Response<super::AlertMetadata>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AlertMetadata>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -700,13 +770,21 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/GetAlertMetadata",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "GetAlertMetadata",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns customer-level settings.
         pub async fn get_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSettingsRequest>,
-        ) -> Result<tonic::Response<super::Settings>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Settings>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -720,13 +798,21 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/GetSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "GetSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the customer-level settings.
         pub async fn update_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateSettingsRequest>,
-        ) -> Result<tonic::Response<super::Settings>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Settings>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -740,13 +826,24 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/UpdateSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "UpdateSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Performs batch delete operation on alerts.
         pub async fn batch_delete_alerts(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchDeleteAlertsRequest>,
-        ) -> Result<tonic::Response<super::BatchDeleteAlertsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::BatchDeleteAlertsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -760,13 +857,24 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/BatchDeleteAlerts",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "BatchDeleteAlerts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Performs batch undelete operation on alerts.
         pub async fn batch_undelete_alerts(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchUndeleteAlertsRequest>,
-        ) -> Result<tonic::Response<super::BatchUndeleteAlertsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::BatchUndeleteAlertsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -780,7 +888,15 @@ pub mod alert_center_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.alertcenter.v1beta1.AlertCenterService/BatchUndeleteAlerts",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.alertcenter.v1beta1.AlertCenterService",
+                        "BatchUndeleteAlerts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

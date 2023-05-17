@@ -1,165 +1,3 @@
-/// Represents an auditing event from Continuous Validation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ContinuousValidationEvent {
-    /// Type of CV event.
-    #[prost(oneof = "continuous_validation_event::EventType", tags = "1, 2")]
-    pub event_type: ::core::option::Option<continuous_validation_event::EventType>,
-}
-/// Nested message and enum types in `ContinuousValidationEvent`.
-pub mod continuous_validation_event {
-    /// An auditing event for one Pod.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ContinuousValidationPodEvent {
-        /// The k8s namespace of the Pod.
-        #[prost(string, tag = "7")]
-        pub pod_namespace: ::prost::alloc::string::String,
-        /// The name of the Pod.
-        #[prost(string, tag = "1")]
-        pub pod: ::prost::alloc::string::String,
-        /// Deploy time of the Pod from k8s.
-        #[prost(message, optional, tag = "2")]
-        pub deploy_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// Termination time of the Pod from k8s, or nothing if still running.
-        #[prost(message, optional, tag = "3")]
-        pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-        /// Auditing verdict for this Pod.
-        #[prost(
-            enumeration = "continuous_validation_pod_event::PolicyConformanceVerdict",
-            tag = "4"
-        )]
-        pub verdict: i32,
-        /// List of images with auditing details.
-        #[prost(message, repeated, tag = "5")]
-        pub images: ::prost::alloc::vec::Vec<
-            continuous_validation_pod_event::ImageDetails,
-        >,
-    }
-    /// Nested message and enum types in `ContinuousValidationPodEvent`.
-    pub mod continuous_validation_pod_event {
-        /// Container image with auditing details.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ImageDetails {
-            /// The name of the image.
-            #[prost(string, tag = "1")]
-            pub image: ::prost::alloc::string::String,
-            /// The result of the audit for this image.
-            #[prost(enumeration = "image_details::AuditResult", tag = "2")]
-            pub result: i32,
-            /// Description of the above result.
-            #[prost(string, tag = "3")]
-            pub description: ::prost::alloc::string::String,
-        }
-        /// Nested message and enum types in `ImageDetails`.
-        pub mod image_details {
-            /// Result of the audit.
-            #[derive(
-                Clone,
-                Copy,
-                Debug,
-                PartialEq,
-                Eq,
-                Hash,
-                PartialOrd,
-                Ord,
-                ::prost::Enumeration
-            )]
-            #[repr(i32)]
-            pub enum AuditResult {
-                /// Unspecified result. This is an error.
-                Unspecified = 0,
-                /// Image is allowed.
-                Allow = 1,
-                /// Image is denied.
-                Deny = 2,
-            }
-            impl AuditResult {
-                /// String value of the enum field names used in the ProtoBuf definition.
-                ///
-                /// The values are not transformed in any way and thus are considered stable
-                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                pub fn as_str_name(&self) -> &'static str {
-                    match self {
-                        AuditResult::Unspecified => "AUDIT_RESULT_UNSPECIFIED",
-                        AuditResult::Allow => "ALLOW",
-                        AuditResult::Deny => "DENY",
-                    }
-                }
-                /// Creates an enum from field names used in the ProtoBuf definition.
-                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                    match value {
-                        "AUDIT_RESULT_UNSPECIFIED" => Some(Self::Unspecified),
-                        "ALLOW" => Some(Self::Allow),
-                        "DENY" => Some(Self::Deny),
-                        _ => None,
-                    }
-                }
-            }
-        }
-        /// Audit time policy conformance verdict.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum PolicyConformanceVerdict {
-            /// We should always have a verdict. This is an error.
-            Unspecified = 0,
-            /// The pod violates the policy.
-            ViolatesPolicy = 1,
-        }
-        impl PolicyConformanceVerdict {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    PolicyConformanceVerdict::Unspecified => {
-                        "POLICY_CONFORMANCE_VERDICT_UNSPECIFIED"
-                    }
-                    PolicyConformanceVerdict::ViolatesPolicy => "VIOLATES_POLICY",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "POLICY_CONFORMANCE_VERDICT_UNSPECIFIED" => Some(Self::Unspecified),
-                    "VIOLATES_POLICY" => Some(Self::ViolatesPolicy),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// An event describing that the project policy is unsupported by CV.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct UnsupportedPolicyEvent {
-        /// A description of the unsupported policy.
-        #[prost(string, tag = "1")]
-        pub description: ::prost::alloc::string::String,
-    }
-    /// Type of CV event.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum EventType {
-        /// Pod event.
-        #[prost(message, tag = "1")]
-        PodEvent(ContinuousValidationPodEvent),
-        /// Unsupported policy event.
-        #[prost(message, tag = "2")]
-        UnsupportedPolicyEvent(UnsupportedPolicyEvent),
-    }
-}
 /// A \[policy][google.cloud.binaryauthorization.v1beta1.Policy\] for Binary Authorization.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -827,6 +665,22 @@ pub mod binauthz_management_service_v1_beta1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// A [policy][google.cloud.binaryauthorization.v1beta1.Policy] specifies the [attestors][google.cloud.binaryauthorization.v1beta1.Attestor] that must attest to
         /// a container image, before the project is allowed to deploy that
         /// image. There is at most one policy per project. All image admission
@@ -837,7 +691,7 @@ pub mod binauthz_management_service_v1_beta1_client {
         pub async fn get_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPolicyRequest>,
-        ) -> Result<tonic::Response<super::Policy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Policy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -851,7 +705,15 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/GetPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "GetPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates or updates a project's [policy][google.cloud.binaryauthorization.v1beta1.Policy], and returns a copy of the
         /// new [policy][google.cloud.binaryauthorization.v1beta1.Policy]. A policy is always updated as a whole, to avoid race
@@ -861,7 +723,7 @@ pub mod binauthz_management_service_v1_beta1_client {
         pub async fn update_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdatePolicyRequest>,
-        ) -> Result<tonic::Response<super::Policy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Policy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -875,7 +737,15 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/UpdatePolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "UpdatePolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an [attestor][google.cloud.binaryauthorization.v1beta1.Attestor], and returns a copy of the new
         /// [attestor][google.cloud.binaryauthorization.v1beta1.Attestor]. Returns NOT_FOUND if the project does not exist,
@@ -884,7 +754,7 @@ pub mod binauthz_management_service_v1_beta1_client {
         pub async fn create_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAttestorRequest>,
-        ) -> Result<tonic::Response<super::Attestor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Attestor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -898,14 +768,22 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/CreateAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "CreateAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an [attestor][google.cloud.binaryauthorization.v1beta1.Attestor].
         /// Returns NOT_FOUND if the [attestor][google.cloud.binaryauthorization.v1beta1.Attestor] does not exist.
         pub async fn get_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAttestorRequest>,
-        ) -> Result<tonic::Response<super::Attestor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Attestor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -919,14 +797,22 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/GetAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "GetAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an [attestor][google.cloud.binaryauthorization.v1beta1.Attestor].
         /// Returns NOT_FOUND if the [attestor][google.cloud.binaryauthorization.v1beta1.Attestor] does not exist.
         pub async fn update_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAttestorRequest>,
-        ) -> Result<tonic::Response<super::Attestor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Attestor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -940,14 +826,25 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/UpdateAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "UpdateAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists [attestors][google.cloud.binaryauthorization.v1beta1.Attestor].
         /// Returns INVALID_ARGUMENT if the project does not exist.
         pub async fn list_attestors(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAttestorsRequest>,
-        ) -> Result<tonic::Response<super::ListAttestorsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAttestorsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -961,14 +858,22 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/ListAttestors",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "ListAttestors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an [attestor][google.cloud.binaryauthorization.v1beta1.Attestor]. Returns NOT_FOUND if the
         /// [attestor][google.cloud.binaryauthorization.v1beta1.Attestor] does not exist.
         pub async fn delete_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAttestorRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -982,7 +887,15 @@ pub mod binauthz_management_service_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1/DeleteAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.BinauthzManagementServiceV1Beta1",
+                        "DeleteAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -1045,11 +958,27 @@ pub mod system_policy_v1_beta1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets the current system policy in the specified location.
         pub async fn get_system_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSystemPolicyRequest>,
-        ) -> Result<tonic::Response<super::Policy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Policy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1063,7 +992,177 @@ pub mod system_policy_v1_beta1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1beta1.SystemPolicyV1Beta1/GetSystemPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1beta1.SystemPolicyV1Beta1",
+                        "GetSystemPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
+    }
+}
+/// Represents an auditing event from Continuous Validation.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ContinuousValidationEvent {
+    /// Type of CV event.
+    #[prost(oneof = "continuous_validation_event::EventType", tags = "1, 2")]
+    pub event_type: ::core::option::Option<continuous_validation_event::EventType>,
+}
+/// Nested message and enum types in `ContinuousValidationEvent`.
+pub mod continuous_validation_event {
+    /// An auditing event for one Pod.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ContinuousValidationPodEvent {
+        /// The k8s namespace of the Pod.
+        #[prost(string, tag = "7")]
+        pub pod_namespace: ::prost::alloc::string::String,
+        /// The name of the Pod.
+        #[prost(string, tag = "1")]
+        pub pod: ::prost::alloc::string::String,
+        /// Deploy time of the Pod from k8s.
+        #[prost(message, optional, tag = "2")]
+        pub deploy_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Termination time of the Pod from k8s, or nothing if still running.
+        #[prost(message, optional, tag = "3")]
+        pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+        /// Auditing verdict for this Pod.
+        #[prost(
+            enumeration = "continuous_validation_pod_event::PolicyConformanceVerdict",
+            tag = "4"
+        )]
+        pub verdict: i32,
+        /// List of images with auditing details.
+        #[prost(message, repeated, tag = "5")]
+        pub images: ::prost::alloc::vec::Vec<
+            continuous_validation_pod_event::ImageDetails,
+        >,
+    }
+    /// Nested message and enum types in `ContinuousValidationPodEvent`.
+    pub mod continuous_validation_pod_event {
+        /// Container image with auditing details.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ImageDetails {
+            /// The name of the image.
+            #[prost(string, tag = "1")]
+            pub image: ::prost::alloc::string::String,
+            /// The result of the audit for this image.
+            #[prost(enumeration = "image_details::AuditResult", tag = "2")]
+            pub result: i32,
+            /// Description of the above result.
+            #[prost(string, tag = "3")]
+            pub description: ::prost::alloc::string::String,
+        }
+        /// Nested message and enum types in `ImageDetails`.
+        pub mod image_details {
+            /// Result of the audit.
+            #[derive(
+                Clone,
+                Copy,
+                Debug,
+                PartialEq,
+                Eq,
+                Hash,
+                PartialOrd,
+                Ord,
+                ::prost::Enumeration
+            )]
+            #[repr(i32)]
+            pub enum AuditResult {
+                /// Unspecified result. This is an error.
+                Unspecified = 0,
+                /// Image is allowed.
+                Allow = 1,
+                /// Image is denied.
+                Deny = 2,
+            }
+            impl AuditResult {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        AuditResult::Unspecified => "AUDIT_RESULT_UNSPECIFIED",
+                        AuditResult::Allow => "ALLOW",
+                        AuditResult::Deny => "DENY",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "AUDIT_RESULT_UNSPECIFIED" => Some(Self::Unspecified),
+                        "ALLOW" => Some(Self::Allow),
+                        "DENY" => Some(Self::Deny),
+                        _ => None,
+                    }
+                }
+            }
+        }
+        /// Audit time policy conformance verdict.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum PolicyConformanceVerdict {
+            /// We should always have a verdict. This is an error.
+            Unspecified = 0,
+            /// The pod violates the policy.
+            ViolatesPolicy = 1,
+        }
+        impl PolicyConformanceVerdict {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    PolicyConformanceVerdict::Unspecified => {
+                        "POLICY_CONFORMANCE_VERDICT_UNSPECIFIED"
+                    }
+                    PolicyConformanceVerdict::ViolatesPolicy => "VIOLATES_POLICY",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "POLICY_CONFORMANCE_VERDICT_UNSPECIFIED" => Some(Self::Unspecified),
+                    "VIOLATES_POLICY" => Some(Self::ViolatesPolicy),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// An event describing that the project policy is unsupported by CV.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct UnsupportedPolicyEvent {
+        /// A description of the unsupported policy.
+        #[prost(string, tag = "1")]
+        pub description: ::prost::alloc::string::String,
+    }
+    /// Type of CV event.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum EventType {
+        /// Pod event.
+        #[prost(message, tag = "1")]
+        PodEvent(ContinuousValidationPodEvent),
+        /// Unsupported policy event.
+        #[prost(message, tag = "2")]
+        UnsupportedPolicyEvent(UnsupportedPolicyEvent),
     }
 }

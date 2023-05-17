@@ -1,2050 +1,58 @@
-/// A read group is all the data that's processed the same way by the sequencer.
+/// Metadata describing an \[Operation][google.longrunning.Operation\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadGroup {
-    /// The server-generated read group ID, unique for all read groups.
-    /// Note: This is different than the @RG ID field in the SAM spec. For that
-    /// value, see \[name][google.genomics.v1.ReadGroup.name\].
+pub struct OperationMetadata {
+    /// The Google Cloud Project in which the job is scoped.
     #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The dataset to which this read group belongs.
-    #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The read group name. This corresponds to the @RG ID field in the SAM spec.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// A free-form text description of this read group.
-    #[prost(string, tag = "4")]
-    pub description: ::prost::alloc::string::String,
-    /// A client-supplied sample identifier for the reads in this read group.
-    #[prost(string, tag = "5")]
-    pub sample_id: ::prost::alloc::string::String,
-    /// The experiment used to generate this read group.
-    #[prost(message, optional, tag = "6")]
-    pub experiment: ::core::option::Option<read_group::Experiment>,
-    /// The predicted insert size of this read group. The insert size is the length
-    /// the sequenced DNA fragment from end-to-end, not including the adapters.
-    #[prost(int32, tag = "7")]
-    pub predicted_insert_size: i32,
-    /// The programs used to generate this read group. Programs are always
-    /// identical for all read groups within a read group set. For this reason,
-    /// only the first read group in a returned set will have this field
-    /// populated.
-    #[prost(message, repeated, tag = "10")]
-    pub programs: ::prost::alloc::vec::Vec<read_group::Program>,
-    /// The reference set the reads in this read group are aligned to.
-    #[prost(string, tag = "11")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// A map of additional read group information. This must be of the form
-    /// map<string, string[]> (string key mapping to a list of string values).
-    #[prost(btree_map = "string, message", tag = "12")]
-    pub info: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::ListValue,
-    >,
-}
-/// Nested message and enum types in `ReadGroup`.
-pub mod read_group {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Experiment {
-        /// A client-supplied library identifier; a library is a collection of DNA
-        /// fragments which have been prepared for sequencing from a sample. This
-        /// field is important for quality control as error or bias can be introduced
-        /// during sample preparation.
-        #[prost(string, tag = "1")]
-        pub library_id: ::prost::alloc::string::String,
-        /// The platform unit used as part of this experiment, for example
-        /// flowcell-barcode.lane for Illumina or slide for SOLiD. Corresponds to the
-        /// @RG PU field in the SAM spec.
-        #[prost(string, tag = "2")]
-        pub platform_unit: ::prost::alloc::string::String,
-        /// The sequencing center used as part of this experiment.
-        #[prost(string, tag = "3")]
-        pub sequencing_center: ::prost::alloc::string::String,
-        /// The instrument model used as part of this experiment. This maps to
-        /// sequencing technology in the SAM spec.
-        #[prost(string, tag = "4")]
-        pub instrument_model: ::prost::alloc::string::String,
-    }
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Program {
-        /// The command line used to run this program.
-        #[prost(string, tag = "1")]
-        pub command_line: ::prost::alloc::string::String,
-        /// The user specified locally unique ID of the program. Used along with
-        /// `prevProgramId` to define an ordering between programs.
-        #[prost(string, tag = "2")]
-        pub id: ::prost::alloc::string::String,
-        /// The display name of the program. This is typically the colloquial name of
-        /// the tool used, for example 'bwa' or 'picard'.
-        #[prost(string, tag = "3")]
-        pub name: ::prost::alloc::string::String,
-        /// The ID of the program run before this one.
-        #[prost(string, tag = "4")]
-        pub prev_program_id: ::prost::alloc::string::String,
-        /// The version of the program run.
-        #[prost(string, tag = "5")]
-        pub version: ::prost::alloc::string::String,
-    }
-}
-/// A read group set is a logical collection of read groups, which are
-/// collections of reads produced by a sequencer. A read group set typically
-/// models reads corresponding to one sample, sequenced one way, and aligned one
-/// way.
-///
-/// * A read group set belongs to one dataset.
-/// * A read group belongs to one read group set.
-/// * A read belongs to one read group.
-///
-/// For more genomics resource definitions, see [Fundamentals of Google
-/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReadGroupSet {
-    /// The server-generated read group set ID, unique for all read group sets.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The dataset to which this read group set belongs.
-    #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The reference set to which the reads in this read group set are aligned.
-    #[prost(string, tag = "3")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// The read group set name. By default this will be initialized to the sample
-    /// name of the sequenced data contained in this set.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// The filename of the original source file for this read group set, if any.
-    #[prost(string, tag = "5")]
-    pub filename: ::prost::alloc::string::String,
-    /// The read groups in this set. There are typically 1-10 read groups in a read
-    /// group set.
-    #[prost(message, repeated, tag = "6")]
-    pub read_groups: ::prost::alloc::vec::Vec<ReadGroup>,
-    /// A map of additional read group set information.
-    #[prost(btree_map = "string, message", tag = "7")]
-    pub info: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::ListValue,
-    >,
-}
-/// A reference is a canonical assembled DNA sequence, intended to act as a
-/// reference coordinate space for other genomic annotations. A single reference
-/// might represent the human chromosome 1 or mitochandrial DNA, for instance. A
-/// reference belongs to one or more reference sets.
-///
-/// For more genomics resource definitions, see [Fundamentals of Google
-/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Reference {
-    /// The server-generated reference ID, unique across all references.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The length of this reference's sequence.
-    #[prost(int64, tag = "2")]
-    pub length: i64,
-    /// MD5 of the upper-case sequence excluding all whitespace characters (this
-    /// is equivalent to SQ:M5 in SAM). This value is represented in lower case
-    /// hexadecimal format.
-    #[prost(string, tag = "3")]
-    pub md5checksum: ::prost::alloc::string::String,
-    /// The name of this reference, for example `22`.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// The URI from which the sequence was obtained. Typically specifies a FASTA
-    /// format file.
-    #[prost(string, tag = "5")]
-    pub source_uri: ::prost::alloc::string::String,
-    /// All known corresponding accession IDs in INSDC (GenBank/ENA/DDBJ) ideally
-    /// with a version number, for example `GCF_000001405.26`.
-    #[prost(string, repeated, tag = "6")]
-    pub source_accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// ID from <http://www.ncbi.nlm.nih.gov/taxonomy.> For example, 9606 for human.
-    #[prost(int32, tag = "7")]
-    pub ncbi_taxon_id: i32,
-}
-/// A reference set is a set of references which typically comprise a reference
-/// assembly for a species, such as `GRCh38` which is representative
-/// of the human genome. A reference set defines a common coordinate space for
-/// comparing reference-aligned experimental data. A reference set contains 1 or
-/// more references.
-///
-/// For more genomics resource definitions, see [Fundamentals of Google
-/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReferenceSet {
-    /// The server-generated reference set ID, unique across all reference sets.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The IDs of the reference objects that are part of this set.
-    /// `Reference.md5checksum` must be unique within this set.
-    #[prost(string, repeated, tag = "2")]
-    pub reference_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Order-independent MD5 checksum which identifies this reference set. The
-    /// checksum is computed by sorting all lower case hexidecimal string
-    /// `reference.md5checksum` (for all reference in this set) in
-    /// ascending lexicographic order, concatenating, and taking the MD5 of that
-    /// value. The resulting value is represented in lower case hexadecimal format.
-    #[prost(string, tag = "3")]
-    pub md5checksum: ::prost::alloc::string::String,
-    /// ID from <http://www.ncbi.nlm.nih.gov/taxonomy> (for example, 9606 for human)
-    /// indicating the species which this reference set is intended to model. Note
-    /// that contained references may specify a different `ncbiTaxonId`, as
-    /// assemblies may contain reference sequences which do not belong to the
-    /// modeled species, for example EBV in a human reference genome.
-    #[prost(int32, tag = "4")]
-    pub ncbi_taxon_id: i32,
-    /// Free text description of this reference set.
-    #[prost(string, tag = "5")]
-    pub description: ::prost::alloc::string::String,
-    /// Public id of this reference set, such as `GRCh37`.
-    #[prost(string, tag = "6")]
-    pub assembly_id: ::prost::alloc::string::String,
-    /// The URI from which the references were obtained.
-    #[prost(string, tag = "7")]
-    pub source_uri: ::prost::alloc::string::String,
-    /// All known corresponding accession IDs in INSDC (GenBank/ENA/DDBJ) ideally
-    /// with a version number, for example `NC_000001.11`.
-    #[prost(string, repeated, tag = "8")]
-    pub source_accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchReferenceSetsRequest {
-    /// If present, return reference sets for which the
-    /// \[md5checksum][google.genomics.v1.ReferenceSet.md5checksum\] matches exactly.
-    #[prost(string, repeated, tag = "1")]
-    pub md5checksums: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If present, return reference sets for which a prefix of any of
-    /// \[sourceAccessions][google.genomics.v1.ReferenceSet.source_accessions\]
-    /// match any of these strings. Accession numbers typically have a main number
-    /// and a version, for example `NC_000001.11`.
-    #[prost(string, repeated, tag = "2")]
-    pub accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If present, return reference sets for which a substring of their
-    /// `assemblyId` matches this string (case insensitive).
-    #[prost(string, tag = "3")]
-    pub assembly_id: ::prost::alloc::string::String,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "4")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single page. If unspecified,
-    /// defaults to 1024. The maximum value is 4096.
-    #[prost(int32, tag = "5")]
-    pub page_size: i32,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchReferenceSetsResponse {
-    /// The matching references sets.
-    #[prost(message, repeated, tag = "1")]
-    pub reference_sets: ::prost::alloc::vec::Vec<ReferenceSet>,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetReferenceSetRequest {
-    /// The ID of the reference set.
-    #[prost(string, tag = "1")]
-    pub reference_set_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchReferencesRequest {
-    /// If present, return references for which the
-    /// \[md5checksum][google.genomics.v1.Reference.md5checksum\] matches exactly.
-    #[prost(string, repeated, tag = "1")]
-    pub md5checksums: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If present, return references for which a prefix of any of
-    /// \[sourceAccessions][google.genomics.v1.Reference.source_accessions\] match
-    /// any of these strings. Accession numbers typically have a main number and a
-    /// version, for example `GCF_000001405.26`.
-    #[prost(string, repeated, tag = "2")]
-    pub accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If present, return only references which belong to this reference set.
-    #[prost(string, tag = "3")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "4")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single page. If unspecified,
-    /// defaults to 1024. The maximum value is 4096.
-    #[prost(int32, tag = "5")]
-    pub page_size: i32,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchReferencesResponse {
-    /// The matching references.
-    #[prost(message, repeated, tag = "1")]
-    pub references: ::prost::alloc::vec::Vec<Reference>,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetReferenceRequest {
-    /// The ID of the reference.
-    #[prost(string, tag = "1")]
-    pub reference_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListBasesRequest {
-    /// The ID of the reference.
-    #[prost(string, tag = "1")]
-    pub reference_id: ::prost::alloc::string::String,
-    /// The start position (0-based) of this query. Defaults to 0.
-    #[prost(int64, tag = "2")]
-    pub start: i64,
-    /// The end position (0-based, exclusive) of this query. Defaults to the length
-    /// of this reference.
-    #[prost(int64, tag = "3")]
-    pub end: i64,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "4")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The maximum number of bases to return in a single page. If unspecified,
-    /// defaults to 200Kbp (kilo base pairs). The maximum value is 10Mbp (mega base
-    /// pairs).
-    #[prost(int32, tag = "5")]
-    pub page_size: i32,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListBasesResponse {
-    /// The offset position (0-based) of the given `sequence` from the
-    /// start of this `Reference`. This value will differ for each page
-    /// in a paginated request.
-    #[prost(int64, tag = "1")]
-    pub offset: i64,
-    /// A substring of the bases that make up this reference.
-    #[prost(string, tag = "2")]
-    pub sequence: ::prost::alloc::string::String,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "3")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod reference_service_v1_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    #[derive(Debug, Clone)]
-    pub struct ReferenceServiceV1Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ReferenceServiceV1Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ReferenceServiceV1Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ReferenceServiceV1Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Searches for reference sets which match the given criteria.
-        ///
-        /// For the definitions of references and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// Implements
-        /// [GlobalAllianceApi.searchReferenceSets](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L71)
-        pub async fn search_reference_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SearchReferenceSetsRequest>,
-        ) -> Result<tonic::Response<super::SearchReferenceSetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.ReferenceServiceV1/SearchReferenceSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a reference set.
-        ///
-        /// For the definitions of references and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// Implements
-        /// [GlobalAllianceApi.getReferenceSet](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L83).
-        pub async fn get_reference_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetReferenceSetRequest>,
-        ) -> Result<tonic::Response<super::ReferenceSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.ReferenceServiceV1/GetReferenceSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Searches for references which match the given criteria.
-        ///
-        /// For the definitions of references and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// Implements
-        /// [GlobalAllianceApi.searchReferences](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L146).
-        pub async fn search_references(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SearchReferencesRequest>,
-        ) -> Result<tonic::Response<super::SearchReferencesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.ReferenceServiceV1/SearchReferences",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a reference.
-        ///
-        /// For the definitions of references and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// Implements
-        /// [GlobalAllianceApi.getReference](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L158).
-        pub async fn get_reference(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetReferenceRequest>,
-        ) -> Result<tonic::Response<super::Reference>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.ReferenceServiceV1/GetReference",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists the bases in a reference, optionally restricted to a range.
-        ///
-        /// For the definitions of references and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// Implements
-        /// [GlobalAllianceApi.getReferenceBases](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L221).
-        pub async fn list_bases(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListBasesRequest>,
-        ) -> Result<tonic::Response<super::ListBasesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.ReferenceServiceV1/ListBases",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// An annotation set is a logical grouping of annotations that share consistent
-/// type information and provenance. Examples of annotation sets include 'all
-/// genes from refseq', and 'all variant annotations from ClinVar'.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnnotationSet {
-    /// The server-generated annotation set ID, unique across all annotation sets.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The dataset to which this annotation set belongs.
-    #[prost(string, tag = "2")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The ID of the reference set that defines the coordinate space for this
-    /// set's annotations.
-    #[prost(string, tag = "3")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// The display name for this annotation set.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// The source URI describing the file from which this annotation set was
-    /// generated, if any.
-    #[prost(string, tag = "5")]
-    pub source_uri: ::prost::alloc::string::String,
-    /// The type of annotations contained within this set.
-    #[prost(enumeration = "AnnotationType", tag = "6")]
-    pub r#type: i32,
-    /// A map of additional read alignment information. This must be of the form
-    /// map<string, string[]> (string key mapping to a list of string values).
-    #[prost(btree_map = "string, message", tag = "17")]
-    pub info: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::ListValue,
-    >,
-}
-/// An annotation describes a region of reference genome. The value of an
-/// annotation may be one of several canonical types, supplemented by arbitrary
-/// info tags. An annotation is not inherently associated with a specific
-/// sample or individual (though a client could choose to use annotations in
-/// this way). Example canonical annotation types are `GENE` and
-/// `VARIANT`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Annotation {
-    /// The server-generated annotation ID, unique across all annotations.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The annotation set to which this annotation belongs.
-    #[prost(string, tag = "2")]
-    pub annotation_set_id: ::prost::alloc::string::String,
-    /// The display name of this annotation.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// The ID of the Google Genomics reference associated with this range.
-    #[prost(string, tag = "4")]
-    pub reference_id: ::prost::alloc::string::String,
-    /// The display name corresponding to the reference specified by
-    /// `referenceId`, for example `chr1`, `1`, or `chrX`.
-    #[prost(string, tag = "5")]
-    pub reference_name: ::prost::alloc::string::String,
-    /// The start position of the range on the reference, 0-based inclusive.
-    #[prost(int64, tag = "6")]
-    pub start: i64,
-    /// The end position of the range on the reference, 0-based exclusive.
-    #[prost(int64, tag = "7")]
-    pub end: i64,
-    /// Whether this range refers to the reverse strand, as opposed to the forward
-    /// strand. Note that regardless of this field, the start/end position of the
-    /// range always refer to the forward strand.
-    #[prost(bool, tag = "8")]
-    pub reverse_strand: bool,
-    /// The data type for this annotation. Must match the containing annotation
-    /// set's type.
-    #[prost(enumeration = "AnnotationType", tag = "9")]
-    pub r#type: i32,
-    /// A map of additional read alignment information. This must be of the form
-    /// map<string, string[]> (string key mapping to a list of string values).
-    #[prost(btree_map = "string, message", tag = "12")]
-    pub info: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::ListValue,
-    >,
-    #[prost(oneof = "annotation::Value", tags = "10, 11")]
-    pub value: ::core::option::Option<annotation::Value>,
-}
-/// Nested message and enum types in `Annotation`.
-pub mod annotation {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// A variant annotation, which describes the effect of a variant on the
-        /// genome, the coding sequence, and/or higher level consequences at the
-        /// organism level e.g. pathogenicity. This field is only set for annotations
-        /// of type `VARIANT`.
-        #[prost(message, tag = "10")]
-        Variant(super::VariantAnnotation),
-        /// A transcript value represents the assertion that a particular region of
-        /// the reference genome may be transcribed as RNA. An alternative splicing
-        /// pattern would be represented as a separate transcript object. This field
-        /// is only set for annotations of type `TRANSCRIPT`.
-        #[prost(message, tag = "11")]
-        Transcript(super::Transcript),
-    }
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VariantAnnotation {
-    /// Type has been adapted from ClinVar's list of variant types.
-    #[prost(enumeration = "variant_annotation::Type", tag = "1")]
-    pub r#type: i32,
-    /// Effect of the variant on the coding sequence.
-    #[prost(enumeration = "variant_annotation::Effect", tag = "2")]
-    pub effect: i32,
-    /// The alternate allele for this variant. If multiple alternate alleles
-    /// exist at this location, create a separate variant for each one, as they
-    /// may represent distinct conditions.
-    #[prost(string, tag = "3")]
-    pub alternate_bases: ::prost::alloc::string::String,
-    /// Google annotation ID of the gene affected by this variant. This should
-    /// be provided when the variant is created.
-    #[prost(string, tag = "4")]
-    pub gene_id: ::prost::alloc::string::String,
-    /// Google annotation IDs of the transcripts affected by this variant. These
-    /// should be provided when the variant is created.
-    #[prost(string, repeated, tag = "5")]
-    pub transcript_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The set of conditions associated with this variant.
-    /// A condition describes the way a variant influences human health.
-    #[prost(message, repeated, tag = "6")]
-    pub conditions: ::prost::alloc::vec::Vec<variant_annotation::ClinicalCondition>,
-    /// Describes the clinical significance of a variant.
-    /// It is adapted from the ClinVar controlled vocabulary for clinical
-    /// significance described at:
-    /// <http://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/>
-    #[prost(enumeration = "variant_annotation::ClinicalSignificance", tag = "7")]
-    pub clinical_significance: i32,
-}
-/// Nested message and enum types in `VariantAnnotation`.
-pub mod variant_annotation {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ClinicalCondition {
-        /// A set of names for the condition.
-        #[prost(string, repeated, tag = "1")]
-        pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// The set of external IDs for this condition.
-        #[prost(message, repeated, tag = "2")]
-        pub external_ids: ::prost::alloc::vec::Vec<super::ExternalId>,
-        /// The MedGen concept id associated with this gene.
-        /// Search for these IDs at <http://www.ncbi.nlm.nih.gov/medgen/>
-        #[prost(string, tag = "3")]
-        pub concept_id: ::prost::alloc::string::String,
-        /// The OMIM id for this condition.
-        /// Search for these IDs at <http://omim.org/>
-        #[prost(string, tag = "4")]
-        pub omim_id: ::prost::alloc::string::String,
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        Unspecified = 0,
-        /// `TYPE_OTHER` should be used when no other Type will suffice.
-        /// Further explanation of the variant type may be included in the
-        /// \[info][google.genomics.v1.Annotation.info\] field.
-        Other = 1,
-        /// `INSERTION` indicates an insertion.
-        Insertion = 2,
-        /// `DELETION` indicates a deletion.
-        Deletion = 3,
-        /// `SUBSTITUTION` indicates a block substitution of
-        /// two or more nucleotides.
-        Substitution = 4,
-        /// `SNP` indicates a single nucleotide polymorphism.
-        Snp = 5,
-        /// `STRUCTURAL` indicates a large structural variant,
-        /// including chromosomal fusions, inversions, etc.
-        Structural = 6,
-        /// `CNV` indicates a variation in copy number.
-        Cnv = 7,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::Other => "TYPE_OTHER",
-                Type::Insertion => "INSERTION",
-                Type::Deletion => "DELETION",
-                Type::Substitution => "SUBSTITUTION",
-                Type::Snp => "SNP",
-                Type::Structural => "STRUCTURAL",
-                Type::Cnv => "CNV",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "TYPE_OTHER" => Some(Self::Other),
-                "INSERTION" => Some(Self::Insertion),
-                "DELETION" => Some(Self::Deletion),
-                "SUBSTITUTION" => Some(Self::Substitution),
-                "SNP" => Some(Self::Snp),
-                "STRUCTURAL" => Some(Self::Structural),
-                "CNV" => Some(Self::Cnv),
-                _ => None,
-            }
-        }
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Effect {
-        Unspecified = 0,
-        /// `EFFECT_OTHER` should be used when no other Effect
-        /// will suffice.
-        Other = 1,
-        /// `FRAMESHIFT` indicates a mutation in which the insertion or
-        /// deletion of nucleotides resulted in a frameshift change.
-        Frameshift = 2,
-        /// `FRAME_PRESERVING_INDEL` indicates a mutation in which a
-        /// multiple of three nucleotides has been inserted or deleted, resulting
-        /// in no change to the reading frame of the coding sequence.
-        FramePreservingIndel = 3,
-        /// `SYNONYMOUS_SNP` indicates a single nucleotide polymorphism
-        /// mutation that results in no amino acid change.
-        SynonymousSnp = 4,
-        /// `NONSYNONYMOUS_SNP` indicates a single nucleotide
-        /// polymorphism mutation that results in an amino acid change.
-        NonsynonymousSnp = 5,
-        /// `STOP_GAIN` indicates a mutation that leads to the creation
-        /// of a stop codon at the variant site. Frameshift mutations creating
-        /// downstream stop codons do not count as `STOP_GAIN`.
-        StopGain = 6,
-        /// `STOP_LOSS` indicates a mutation that eliminates a
-        /// stop codon at the variant site.
-        StopLoss = 7,
-        /// `SPLICE_SITE_DISRUPTION` indicates that this variant is
-        /// found in a splice site for the associated transcript, and alters the
-        /// normal splicing pattern.
-        SpliceSiteDisruption = 8,
-    }
-    impl Effect {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Effect::Unspecified => "EFFECT_UNSPECIFIED",
-                Effect::Other => "EFFECT_OTHER",
-                Effect::Frameshift => "FRAMESHIFT",
-                Effect::FramePreservingIndel => "FRAME_PRESERVING_INDEL",
-                Effect::SynonymousSnp => "SYNONYMOUS_SNP",
-                Effect::NonsynonymousSnp => "NONSYNONYMOUS_SNP",
-                Effect::StopGain => "STOP_GAIN",
-                Effect::StopLoss => "STOP_LOSS",
-                Effect::SpliceSiteDisruption => "SPLICE_SITE_DISRUPTION",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "EFFECT_UNSPECIFIED" => Some(Self::Unspecified),
-                "EFFECT_OTHER" => Some(Self::Other),
-                "FRAMESHIFT" => Some(Self::Frameshift),
-                "FRAME_PRESERVING_INDEL" => Some(Self::FramePreservingIndel),
-                "SYNONYMOUS_SNP" => Some(Self::SynonymousSnp),
-                "NONSYNONYMOUS_SNP" => Some(Self::NonsynonymousSnp),
-                "STOP_GAIN" => Some(Self::StopGain),
-                "STOP_LOSS" => Some(Self::StopLoss),
-                "SPLICE_SITE_DISRUPTION" => Some(Self::SpliceSiteDisruption),
-                _ => None,
-            }
-        }
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ClinicalSignificance {
-        Unspecified = 0,
-        /// `OTHER` should be used when no other clinical significance
-        /// value will suffice.
-        Other = 1,
-        Uncertain = 2,
-        Benign = 3,
-        LikelyBenign = 4,
-        LikelyPathogenic = 5,
-        Pathogenic = 6,
-        DrugResponse = 7,
-        Histocompatibility = 8,
-        ConfersSensitivity = 9,
-        RiskFactor = 10,
-        Association = 11,
-        Protective = 12,
-        /// `MULTIPLE_REPORTED` should be used when multiple clinical
-        /// signficances are reported for a variant. The original clinical
-        /// significance values may be provided in the `info` field.
-        MultipleReported = 13,
-    }
-    impl ClinicalSignificance {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ClinicalSignificance::Unspecified => "CLINICAL_SIGNIFICANCE_UNSPECIFIED",
-                ClinicalSignificance::Other => "CLINICAL_SIGNIFICANCE_OTHER",
-                ClinicalSignificance::Uncertain => "UNCERTAIN",
-                ClinicalSignificance::Benign => "BENIGN",
-                ClinicalSignificance::LikelyBenign => "LIKELY_BENIGN",
-                ClinicalSignificance::LikelyPathogenic => "LIKELY_PATHOGENIC",
-                ClinicalSignificance::Pathogenic => "PATHOGENIC",
-                ClinicalSignificance::DrugResponse => "DRUG_RESPONSE",
-                ClinicalSignificance::Histocompatibility => "HISTOCOMPATIBILITY",
-                ClinicalSignificance::ConfersSensitivity => "CONFERS_SENSITIVITY",
-                ClinicalSignificance::RiskFactor => "RISK_FACTOR",
-                ClinicalSignificance::Association => "ASSOCIATION",
-                ClinicalSignificance::Protective => "PROTECTIVE",
-                ClinicalSignificance::MultipleReported => "MULTIPLE_REPORTED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "CLINICAL_SIGNIFICANCE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CLINICAL_SIGNIFICANCE_OTHER" => Some(Self::Other),
-                "UNCERTAIN" => Some(Self::Uncertain),
-                "BENIGN" => Some(Self::Benign),
-                "LIKELY_BENIGN" => Some(Self::LikelyBenign),
-                "LIKELY_PATHOGENIC" => Some(Self::LikelyPathogenic),
-                "PATHOGENIC" => Some(Self::Pathogenic),
-                "DRUG_RESPONSE" => Some(Self::DrugResponse),
-                "HISTOCOMPATIBILITY" => Some(Self::Histocompatibility),
-                "CONFERS_SENSITIVITY" => Some(Self::ConfersSensitivity),
-                "RISK_FACTOR" => Some(Self::RiskFactor),
-                "ASSOCIATION" => Some(Self::Association),
-                "PROTECTIVE" => Some(Self::Protective),
-                "MULTIPLE_REPORTED" => Some(Self::MultipleReported),
-                _ => None,
-            }
-        }
-    }
-}
-/// A transcript represents the assertion that a particular region of the
-/// reference genome may be transcribed as RNA.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Transcript {
-    /// The annotation ID of the gene from which this transcript is transcribed.
-    #[prost(string, tag = "1")]
-    pub gene_id: ::prost::alloc::string::String,
-    /// The <a href="<http://en.wikipedia.org/wiki/Exon">exons</a>> that compose
-    /// this transcript. This field should be unset for genomes where transcript
-    /// splicing does not occur, for example prokaryotes.
-    ///
-    /// Introns are regions of the transcript that are not included in the
-    /// spliced RNA product. Though not explicitly modeled here, intron ranges can
-    /// be deduced; all regions of this transcript that are not exons are introns.
-    ///
-    /// Exonic sequences do not necessarily code for a translational product
-    /// (amino acids). Only the regions of exons bounded by the
-    /// \[codingSequence][google.genomics.v1.Transcript.coding_sequence\] correspond
-    /// to coding DNA sequence.
-    ///
-    /// Exons are ordered by start position and may not overlap.
-    #[prost(message, repeated, tag = "2")]
-    pub exons: ::prost::alloc::vec::Vec<transcript::Exon>,
-    /// The range of the coding sequence for this transcript, if any. To determine
-    /// the exact ranges of coding sequence, intersect this range with those of the
-    /// \[exons][google.genomics.v1.Transcript.exons\], if any. If there are any
-    /// \[exons][google.genomics.v1.Transcript.exons\], the
-    /// \[codingSequence][google.genomics.v1.Transcript.coding_sequence\] must start
-    /// and end within them.
-    ///
-    /// Note that in some cases, the reference genome will not exactly match the
-    /// observed mRNA transcript e.g. due to variance in the source genome from
-    /// reference. In these cases,
-    /// \[exon.frame][google.genomics.v1.Transcript.Exon.frame\] will not necessarily
-    /// match the expected reference reading frame and coding exon reference bases
-    /// cannot necessarily be concatenated to produce the original transcript mRNA.
-    #[prost(message, optional, tag = "3")]
-    pub coding_sequence: ::core::option::Option<transcript::CodingSequence>,
-}
-/// Nested message and enum types in `Transcript`.
-pub mod transcript {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Exon {
-        /// The start position of the exon on this annotation's reference sequence,
-        /// 0-based inclusive. Note that this is relative to the reference start, and
-        /// **not** the containing annotation start.
-        #[prost(int64, tag = "1")]
-        pub start: i64,
-        /// The end position of the exon on this annotation's reference sequence,
-        /// 0-based exclusive. Note that this is relative to the reference start, and
-        /// *not* the containing annotation start.
-        #[prost(int64, tag = "2")]
-        pub end: i64,
-        /// The frame of this exon. Contains a value of 0, 1, or 2, which indicates
-        /// the offset of the first coding base of the exon within the reading frame
-        /// of the coding DNA sequence, if any. This field is dependent on the
-        /// strandedness of this annotation (see
-        /// \[Annotation.reverse_strand][google.genomics.v1.Annotation.reverse_strand\]).
-        /// For forward stranded annotations, this offset is relative to the
-        /// \[exon.start][google.genomics.v1.Transcript.Exon.start\]. For reverse
-        /// strand annotations, this offset is relative to the
-        /// \[exon.end][google.genomics.v1.Transcript.Exon.end\] `- 1`.
-        ///
-        /// Unset if this exon does not intersect the coding sequence. Upon creation
-        /// of a transcript, the frame must be populated for all or none of the
-        /// coding exons.
-        #[prost(message, optional, tag = "3")]
-        pub frame: ::core::option::Option<i32>,
-    }
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct CodingSequence {
-        /// The start of the coding sequence on this annotation's reference sequence,
-        /// 0-based inclusive. Note that this position is relative to the reference
-        /// start, and *not* the containing annotation start.
-        #[prost(int64, tag = "1")]
-        pub start: i64,
-        /// The end of the coding sequence on this annotation's reference sequence,
-        /// 0-based exclusive. Note that this position is relative to the reference
-        /// start, and *not* the containing annotation start.
-        #[prost(int64, tag = "2")]
-        pub end: i64,
-    }
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExternalId {
-    /// The name of the source of this data.
-    #[prost(string, tag = "1")]
-    pub source_name: ::prost::alloc::string::String,
-    /// The id used by the source of this data.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAnnotationSetRequest {
-    /// The annotation set to create.
-    #[prost(message, optional, tag = "1")]
-    pub annotation_set: ::core::option::Option<AnnotationSet>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetAnnotationSetRequest {
-    /// The ID of the annotation set to be retrieved.
-    #[prost(string, tag = "1")]
-    pub annotation_set_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateAnnotationSetRequest {
-    /// The ID of the annotation set to be updated.
-    #[prost(string, tag = "1")]
-    pub annotation_set_id: ::prost::alloc::string::String,
-    /// The new annotation set.
-    #[prost(message, optional, tag = "2")]
-    pub annotation_set: ::core::option::Option<AnnotationSet>,
-    /// An optional mask specifying which fields to update. Mutable fields are
-    /// \[name][google.genomics.v1.AnnotationSet.name\],
-    /// \[source_uri][google.genomics.v1.AnnotationSet.source_uri\], and
-    /// \[info][google.genomics.v1.AnnotationSet.info\]. If unspecified, all
-    /// mutable fields will be updated.
-    #[prost(message, optional, tag = "3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteAnnotationSetRequest {
-    /// The ID of the annotation set to be deleted.
-    #[prost(string, tag = "1")]
-    pub annotation_set_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchAnnotationSetsRequest {
-    /// Required. The dataset IDs to search within. Caller must have `READ` access
-    /// to these datasets.
-    #[prost(string, repeated, tag = "1")]
-    pub dataset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// If specified, only annotation sets associated with the given reference set
-    /// are returned.
-    #[prost(string, tag = "2")]
-    pub reference_set_id: ::prost::alloc::string::String,
-    /// Only return annotations sets for which a substring of the name matches this
-    /// string (case insensitive).
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// If specified, only annotation sets that have any of these types are
-    /// returned.
-    #[prost(enumeration = "AnnotationType", repeated, tag = "4")]
-    pub types: ::prost::alloc::vec::Vec<i32>,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "5")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single page. If unspecified,
-    /// defaults to 128. The maximum value is 1024.
-    #[prost(int32, tag = "6")]
-    pub page_size: i32,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchAnnotationSetsResponse {
-    /// The matching annotation sets.
-    #[prost(message, repeated, tag = "1")]
-    pub annotation_sets: ::prost::alloc::vec::Vec<AnnotationSet>,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAnnotationRequest {
-    /// The annotation to be created.
-    #[prost(message, optional, tag = "1")]
-    pub annotation: ::core::option::Option<Annotation>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchCreateAnnotationsRequest {
-    /// The annotations to be created. At most 4096 can be specified in a single
-    /// request.
-    #[prost(message, repeated, tag = "1")]
-    pub annotations: ::prost::alloc::vec::Vec<Annotation>,
-    /// A unique request ID which enables the server to detect duplicated requests.
-    /// If provided, duplicated requests will result in the same response; if not
-    /// provided, duplicated requests may result in duplicated data. For a given
-    /// annotation set, callers should not reuse `request_id`s when writing
-    /// different batches of annotations - behavior in this case is undefined.
-    /// A common approach is to use a UUID. For batch jobs where worker crashes are
-    /// a possibility, consider using some unique variant of a worker or run ID.
-    #[prost(string, tag = "2")]
-    pub request_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchCreateAnnotationsResponse {
-    /// The resulting per-annotation entries, ordered consistently with the
-    /// original request.
-    #[prost(message, repeated, tag = "1")]
-    pub entries: ::prost::alloc::vec::Vec<batch_create_annotations_response::Entry>,
-}
-/// Nested message and enum types in `BatchCreateAnnotationsResponse`.
-pub mod batch_create_annotations_response {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Entry {
-        /// The creation status.
-        #[prost(message, optional, tag = "1")]
-        pub status: ::core::option::Option<super::super::super::rpc::Status>,
-        /// The created annotation, if creation was successful.
-        #[prost(message, optional, tag = "2")]
-        pub annotation: ::core::option::Option<super::Annotation>,
-    }
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetAnnotationRequest {
-    /// The ID of the annotation to be retrieved.
-    #[prost(string, tag = "1")]
-    pub annotation_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateAnnotationRequest {
-    /// The ID of the annotation to be updated.
-    #[prost(string, tag = "1")]
-    pub annotation_id: ::prost::alloc::string::String,
-    /// The new annotation.
-    #[prost(message, optional, tag = "2")]
-    pub annotation: ::core::option::Option<Annotation>,
-    /// An optional mask specifying which fields to update. Mutable fields are
-    /// \[name][google.genomics.v1.Annotation.name\],
-    /// \[variant][google.genomics.v1.Annotation.variant\],
-    /// \[transcript][google.genomics.v1.Annotation.transcript\], and
-    /// \[info][google.genomics.v1.Annotation.info\]. If unspecified, all mutable
-    /// fields will be updated.
-    #[prost(message, optional, tag = "3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteAnnotationRequest {
-    /// The ID of the annotation to be deleted.
-    #[prost(string, tag = "1")]
-    pub annotation_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchAnnotationsRequest {
-    /// Required. The annotation sets to search within. The caller must have
-    /// `READ` access to these annotation sets.
-    /// All queried annotation sets must have the same type.
-    #[prost(string, repeated, tag = "1")]
-    pub annotation_set_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The start position of the range on the reference, 0-based inclusive. If
-    /// specified,
-    /// \[referenceId][google.genomics.v1.SearchAnnotationsRequest.reference_id\] or
-    /// \[referenceName][google.genomics.v1.SearchAnnotationsRequest.reference_name\]
-    /// must be specified. Defaults to 0.
-    #[prost(int64, tag = "4")]
-    pub start: i64,
-    /// The end position of the range on the reference, 0-based exclusive. If
-    /// \[referenceId][google.genomics.v1.SearchAnnotationsRequest.reference_id\] or
-    /// \[referenceName][google.genomics.v1.SearchAnnotationsRequest.reference_name\]
-    /// must be specified, Defaults to the length of the reference.
-    #[prost(int64, tag = "5")]
-    pub end: i64,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "6")]
-    pub page_token: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single page. If unspecified,
-    /// defaults to 256. The maximum value is 2048.
-    #[prost(int32, tag = "7")]
-    pub page_size: i32,
-    /// Required. `reference_id` or `reference_name` must be set.
-    #[prost(oneof = "search_annotations_request::Reference", tags = "2, 3")]
-    pub reference: ::core::option::Option<search_annotations_request::Reference>,
-}
-/// Nested message and enum types in `SearchAnnotationsRequest`.
-pub mod search_annotations_request {
-    /// Required. `reference_id` or `reference_name` must be set.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Reference {
-        /// The ID of the reference to query.
-        #[prost(string, tag = "2")]
-        ReferenceId(::prost::alloc::string::String),
-        /// The name of the reference to query, within the reference set associated
-        /// with this query.
-        #[prost(string, tag = "3")]
-        ReferenceName(::prost::alloc::string::String),
-    }
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SearchAnnotationsResponse {
-    /// The matching annotations.
-    #[prost(message, repeated, tag = "1")]
-    pub annotations: ::prost::alloc::vec::Vec<Annotation>,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// When an \[Annotation][google.genomics.v1.Annotation\] or
-/// \[AnnotationSet][google.genomics.v1.AnnotationSet\] is created, if `type` is
-/// not specified it will be set to `GENERIC`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum AnnotationType {
-    Unspecified = 0,
-    /// A `GENERIC` annotation type should be used when no other annotation
-    /// type will suffice. This represents an untyped annotation of the reference
-    /// genome.
-    Generic = 1,
-    /// A `VARIANT` annotation type.
-    Variant = 2,
-    /// A `GENE` annotation type represents the existence of a gene at the
-    /// associated reference coordinates. The start coordinate is typically the
-    /// gene's transcription start site and the end is typically the end of the
-    /// gene's last exon.
-    Gene = 3,
-    /// A `TRANSCRIPT` annotation type represents the assertion that a
-    /// particular region of the reference genome may be transcribed as RNA.
-    Transcript = 4,
-}
-impl AnnotationType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            AnnotationType::Unspecified => "ANNOTATION_TYPE_UNSPECIFIED",
-            AnnotationType::Generic => "GENERIC",
-            AnnotationType::Variant => "VARIANT",
-            AnnotationType::Gene => "GENE",
-            AnnotationType::Transcript => "TRANSCRIPT",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "ANNOTATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "GENERIC" => Some(Self::Generic),
-            "VARIANT" => Some(Self::Variant),
-            "GENE" => Some(Self::Gene),
-            "TRANSCRIPT" => Some(Self::Transcript),
-            _ => None,
-        }
-    }
-}
-/// Generated client implementations.
-pub mod annotation_service_v1_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service provides storage and positional retrieval of genomic
-    /// reference annotations, including variant annotations.
-    #[derive(Debug, Clone)]
-    pub struct AnnotationServiceV1Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AnnotationServiceV1Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AnnotationServiceV1Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AnnotationServiceV1Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a new annotation set. Caller must have WRITE permission for the
-        /// associated dataset.
-        ///
-        /// The following fields are required:
-        ///
-        ///   * [datasetId][google.genomics.v1.AnnotationSet.dataset_id]
-        ///   * [referenceSetId][google.genomics.v1.AnnotationSet.reference_set_id]
-        ///
-        /// All other fields may be optionally specified, unless documented as being
-        /// server-generated (for example, the `id` field).
-        pub async fn create_annotation_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateAnnotationSetRequest>,
-        ) -> Result<tonic::Response<super::AnnotationSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/CreateAnnotationSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets an annotation set. Caller must have READ permission for
-        /// the associated dataset.
-        pub async fn get_annotation_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAnnotationSetRequest>,
-        ) -> Result<tonic::Response<super::AnnotationSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/GetAnnotationSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates an annotation set. The update must respect all mutability
-        /// restrictions and other invariants described on the annotation set resource.
-        /// Caller must have WRITE permission for the associated dataset.
-        pub async fn update_annotation_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateAnnotationSetRequest>,
-        ) -> Result<tonic::Response<super::AnnotationSet>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/UpdateAnnotationSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes an annotation set. Caller must have WRITE permission
-        /// for the associated annotation set.
-        pub async fn delete_annotation_set(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteAnnotationSetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/DeleteAnnotationSet",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Searches for annotation sets that match the given criteria. Annotation sets
-        /// are returned in an unspecified order. This order is consistent, such that
-        /// two queries for the same content (regardless of page size) yield annotation
-        /// sets in the same order across their respective streams of paginated
-        /// responses. Caller must have READ permission for the queried datasets.
-        pub async fn search_annotation_sets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SearchAnnotationSetsRequest>,
-        ) -> Result<
-            tonic::Response<super::SearchAnnotationSetsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/SearchAnnotationSets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new annotation. Caller must have WRITE permission
-        /// for the associated annotation set.
-        ///
-        /// The following fields are required:
-        ///
-        /// * [annotationSetId][google.genomics.v1.Annotation.annotation_set_id]
-        /// * [referenceName][google.genomics.v1.Annotation.reference_name] or
-        ///   [referenceId][google.genomics.v1.Annotation.reference_id]
-        ///
-        /// ### Transcripts
-        ///
-        /// For annotations of type TRANSCRIPT, the following fields of
-        /// [transcript][google.genomics.v1.Annotation.transcript] must be provided:
-        ///
-        /// * [exons.start][google.genomics.v1.Transcript.Exon.start]
-        /// * [exons.end][google.genomics.v1.Transcript.Exon.end]
-        ///
-        /// All other fields may be optionally specified, unless documented as being
-        /// server-generated (for example, the `id` field). The annotated
-        /// range must be no longer than 100Mbp (mega base pairs). See the
-        /// [Annotation resource][google.genomics.v1.Annotation]
-        /// for additional restrictions on each field.
-        pub async fn create_annotation(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateAnnotationRequest>,
-        ) -> Result<tonic::Response<super::Annotation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/CreateAnnotation",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates one or more new annotations atomically. All annotations must
-        /// belong to the same annotation set. Caller must have WRITE
-        /// permission for this annotation set. For optimal performance, batch
-        /// positionally adjacent annotations together.
-        ///
-        /// If the request has a systemic issue, such as an attempt to write to
-        /// an inaccessible annotation set, the entire RPC will fail accordingly. For
-        /// lesser data issues, when possible an error will be isolated to the
-        /// corresponding batch entry in the response; the remaining well formed
-        /// annotations will be created normally.
-        ///
-        /// For details on the requirements for each individual annotation resource,
-        /// see
-        /// [CreateAnnotation][google.genomics.v1.AnnotationServiceV1.CreateAnnotation].
-        pub async fn batch_create_annotations(
-            &mut self,
-            request: impl tonic::IntoRequest<super::BatchCreateAnnotationsRequest>,
-        ) -> Result<
-            tonic::Response<super::BatchCreateAnnotationsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/BatchCreateAnnotations",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets an annotation. Caller must have READ permission
-        /// for the associated annotation set.
-        pub async fn get_annotation(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAnnotationRequest>,
-        ) -> Result<tonic::Response<super::Annotation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/GetAnnotation",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates an annotation. Caller must have
-        /// WRITE permission for the associated dataset.
-        pub async fn update_annotation(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateAnnotationRequest>,
-        ) -> Result<tonic::Response<super::Annotation>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/UpdateAnnotation",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes an annotation. Caller must have WRITE permission for
-        /// the associated annotation set.
-        pub async fn delete_annotation(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteAnnotationRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/DeleteAnnotation",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Searches for annotations that match the given criteria. Results are
-        /// ordered by genomic coordinate (by reference sequence, then position).
-        /// Annotations with equivalent genomic coordinates are returned in an
-        /// unspecified order. This order is consistent, such that two queries for the
-        /// same content (regardless of page size) yield annotations in the same order
-        /// across their respective streams of paginated responses. Caller must have
-        /// READ permission for the queried annotation sets.
-        pub async fn search_annotations(
-            &mut self,
-            request: impl tonic::IntoRequest<super::SearchAnnotationsRequest>,
-        ) -> Result<tonic::Response<super::SearchAnnotationsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.AnnotationServiceV1/SearchAnnotations",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A Dataset is a collection of genomic data.
-///
-/// For more genomics resource definitions, see [Fundamentals of Google
-/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Dataset {
-    /// The server-generated dataset ID, unique across all datasets.
-    #[prost(string, tag = "1")]
-    pub id: ::prost::alloc::string::String,
-    /// The Google Cloud project ID that this dataset belongs to.
-    #[prost(string, tag = "2")]
     pub project_id: ::prost::alloc::string::String,
-    /// The dataset name.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// The time this dataset was created, in seconds from the epoch.
-    #[prost(message, optional, tag = "4")]
+    /// The time at which the job was submitted to the Genomics service.
+    #[prost(message, optional, tag = "2")]
     pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The dataset list request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDatasetsRequest {
-    /// Required. The Google Cloud project ID to list datasets for.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single page. If unspecified,
-    /// defaults to 50. The maximum value is 1024.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The continuation token, which is used to page through large result sets.
-    /// To get the next page of results, set this parameter to the value of
-    /// `nextPageToken` from the previous response.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The dataset list response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListDatasetsResponse {
-    /// The list of matching Datasets.
-    #[prost(message, repeated, tag = "1")]
-    pub datasets: ::prost::alloc::vec::Vec<Dataset>,
-    /// The continuation token, which is used to page through large result sets.
-    /// Provide this value in a subsequent request to return the next page of
-    /// results. This field will be empty if there aren't any additional results.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateDatasetRequest {
-    /// The dataset to be created. Must contain projectId and name.
-    #[prost(message, optional, tag = "1")]
-    pub dataset: ::core::option::Option<Dataset>,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateDatasetRequest {
-    /// The ID of the dataset to be updated.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// The new dataset data.
-    #[prost(message, optional, tag = "2")]
-    pub dataset: ::core::option::Option<Dataset>,
-    /// An optional mask specifying which fields to update. At this time, the only
-    /// mutable field is \[name][google.genomics.v1.Dataset.name\]. The only
-    /// acceptable value is "name". If unspecified, all mutable fields will be
-    /// updated.
+    /// The time at which the job began to run.
     #[prost(message, optional, tag = "3")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the job stopped running.
+    #[prost(message, optional, tag = "4")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The original request that started the operation. Note that this will be in
+    /// current version of the API. If the operation was started with v1beta2 API
+    /// and a GetOperation is performed on v1 API, a v1 request will be returned.
+    #[prost(message, optional, tag = "5")]
+    pub request: ::core::option::Option<::prost_types::Any>,
+    /// Optional event messages that were generated during the job's execution.
+    /// This also contains any warnings that were generated during import
+    /// or export.
+    #[prost(message, repeated, tag = "6")]
+    pub events: ::prost::alloc::vec::Vec<OperationEvent>,
+    /// This field is deprecated. Use `labels` instead. Optionally provided by the
+    /// caller when submitting the request that creates the operation.
+    #[prost(string, tag = "7")]
+    pub client_id: ::prost::alloc::string::String,
+    /// Runtime metadata on this Operation.
+    #[prost(message, optional, tag = "8")]
+    pub runtime_metadata: ::core::option::Option<::prost_types::Any>,
+    /// Optionally provided by the caller when submitting the request that creates
+    /// the operation.
+    #[prost(btree_map = "string, string", tag = "9")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
 }
+/// An event that occurred during an \[Operation][google.longrunning.Operation\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteDatasetRequest {
-    /// The ID of the dataset to be deleted.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UndeleteDatasetRequest {
-    /// The ID of the dataset to be undeleted.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetDatasetRequest {
-    /// The ID of the dataset.
-    #[prost(string, tag = "1")]
-    pub dataset_id: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod dataset_service_v1_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// This service manages datasets, which are collections of genomic data.
-    #[derive(Debug, Clone)]
-    pub struct DatasetServiceV1Client<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> DatasetServiceV1Client<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> DatasetServiceV1Client<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            DatasetServiceV1Client::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists datasets within a project.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn list_datasets(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListDatasetsRequest>,
-        ) -> Result<tonic::Response<super::ListDatasetsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/ListDatasets",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new dataset.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn create_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/CreateDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a dataset by ID.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn get_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/GetDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a dataset.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// This method supports patch semantics.
-        pub async fn update_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/UpdateDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a dataset and all of its contents (all read group sets,
-        /// reference sets, variant sets, call sets, annotation sets, etc.)
-        /// This is reversible (up to one week after the deletion) via
-        /// the
-        /// [datasets.undelete][google.genomics.v1.DatasetServiceV1.UndeleteDataset]
-        /// operation.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn delete_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteDatasetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/DeleteDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Undeletes a dataset by restoring a dataset which was deleted via this API.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// This operation is only possible for a week after the deletion occurred.
-        pub async fn undelete_dataset(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UndeleteDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/UndeleteDataset",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Sets the access control policy on the specified dataset. Replaces any
-        /// existing policy.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        ///
-        /// See <a href="/iam/docs/managing-policies#setting_a_policy">Setting a
-        /// Policy</a> for more information.
-        pub async fn set_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::iam::v1::SetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/SetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets the access control policy for the dataset. This is empty if the
-        /// policy or resource does not exist.
-        ///
-        /// See <a href="/iam/docs/managing-policies#getting_a_policy">Getting a
-        /// Policy</a> for more information.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn get_iam_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::iam::v1::GetIamPolicyRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::iam::v1::Policy>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/GetIamPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Returns permissions that a caller has on the specified resource.
-        /// See <a href="/iam/docs/managing-policies#testing_permissions">Testing
-        /// Permissions</a> for more information.
-        ///
-        /// For the definitions of datasets and other genomics resources, see
-        /// [Fundamentals of Google
-        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
-        pub async fn test_iam_permissions(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::super::super::iam::v1::TestIamPermissionsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::iam::v1::TestIamPermissionsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.genomics.v1.DatasetServiceV1/TestIamPermissions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// An abstraction for referring to a genomic position, in relation to some
-/// already known reference. For now, represents a genomic position as a
-/// reference name, a base number on that reference (0-based), and a
-/// determination of forward or reverse strand.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Position {
-    /// The name of the reference in whatever reference set is being used.
-    #[prost(string, tag = "1")]
-    pub reference_name: ::prost::alloc::string::String,
-    /// The 0-based offset from the start of the forward strand for that reference.
-    #[prost(int64, tag = "2")]
-    pub position: i64,
-    /// Whether this position is on the reverse strand, as opposed to the forward
-    /// strand.
-    #[prost(bool, tag = "3")]
-    pub reverse_strand: bool,
+pub struct OperationEvent {
+    /// Optional time of when event started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Optional time of when event finished. An event can have a start time and no
+    /// finish time. If an event has a finish time, there must be a start time.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Required description of event.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
 }
 /// Metadata describes a single piece of variant call metadata.
 /// These data include a top level key and either a single value string (value)
@@ -2892,12 +900,28 @@ pub mod streaming_variant_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns a stream of all the variants matching the search request, ordered
         /// by reference name, position, and ID.
         pub async fn stream_variants(
             &mut self,
             request: impl tonic::IntoRequest<super::StreamVariantsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::StreamVariantsResponse>>,
             tonic::Status,
         > {
@@ -2914,7 +938,15 @@ pub mod streaming_variant_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.StreamingVariantService/StreamVariants",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.StreamingVariantService",
+                        "StreamVariants",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }
@@ -2976,6 +1008,22 @@ pub mod variant_service_v1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates variant data by asynchronously importing the provided information.
         ///
         /// For the definitions of variant sets and other genomics resources, see
@@ -2997,7 +1045,7 @@ pub mod variant_service_v1_client {
         pub async fn import_variants(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportVariantsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3014,7 +1062,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/ImportVariants",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "ImportVariants",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new variant set.
         ///
@@ -3028,7 +1084,7 @@ pub mod variant_service_v1_client {
         pub async fn create_variant_set(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateVariantSetRequest>,
-        ) -> Result<tonic::Response<super::VariantSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::VariantSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3042,7 +1098,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/CreateVariantSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "CreateVariantSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports variant set data to an external destination.
         ///
@@ -3052,7 +1116,7 @@ pub mod variant_service_v1_client {
         pub async fn export_variant_set(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportVariantSetRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3069,7 +1133,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/ExportVariantSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "ExportVariantSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a variant set by ID.
         ///
@@ -3079,7 +1151,7 @@ pub mod variant_service_v1_client {
         pub async fn get_variant_set(
             &mut self,
             request: impl tonic::IntoRequest<super::GetVariantSetRequest>,
-        ) -> Result<tonic::Response<super::VariantSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::VariantSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3093,7 +1165,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/GetVariantSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "GetVariantSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a list of all variant sets matching search criteria.
         ///
@@ -3106,7 +1186,10 @@ pub mod variant_service_v1_client {
         pub async fn search_variant_sets(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchVariantSetsRequest>,
-        ) -> Result<tonic::Response<super::SearchVariantSetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchVariantSetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3120,7 +1203,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/SearchVariantSets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "SearchVariantSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a variant set including all variants, call sets, and calls within.
         /// This is not reversible.
@@ -3131,7 +1222,7 @@ pub mod variant_service_v1_client {
         pub async fn delete_variant_set(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteVariantSetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3145,7 +1236,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/DeleteVariantSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "DeleteVariantSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a variant set using patch semantics.
         ///
@@ -3155,7 +1254,7 @@ pub mod variant_service_v1_client {
         pub async fn update_variant_set(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateVariantSetRequest>,
-        ) -> Result<tonic::Response<super::VariantSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::VariantSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3169,7 +1268,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/UpdateVariantSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "UpdateVariantSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a list of variants matching the criteria.
         ///
@@ -3182,7 +1289,10 @@ pub mod variant_service_v1_client {
         pub async fn search_variants(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchVariantsRequest>,
-        ) -> Result<tonic::Response<super::SearchVariantsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchVariantsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3196,7 +1306,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/SearchVariants",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "SearchVariants",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new variant.
         ///
@@ -3206,7 +1324,7 @@ pub mod variant_service_v1_client {
         pub async fn create_variant(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateVariantRequest>,
-        ) -> Result<tonic::Response<super::Variant>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variant>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3220,7 +1338,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/CreateVariant",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "CreateVariant",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a variant.
         ///
@@ -3233,7 +1359,7 @@ pub mod variant_service_v1_client {
         pub async fn update_variant(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateVariantRequest>,
-        ) -> Result<tonic::Response<super::Variant>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variant>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3247,7 +1373,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/UpdateVariant",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "UpdateVariant",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a variant.
         ///
@@ -3257,7 +1391,7 @@ pub mod variant_service_v1_client {
         pub async fn delete_variant(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteVariantRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3271,7 +1405,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/DeleteVariant",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "DeleteVariant",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a variant by ID.
         ///
@@ -3281,7 +1423,7 @@ pub mod variant_service_v1_client {
         pub async fn get_variant(
             &mut self,
             request: impl tonic::IntoRequest<super::GetVariantRequest>,
-        ) -> Result<tonic::Response<super::Variant>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variant>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3295,7 +1437,12 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/GetVariant",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.genomics.v1.VariantServiceV1", "GetVariant"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Merges the given variants with existing variants.
         ///
@@ -3391,7 +1538,7 @@ pub mod variant_service_v1_client {
         pub async fn merge_variants(
             &mut self,
             request: impl tonic::IntoRequest<super::MergeVariantsRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3405,7 +1552,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/MergeVariants",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "MergeVariants",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a list of call sets matching the criteria.
         ///
@@ -3418,7 +1573,10 @@ pub mod variant_service_v1_client {
         pub async fn search_call_sets(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchCallSetsRequest>,
-        ) -> Result<tonic::Response<super::SearchCallSetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchCallSetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3432,7 +1590,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/SearchCallSets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "SearchCallSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new call set.
         ///
@@ -3442,7 +1608,7 @@ pub mod variant_service_v1_client {
         pub async fn create_call_set(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCallSetRequest>,
-        ) -> Result<tonic::Response<super::CallSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CallSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3456,7 +1622,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/CreateCallSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "CreateCallSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a call set.
         ///
@@ -3468,7 +1642,7 @@ pub mod variant_service_v1_client {
         pub async fn update_call_set(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCallSetRequest>,
-        ) -> Result<tonic::Response<super::CallSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CallSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3482,7 +1656,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/UpdateCallSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "UpdateCallSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a call set.
         ///
@@ -3492,7 +1674,7 @@ pub mod variant_service_v1_client {
         pub async fn delete_call_set(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCallSetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3506,7 +1688,15 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/DeleteCallSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.VariantServiceV1",
+                        "DeleteCallSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a call set by ID.
         ///
@@ -3516,7 +1706,7 @@ pub mod variant_service_v1_client {
         pub async fn get_call_set(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCallSetRequest>,
-        ) -> Result<tonic::Response<super::CallSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CallSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3530,24 +1720,503 @@ pub mod variant_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.VariantServiceV1/GetCallSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.genomics.v1.VariantServiceV1", "GetCallSet"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
-/// A 0-based half-open genomic coordinate range for search requests.
+/// An abstraction for referring to a genomic position, in relation to some
+/// already known reference. For now, represents a genomic position as a
+/// reference name, a base number on that reference (0-based), and a
+/// determination of forward or reverse strand.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Range {
-    /// The reference sequence name, for example `chr1`,
-    /// `1`, or `chrX`.
+pub struct Position {
+    /// The name of the reference in whatever reference set is being used.
     #[prost(string, tag = "1")]
     pub reference_name: ::prost::alloc::string::String,
-    /// The start position of the range on the reference, 0-based inclusive.
+    /// The 0-based offset from the start of the forward strand for that reference.
+    #[prost(int64, tag = "2")]
+    pub position: i64,
+    /// Whether this position is on the reverse strand, as opposed to the forward
+    /// strand.
+    #[prost(bool, tag = "3")]
+    pub reverse_strand: bool,
+}
+/// A reference is a canonical assembled DNA sequence, intended to act as a
+/// reference coordinate space for other genomic annotations. A single reference
+/// might represent the human chromosome 1 or mitochandrial DNA, for instance. A
+/// reference belongs to one or more reference sets.
+///
+/// For more genomics resource definitions, see [Fundamentals of Google
+/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Reference {
+    /// The server-generated reference ID, unique across all references.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The length of this reference's sequence.
+    #[prost(int64, tag = "2")]
+    pub length: i64,
+    /// MD5 of the upper-case sequence excluding all whitespace characters (this
+    /// is equivalent to SQ:M5 in SAM). This value is represented in lower case
+    /// hexadecimal format.
+    #[prost(string, tag = "3")]
+    pub md5checksum: ::prost::alloc::string::String,
+    /// The name of this reference, for example `22`.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// The URI from which the sequence was obtained. Typically specifies a FASTA
+    /// format file.
+    #[prost(string, tag = "5")]
+    pub source_uri: ::prost::alloc::string::String,
+    /// All known corresponding accession IDs in INSDC (GenBank/ENA/DDBJ) ideally
+    /// with a version number, for example `GCF_000001405.26`.
+    #[prost(string, repeated, tag = "6")]
+    pub source_accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// ID from <http://www.ncbi.nlm.nih.gov/taxonomy.> For example, 9606 for human.
+    #[prost(int32, tag = "7")]
+    pub ncbi_taxon_id: i32,
+}
+/// A reference set is a set of references which typically comprise a reference
+/// assembly for a species, such as `GRCh38` which is representative
+/// of the human genome. A reference set defines a common coordinate space for
+/// comparing reference-aligned experimental data. A reference set contains 1 or
+/// more references.
+///
+/// For more genomics resource definitions, see [Fundamentals of Google
+/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReferenceSet {
+    /// The server-generated reference set ID, unique across all reference sets.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The IDs of the reference objects that are part of this set.
+    /// `Reference.md5checksum` must be unique within this set.
+    #[prost(string, repeated, tag = "2")]
+    pub reference_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Order-independent MD5 checksum which identifies this reference set. The
+    /// checksum is computed by sorting all lower case hexidecimal string
+    /// `reference.md5checksum` (for all reference in this set) in
+    /// ascending lexicographic order, concatenating, and taking the MD5 of that
+    /// value. The resulting value is represented in lower case hexadecimal format.
+    #[prost(string, tag = "3")]
+    pub md5checksum: ::prost::alloc::string::String,
+    /// ID from <http://www.ncbi.nlm.nih.gov/taxonomy> (for example, 9606 for human)
+    /// indicating the species which this reference set is intended to model. Note
+    /// that contained references may specify a different `ncbiTaxonId`, as
+    /// assemblies may contain reference sequences which do not belong to the
+    /// modeled species, for example EBV in a human reference genome.
+    #[prost(int32, tag = "4")]
+    pub ncbi_taxon_id: i32,
+    /// Free text description of this reference set.
+    #[prost(string, tag = "5")]
+    pub description: ::prost::alloc::string::String,
+    /// Public id of this reference set, such as `GRCh37`.
+    #[prost(string, tag = "6")]
+    pub assembly_id: ::prost::alloc::string::String,
+    /// The URI from which the references were obtained.
+    #[prost(string, tag = "7")]
+    pub source_uri: ::prost::alloc::string::String,
+    /// All known corresponding accession IDs in INSDC (GenBank/ENA/DDBJ) ideally
+    /// with a version number, for example `NC_000001.11`.
+    #[prost(string, repeated, tag = "8")]
+    pub source_accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchReferenceSetsRequest {
+    /// If present, return reference sets for which the
+    /// \[md5checksum][google.genomics.v1.ReferenceSet.md5checksum\] matches exactly.
+    #[prost(string, repeated, tag = "1")]
+    pub md5checksums: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If present, return reference sets for which a prefix of any of
+    /// \[sourceAccessions][google.genomics.v1.ReferenceSet.source_accessions\]
+    /// match any of these strings. Accession numbers typically have a main number
+    /// and a version, for example `NC_000001.11`.
+    #[prost(string, repeated, tag = "2")]
+    pub accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If present, return reference sets for which a substring of their
+    /// `assemblyId` matches this string (case insensitive).
+    #[prost(string, tag = "3")]
+    pub assembly_id: ::prost::alloc::string::String,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "4")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single page. If unspecified,
+    /// defaults to 1024. The maximum value is 4096.
+    #[prost(int32, tag = "5")]
+    pub page_size: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchReferenceSetsResponse {
+    /// The matching references sets.
+    #[prost(message, repeated, tag = "1")]
+    pub reference_sets: ::prost::alloc::vec::Vec<ReferenceSet>,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetReferenceSetRequest {
+    /// The ID of the reference set.
+    #[prost(string, tag = "1")]
+    pub reference_set_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchReferencesRequest {
+    /// If present, return references for which the
+    /// \[md5checksum][google.genomics.v1.Reference.md5checksum\] matches exactly.
+    #[prost(string, repeated, tag = "1")]
+    pub md5checksums: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If present, return references for which a prefix of any of
+    /// \[sourceAccessions][google.genomics.v1.Reference.source_accessions\] match
+    /// any of these strings. Accession numbers typically have a main number and a
+    /// version, for example `GCF_000001405.26`.
+    #[prost(string, repeated, tag = "2")]
+    pub accessions: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If present, return only references which belong to this reference set.
+    #[prost(string, tag = "3")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "4")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single page. If unspecified,
+    /// defaults to 1024. The maximum value is 4096.
+    #[prost(int32, tag = "5")]
+    pub page_size: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchReferencesResponse {
+    /// The matching references.
+    #[prost(message, repeated, tag = "1")]
+    pub references: ::prost::alloc::vec::Vec<Reference>,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetReferenceRequest {
+    /// The ID of the reference.
+    #[prost(string, tag = "1")]
+    pub reference_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBasesRequest {
+    /// The ID of the reference.
+    #[prost(string, tag = "1")]
+    pub reference_id: ::prost::alloc::string::String,
+    /// The start position (0-based) of this query. Defaults to 0.
     #[prost(int64, tag = "2")]
     pub start: i64,
-    /// The end position of the range on the reference, 0-based exclusive.
+    /// The end position (0-based, exclusive) of this query. Defaults to the length
+    /// of this reference.
     #[prost(int64, tag = "3")]
     pub end: i64,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "4")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The maximum number of bases to return in a single page. If unspecified,
+    /// defaults to 200Kbp (kilo base pairs). The maximum value is 10Mbp (mega base
+    /// pairs).
+    #[prost(int32, tag = "5")]
+    pub page_size: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListBasesResponse {
+    /// The offset position (0-based) of the given `sequence` from the
+    /// start of this `Reference`. This value will differ for each page
+    /// in a paginated request.
+    #[prost(int64, tag = "1")]
+    pub offset: i64,
+    /// A substring of the bases that make up this reference.
+    #[prost(string, tag = "2")]
+    pub sequence: ::prost::alloc::string::String,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "3")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod reference_service_v1_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    #[derive(Debug, Clone)]
+    pub struct ReferenceServiceV1Client<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ReferenceServiceV1Client<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ReferenceServiceV1Client<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ReferenceServiceV1Client::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Searches for reference sets which match the given criteria.
+        ///
+        /// For the definitions of references and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// Implements
+        /// [GlobalAllianceApi.searchReferenceSets](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L71)
+        pub async fn search_reference_sets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchReferenceSetsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchReferenceSetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.ReferenceServiceV1/SearchReferenceSets",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReferenceServiceV1",
+                        "SearchReferenceSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a reference set.
+        ///
+        /// For the definitions of references and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// Implements
+        /// [GlobalAllianceApi.getReferenceSet](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L83).
+        pub async fn get_reference_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetReferenceSetRequest>,
+        ) -> std::result::Result<tonic::Response<super::ReferenceSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.ReferenceServiceV1/GetReferenceSet",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReferenceServiceV1",
+                        "GetReferenceSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Searches for references which match the given criteria.
+        ///
+        /// For the definitions of references and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// Implements
+        /// [GlobalAllianceApi.searchReferences](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L146).
+        pub async fn search_references(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchReferencesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchReferencesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.ReferenceServiceV1/SearchReferences",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReferenceServiceV1",
+                        "SearchReferences",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a reference.
+        ///
+        /// For the definitions of references and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// Implements
+        /// [GlobalAllianceApi.getReference](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L158).
+        pub async fn get_reference(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetReferenceRequest>,
+        ) -> std::result::Result<tonic::Response<super::Reference>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.ReferenceServiceV1/GetReference",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReferenceServiceV1",
+                        "GetReference",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Lists the bases in a reference, optionally restricted to a range.
+        ///
+        /// For the definitions of references and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// Implements
+        /// [GlobalAllianceApi.getReferenceBases](https://github.com/ga4gh/schemas/blob/v0.5.1/src/main/resources/avro/referencemethods.avdl#L221).
+        pub async fn list_bases(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListBasesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListBasesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.ReferenceServiceV1/ListBases",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.genomics.v1.ReferenceServiceV1", "ListBases"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
 }
 /// A single CIGAR operation.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -3662,6 +2331,499 @@ pub mod cigar_unit {
                 "SEQUENCE_MISMATCH" => Some(Self::SequenceMismatch),
                 _ => None,
             }
+        }
+    }
+}
+/// A Dataset is a collection of genomic data.
+///
+/// For more genomics resource definitions, see [Fundamentals of Google
+/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Dataset {
+    /// The server-generated dataset ID, unique across all datasets.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The Google Cloud project ID that this dataset belongs to.
+    #[prost(string, tag = "2")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The dataset name.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// The time this dataset was created, in seconds from the epoch.
+    #[prost(message, optional, tag = "4")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// The dataset list request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListDatasetsRequest {
+    /// Required. The Google Cloud project ID to list datasets for.
+    #[prost(string, tag = "1")]
+    pub project_id: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single page. If unspecified,
+    /// defaults to 50. The maximum value is 1024.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The dataset list response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListDatasetsResponse {
+    /// The list of matching Datasets.
+    #[prost(message, repeated, tag = "1")]
+    pub datasets: ::prost::alloc::vec::Vec<Dataset>,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateDatasetRequest {
+    /// The dataset to be created. Must contain projectId and name.
+    #[prost(message, optional, tag = "1")]
+    pub dataset: ::core::option::Option<Dataset>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateDatasetRequest {
+    /// The ID of the dataset to be updated.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The new dataset data.
+    #[prost(message, optional, tag = "2")]
+    pub dataset: ::core::option::Option<Dataset>,
+    /// An optional mask specifying which fields to update. At this time, the only
+    /// mutable field is \[name][google.genomics.v1.Dataset.name\]. The only
+    /// acceptable value is "name". If unspecified, all mutable fields will be
+    /// updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteDatasetRequest {
+    /// The ID of the dataset to be deleted.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UndeleteDatasetRequest {
+    /// The ID of the dataset to be undeleted.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetDatasetRequest {
+    /// The ID of the dataset.
+    #[prost(string, tag = "1")]
+    pub dataset_id: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod dataset_service_v1_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This service manages datasets, which are collections of genomic data.
+    #[derive(Debug, Clone)]
+    pub struct DatasetServiceV1Client<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> DatasetServiceV1Client<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> DatasetServiceV1Client<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            DatasetServiceV1Client::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Lists datasets within a project.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn list_datasets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListDatasetsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListDatasetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/ListDatasets",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "ListDatasets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates a new dataset.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn create_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateDatasetRequest>,
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/CreateDataset",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "CreateDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a dataset by ID.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn get_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetDatasetRequest>,
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/GetDataset",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.genomics.v1.DatasetServiceV1", "GetDataset"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Updates a dataset.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// This method supports patch semantics.
+        pub async fn update_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateDatasetRequest>,
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/UpdateDataset",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "UpdateDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Deletes a dataset and all of its contents (all read group sets,
+        /// reference sets, variant sets, call sets, annotation sets, etc.)
+        /// This is reversible (up to one week after the deletion) via
+        /// the
+        /// [datasets.undelete][google.genomics.v1.DatasetServiceV1.UndeleteDataset]
+        /// operation.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn delete_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteDatasetRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/DeleteDataset",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "DeleteDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Undeletes a dataset by restoring a dataset which was deleted via this API.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// This operation is only possible for a week after the deletion occurred.
+        pub async fn undelete_dataset(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UndeleteDatasetRequest>,
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/UndeleteDataset",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "UndeleteDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Sets the access control policy on the specified dataset. Replaces any
+        /// existing policy.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        ///
+        /// See <a href="/iam/docs/managing-policies#setting_a_policy">Setting a
+        /// Policy</a> for more information.
+        pub async fn set_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::iam::v1::SetIamPolicyRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/SetIamPolicy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets the access control policy for the dataset. This is empty if the
+        /// policy or resource does not exist.
+        ///
+        /// See <a href="/iam/docs/managing-policies#getting_a_policy">Getting a
+        /// Policy</a> for more information.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn get_iam_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::iam::v1::GetIamPolicyRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::iam::v1::Policy>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/GetIamPolicy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Returns permissions that a caller has on the specified resource.
+        /// See <a href="/iam/docs/managing-policies#testing_permissions">Testing
+        /// Permissions</a> for more information.
+        ///
+        /// For the definitions of datasets and other genomics resources, see
+        /// [Fundamentals of Google
+        /// Genomics](https://cloud.google.com/genomics/fundamentals-of-google-genomics)
+        pub async fn test_iam_permissions(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::super::super::iam::v1::TestIamPermissionsRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::iam::v1::TestIamPermissionsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.DatasetServiceV1/TestIamPermissions",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.DatasetServiceV1",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -3859,6 +3021,1344 @@ pub struct Read {
     /// A map of additional read alignment information. This must be of the form
     /// map<string, string[]> (string key mapping to a list of string values).
     #[prost(btree_map = "string, message", tag = "17")]
+    pub info: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::ListValue,
+    >,
+}
+/// An annotation set is a logical grouping of annotations that share consistent
+/// type information and provenance. Examples of annotation sets include 'all
+/// genes from refseq', and 'all variant annotations from ClinVar'.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AnnotationSet {
+    /// The server-generated annotation set ID, unique across all annotation sets.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The dataset to which this annotation set belongs.
+    #[prost(string, tag = "2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The ID of the reference set that defines the coordinate space for this
+    /// set's annotations.
+    #[prost(string, tag = "3")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// The display name for this annotation set.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// The source URI describing the file from which this annotation set was
+    /// generated, if any.
+    #[prost(string, tag = "5")]
+    pub source_uri: ::prost::alloc::string::String,
+    /// The type of annotations contained within this set.
+    #[prost(enumeration = "AnnotationType", tag = "6")]
+    pub r#type: i32,
+    /// A map of additional read alignment information. This must be of the form
+    /// map<string, string[]> (string key mapping to a list of string values).
+    #[prost(btree_map = "string, message", tag = "17")]
+    pub info: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::ListValue,
+    >,
+}
+/// An annotation describes a region of reference genome. The value of an
+/// annotation may be one of several canonical types, supplemented by arbitrary
+/// info tags. An annotation is not inherently associated with a specific
+/// sample or individual (though a client could choose to use annotations in
+/// this way). Example canonical annotation types are `GENE` and
+/// `VARIANT`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Annotation {
+    /// The server-generated annotation ID, unique across all annotations.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The annotation set to which this annotation belongs.
+    #[prost(string, tag = "2")]
+    pub annotation_set_id: ::prost::alloc::string::String,
+    /// The display name of this annotation.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// The ID of the Google Genomics reference associated with this range.
+    #[prost(string, tag = "4")]
+    pub reference_id: ::prost::alloc::string::String,
+    /// The display name corresponding to the reference specified by
+    /// `referenceId`, for example `chr1`, `1`, or `chrX`.
+    #[prost(string, tag = "5")]
+    pub reference_name: ::prost::alloc::string::String,
+    /// The start position of the range on the reference, 0-based inclusive.
+    #[prost(int64, tag = "6")]
+    pub start: i64,
+    /// The end position of the range on the reference, 0-based exclusive.
+    #[prost(int64, tag = "7")]
+    pub end: i64,
+    /// Whether this range refers to the reverse strand, as opposed to the forward
+    /// strand. Note that regardless of this field, the start/end position of the
+    /// range always refer to the forward strand.
+    #[prost(bool, tag = "8")]
+    pub reverse_strand: bool,
+    /// The data type for this annotation. Must match the containing annotation
+    /// set's type.
+    #[prost(enumeration = "AnnotationType", tag = "9")]
+    pub r#type: i32,
+    /// A map of additional read alignment information. This must be of the form
+    /// map<string, string[]> (string key mapping to a list of string values).
+    #[prost(btree_map = "string, message", tag = "12")]
+    pub info: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::ListValue,
+    >,
+    #[prost(oneof = "annotation::Value", tags = "10, 11")]
+    pub value: ::core::option::Option<annotation::Value>,
+}
+/// Nested message and enum types in `Annotation`.
+pub mod annotation {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// A variant annotation, which describes the effect of a variant on the
+        /// genome, the coding sequence, and/or higher level consequences at the
+        /// organism level e.g. pathogenicity. This field is only set for annotations
+        /// of type `VARIANT`.
+        #[prost(message, tag = "10")]
+        Variant(super::VariantAnnotation),
+        /// A transcript value represents the assertion that a particular region of
+        /// the reference genome may be transcribed as RNA. An alternative splicing
+        /// pattern would be represented as a separate transcript object. This field
+        /// is only set for annotations of type `TRANSCRIPT`.
+        #[prost(message, tag = "11")]
+        Transcript(super::Transcript),
+    }
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VariantAnnotation {
+    /// Type has been adapted from ClinVar's list of variant types.
+    #[prost(enumeration = "variant_annotation::Type", tag = "1")]
+    pub r#type: i32,
+    /// Effect of the variant on the coding sequence.
+    #[prost(enumeration = "variant_annotation::Effect", tag = "2")]
+    pub effect: i32,
+    /// The alternate allele for this variant. If multiple alternate alleles
+    /// exist at this location, create a separate variant for each one, as they
+    /// may represent distinct conditions.
+    #[prost(string, tag = "3")]
+    pub alternate_bases: ::prost::alloc::string::String,
+    /// Google annotation ID of the gene affected by this variant. This should
+    /// be provided when the variant is created.
+    #[prost(string, tag = "4")]
+    pub gene_id: ::prost::alloc::string::String,
+    /// Google annotation IDs of the transcripts affected by this variant. These
+    /// should be provided when the variant is created.
+    #[prost(string, repeated, tag = "5")]
+    pub transcript_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The set of conditions associated with this variant.
+    /// A condition describes the way a variant influences human health.
+    #[prost(message, repeated, tag = "6")]
+    pub conditions: ::prost::alloc::vec::Vec<variant_annotation::ClinicalCondition>,
+    /// Describes the clinical significance of a variant.
+    /// It is adapted from the ClinVar controlled vocabulary for clinical
+    /// significance described at:
+    /// <http://www.ncbi.nlm.nih.gov/clinvar/docs/clinsig/>
+    #[prost(enumeration = "variant_annotation::ClinicalSignificance", tag = "7")]
+    pub clinical_significance: i32,
+}
+/// Nested message and enum types in `VariantAnnotation`.
+pub mod variant_annotation {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ClinicalCondition {
+        /// A set of names for the condition.
+        #[prost(string, repeated, tag = "1")]
+        pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// The set of external IDs for this condition.
+        #[prost(message, repeated, tag = "2")]
+        pub external_ids: ::prost::alloc::vec::Vec<super::ExternalId>,
+        /// The MedGen concept id associated with this gene.
+        /// Search for these IDs at <http://www.ncbi.nlm.nih.gov/medgen/>
+        #[prost(string, tag = "3")]
+        pub concept_id: ::prost::alloc::string::String,
+        /// The OMIM id for this condition.
+        /// Search for these IDs at <http://omim.org/>
+        #[prost(string, tag = "4")]
+        pub omim_id: ::prost::alloc::string::String,
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        Unspecified = 0,
+        /// `TYPE_OTHER` should be used when no other Type will suffice.
+        /// Further explanation of the variant type may be included in the
+        /// \[info][google.genomics.v1.Annotation.info\] field.
+        Other = 1,
+        /// `INSERTION` indicates an insertion.
+        Insertion = 2,
+        /// `DELETION` indicates a deletion.
+        Deletion = 3,
+        /// `SUBSTITUTION` indicates a block substitution of
+        /// two or more nucleotides.
+        Substitution = 4,
+        /// `SNP` indicates a single nucleotide polymorphism.
+        Snp = 5,
+        /// `STRUCTURAL` indicates a large structural variant,
+        /// including chromosomal fusions, inversions, etc.
+        Structural = 6,
+        /// `CNV` indicates a variation in copy number.
+        Cnv = 7,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::Other => "TYPE_OTHER",
+                Type::Insertion => "INSERTION",
+                Type::Deletion => "DELETION",
+                Type::Substitution => "SUBSTITUTION",
+                Type::Snp => "SNP",
+                Type::Structural => "STRUCTURAL",
+                Type::Cnv => "CNV",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "TYPE_OTHER" => Some(Self::Other),
+                "INSERTION" => Some(Self::Insertion),
+                "DELETION" => Some(Self::Deletion),
+                "SUBSTITUTION" => Some(Self::Substitution),
+                "SNP" => Some(Self::Snp),
+                "STRUCTURAL" => Some(Self::Structural),
+                "CNV" => Some(Self::Cnv),
+                _ => None,
+            }
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Effect {
+        Unspecified = 0,
+        /// `EFFECT_OTHER` should be used when no other Effect
+        /// will suffice.
+        Other = 1,
+        /// `FRAMESHIFT` indicates a mutation in which the insertion or
+        /// deletion of nucleotides resulted in a frameshift change.
+        Frameshift = 2,
+        /// `FRAME_PRESERVING_INDEL` indicates a mutation in which a
+        /// multiple of three nucleotides has been inserted or deleted, resulting
+        /// in no change to the reading frame of the coding sequence.
+        FramePreservingIndel = 3,
+        /// `SYNONYMOUS_SNP` indicates a single nucleotide polymorphism
+        /// mutation that results in no amino acid change.
+        SynonymousSnp = 4,
+        /// `NONSYNONYMOUS_SNP` indicates a single nucleotide
+        /// polymorphism mutation that results in an amino acid change.
+        NonsynonymousSnp = 5,
+        /// `STOP_GAIN` indicates a mutation that leads to the creation
+        /// of a stop codon at the variant site. Frameshift mutations creating
+        /// downstream stop codons do not count as `STOP_GAIN`.
+        StopGain = 6,
+        /// `STOP_LOSS` indicates a mutation that eliminates a
+        /// stop codon at the variant site.
+        StopLoss = 7,
+        /// `SPLICE_SITE_DISRUPTION` indicates that this variant is
+        /// found in a splice site for the associated transcript, and alters the
+        /// normal splicing pattern.
+        SpliceSiteDisruption = 8,
+    }
+    impl Effect {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Effect::Unspecified => "EFFECT_UNSPECIFIED",
+                Effect::Other => "EFFECT_OTHER",
+                Effect::Frameshift => "FRAMESHIFT",
+                Effect::FramePreservingIndel => "FRAME_PRESERVING_INDEL",
+                Effect::SynonymousSnp => "SYNONYMOUS_SNP",
+                Effect::NonsynonymousSnp => "NONSYNONYMOUS_SNP",
+                Effect::StopGain => "STOP_GAIN",
+                Effect::StopLoss => "STOP_LOSS",
+                Effect::SpliceSiteDisruption => "SPLICE_SITE_DISRUPTION",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "EFFECT_UNSPECIFIED" => Some(Self::Unspecified),
+                "EFFECT_OTHER" => Some(Self::Other),
+                "FRAMESHIFT" => Some(Self::Frameshift),
+                "FRAME_PRESERVING_INDEL" => Some(Self::FramePreservingIndel),
+                "SYNONYMOUS_SNP" => Some(Self::SynonymousSnp),
+                "NONSYNONYMOUS_SNP" => Some(Self::NonsynonymousSnp),
+                "STOP_GAIN" => Some(Self::StopGain),
+                "STOP_LOSS" => Some(Self::StopLoss),
+                "SPLICE_SITE_DISRUPTION" => Some(Self::SpliceSiteDisruption),
+                _ => None,
+            }
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ClinicalSignificance {
+        Unspecified = 0,
+        /// `OTHER` should be used when no other clinical significance
+        /// value will suffice.
+        Other = 1,
+        Uncertain = 2,
+        Benign = 3,
+        LikelyBenign = 4,
+        LikelyPathogenic = 5,
+        Pathogenic = 6,
+        DrugResponse = 7,
+        Histocompatibility = 8,
+        ConfersSensitivity = 9,
+        RiskFactor = 10,
+        Association = 11,
+        Protective = 12,
+        /// `MULTIPLE_REPORTED` should be used when multiple clinical
+        /// signficances are reported for a variant. The original clinical
+        /// significance values may be provided in the `info` field.
+        MultipleReported = 13,
+    }
+    impl ClinicalSignificance {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ClinicalSignificance::Unspecified => "CLINICAL_SIGNIFICANCE_UNSPECIFIED",
+                ClinicalSignificance::Other => "CLINICAL_SIGNIFICANCE_OTHER",
+                ClinicalSignificance::Uncertain => "UNCERTAIN",
+                ClinicalSignificance::Benign => "BENIGN",
+                ClinicalSignificance::LikelyBenign => "LIKELY_BENIGN",
+                ClinicalSignificance::LikelyPathogenic => "LIKELY_PATHOGENIC",
+                ClinicalSignificance::Pathogenic => "PATHOGENIC",
+                ClinicalSignificance::DrugResponse => "DRUG_RESPONSE",
+                ClinicalSignificance::Histocompatibility => "HISTOCOMPATIBILITY",
+                ClinicalSignificance::ConfersSensitivity => "CONFERS_SENSITIVITY",
+                ClinicalSignificance::RiskFactor => "RISK_FACTOR",
+                ClinicalSignificance::Association => "ASSOCIATION",
+                ClinicalSignificance::Protective => "PROTECTIVE",
+                ClinicalSignificance::MultipleReported => "MULTIPLE_REPORTED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CLINICAL_SIGNIFICANCE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CLINICAL_SIGNIFICANCE_OTHER" => Some(Self::Other),
+                "UNCERTAIN" => Some(Self::Uncertain),
+                "BENIGN" => Some(Self::Benign),
+                "LIKELY_BENIGN" => Some(Self::LikelyBenign),
+                "LIKELY_PATHOGENIC" => Some(Self::LikelyPathogenic),
+                "PATHOGENIC" => Some(Self::Pathogenic),
+                "DRUG_RESPONSE" => Some(Self::DrugResponse),
+                "HISTOCOMPATIBILITY" => Some(Self::Histocompatibility),
+                "CONFERS_SENSITIVITY" => Some(Self::ConfersSensitivity),
+                "RISK_FACTOR" => Some(Self::RiskFactor),
+                "ASSOCIATION" => Some(Self::Association),
+                "PROTECTIVE" => Some(Self::Protective),
+                "MULTIPLE_REPORTED" => Some(Self::MultipleReported),
+                _ => None,
+            }
+        }
+    }
+}
+/// A transcript represents the assertion that a particular region of the
+/// reference genome may be transcribed as RNA.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Transcript {
+    /// The annotation ID of the gene from which this transcript is transcribed.
+    #[prost(string, tag = "1")]
+    pub gene_id: ::prost::alloc::string::String,
+    /// The <a href="<http://en.wikipedia.org/wiki/Exon">exons</a>> that compose
+    /// this transcript. This field should be unset for genomes where transcript
+    /// splicing does not occur, for example prokaryotes.
+    ///
+    /// Introns are regions of the transcript that are not included in the
+    /// spliced RNA product. Though not explicitly modeled here, intron ranges can
+    /// be deduced; all regions of this transcript that are not exons are introns.
+    ///
+    /// Exonic sequences do not necessarily code for a translational product
+    /// (amino acids). Only the regions of exons bounded by the
+    /// \[codingSequence][google.genomics.v1.Transcript.coding_sequence\] correspond
+    /// to coding DNA sequence.
+    ///
+    /// Exons are ordered by start position and may not overlap.
+    #[prost(message, repeated, tag = "2")]
+    pub exons: ::prost::alloc::vec::Vec<transcript::Exon>,
+    /// The range of the coding sequence for this transcript, if any. To determine
+    /// the exact ranges of coding sequence, intersect this range with those of the
+    /// \[exons][google.genomics.v1.Transcript.exons\], if any. If there are any
+    /// \[exons][google.genomics.v1.Transcript.exons\], the
+    /// \[codingSequence][google.genomics.v1.Transcript.coding_sequence\] must start
+    /// and end within them.
+    ///
+    /// Note that in some cases, the reference genome will not exactly match the
+    /// observed mRNA transcript e.g. due to variance in the source genome from
+    /// reference. In these cases,
+    /// \[exon.frame][google.genomics.v1.Transcript.Exon.frame\] will not necessarily
+    /// match the expected reference reading frame and coding exon reference bases
+    /// cannot necessarily be concatenated to produce the original transcript mRNA.
+    #[prost(message, optional, tag = "3")]
+    pub coding_sequence: ::core::option::Option<transcript::CodingSequence>,
+}
+/// Nested message and enum types in `Transcript`.
+pub mod transcript {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Exon {
+        /// The start position of the exon on this annotation's reference sequence,
+        /// 0-based inclusive. Note that this is relative to the reference start, and
+        /// **not** the containing annotation start.
+        #[prost(int64, tag = "1")]
+        pub start: i64,
+        /// The end position of the exon on this annotation's reference sequence,
+        /// 0-based exclusive. Note that this is relative to the reference start, and
+        /// *not* the containing annotation start.
+        #[prost(int64, tag = "2")]
+        pub end: i64,
+        /// The frame of this exon. Contains a value of 0, 1, or 2, which indicates
+        /// the offset of the first coding base of the exon within the reading frame
+        /// of the coding DNA sequence, if any. This field is dependent on the
+        /// strandedness of this annotation (see
+        /// \[Annotation.reverse_strand][google.genomics.v1.Annotation.reverse_strand\]).
+        /// For forward stranded annotations, this offset is relative to the
+        /// \[exon.start][google.genomics.v1.Transcript.Exon.start\]. For reverse
+        /// strand annotations, this offset is relative to the
+        /// \[exon.end][google.genomics.v1.Transcript.Exon.end\] `- 1`.
+        ///
+        /// Unset if this exon does not intersect the coding sequence. Upon creation
+        /// of a transcript, the frame must be populated for all or none of the
+        /// coding exons.
+        #[prost(message, optional, tag = "3")]
+        pub frame: ::core::option::Option<i32>,
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct CodingSequence {
+        /// The start of the coding sequence on this annotation's reference sequence,
+        /// 0-based inclusive. Note that this position is relative to the reference
+        /// start, and *not* the containing annotation start.
+        #[prost(int64, tag = "1")]
+        pub start: i64,
+        /// The end of the coding sequence on this annotation's reference sequence,
+        /// 0-based exclusive. Note that this position is relative to the reference
+        /// start, and *not* the containing annotation start.
+        #[prost(int64, tag = "2")]
+        pub end: i64,
+    }
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExternalId {
+    /// The name of the source of this data.
+    #[prost(string, tag = "1")]
+    pub source_name: ::prost::alloc::string::String,
+    /// The id used by the source of this data.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateAnnotationSetRequest {
+    /// The annotation set to create.
+    #[prost(message, optional, tag = "1")]
+    pub annotation_set: ::core::option::Option<AnnotationSet>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAnnotationSetRequest {
+    /// The ID of the annotation set to be retrieved.
+    #[prost(string, tag = "1")]
+    pub annotation_set_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateAnnotationSetRequest {
+    /// The ID of the annotation set to be updated.
+    #[prost(string, tag = "1")]
+    pub annotation_set_id: ::prost::alloc::string::String,
+    /// The new annotation set.
+    #[prost(message, optional, tag = "2")]
+    pub annotation_set: ::core::option::Option<AnnotationSet>,
+    /// An optional mask specifying which fields to update. Mutable fields are
+    /// \[name][google.genomics.v1.AnnotationSet.name\],
+    /// \[source_uri][google.genomics.v1.AnnotationSet.source_uri\], and
+    /// \[info][google.genomics.v1.AnnotationSet.info\]. If unspecified, all
+    /// mutable fields will be updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteAnnotationSetRequest {
+    /// The ID of the annotation set to be deleted.
+    #[prost(string, tag = "1")]
+    pub annotation_set_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchAnnotationSetsRequest {
+    /// Required. The dataset IDs to search within. Caller must have `READ` access
+    /// to these datasets.
+    #[prost(string, repeated, tag = "1")]
+    pub dataset_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// If specified, only annotation sets associated with the given reference set
+    /// are returned.
+    #[prost(string, tag = "2")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// Only return annotations sets for which a substring of the name matches this
+    /// string (case insensitive).
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// If specified, only annotation sets that have any of these types are
+    /// returned.
+    #[prost(enumeration = "AnnotationType", repeated, tag = "4")]
+    pub types: ::prost::alloc::vec::Vec<i32>,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "5")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single page. If unspecified,
+    /// defaults to 128. The maximum value is 1024.
+    #[prost(int32, tag = "6")]
+    pub page_size: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchAnnotationSetsResponse {
+    /// The matching annotation sets.
+    #[prost(message, repeated, tag = "1")]
+    pub annotation_sets: ::prost::alloc::vec::Vec<AnnotationSet>,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateAnnotationRequest {
+    /// The annotation to be created.
+    #[prost(message, optional, tag = "1")]
+    pub annotation: ::core::option::Option<Annotation>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchCreateAnnotationsRequest {
+    /// The annotations to be created. At most 4096 can be specified in a single
+    /// request.
+    #[prost(message, repeated, tag = "1")]
+    pub annotations: ::prost::alloc::vec::Vec<Annotation>,
+    /// A unique request ID which enables the server to detect duplicated requests.
+    /// If provided, duplicated requests will result in the same response; if not
+    /// provided, duplicated requests may result in duplicated data. For a given
+    /// annotation set, callers should not reuse `request_id`s when writing
+    /// different batches of annotations - behavior in this case is undefined.
+    /// A common approach is to use a UUID. For batch jobs where worker crashes are
+    /// a possibility, consider using some unique variant of a worker or run ID.
+    #[prost(string, tag = "2")]
+    pub request_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchCreateAnnotationsResponse {
+    /// The resulting per-annotation entries, ordered consistently with the
+    /// original request.
+    #[prost(message, repeated, tag = "1")]
+    pub entries: ::prost::alloc::vec::Vec<batch_create_annotations_response::Entry>,
+}
+/// Nested message and enum types in `BatchCreateAnnotationsResponse`.
+pub mod batch_create_annotations_response {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Entry {
+        /// The creation status.
+        #[prost(message, optional, tag = "1")]
+        pub status: ::core::option::Option<super::super::super::rpc::Status>,
+        /// The created annotation, if creation was successful.
+        #[prost(message, optional, tag = "2")]
+        pub annotation: ::core::option::Option<super::Annotation>,
+    }
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAnnotationRequest {
+    /// The ID of the annotation to be retrieved.
+    #[prost(string, tag = "1")]
+    pub annotation_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateAnnotationRequest {
+    /// The ID of the annotation to be updated.
+    #[prost(string, tag = "1")]
+    pub annotation_id: ::prost::alloc::string::String,
+    /// The new annotation.
+    #[prost(message, optional, tag = "2")]
+    pub annotation: ::core::option::Option<Annotation>,
+    /// An optional mask specifying which fields to update. Mutable fields are
+    /// \[name][google.genomics.v1.Annotation.name\],
+    /// \[variant][google.genomics.v1.Annotation.variant\],
+    /// \[transcript][google.genomics.v1.Annotation.transcript\], and
+    /// \[info][google.genomics.v1.Annotation.info\]. If unspecified, all mutable
+    /// fields will be updated.
+    #[prost(message, optional, tag = "3")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteAnnotationRequest {
+    /// The ID of the annotation to be deleted.
+    #[prost(string, tag = "1")]
+    pub annotation_id: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchAnnotationsRequest {
+    /// Required. The annotation sets to search within. The caller must have
+    /// `READ` access to these annotation sets.
+    /// All queried annotation sets must have the same type.
+    #[prost(string, repeated, tag = "1")]
+    pub annotation_set_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The start position of the range on the reference, 0-based inclusive. If
+    /// specified,
+    /// \[referenceId][google.genomics.v1.SearchAnnotationsRequest.reference_id\] or
+    /// \[referenceName][google.genomics.v1.SearchAnnotationsRequest.reference_name\]
+    /// must be specified. Defaults to 0.
+    #[prost(int64, tag = "4")]
+    pub start: i64,
+    /// The end position of the range on the reference, 0-based exclusive. If
+    /// \[referenceId][google.genomics.v1.SearchAnnotationsRequest.reference_id\] or
+    /// \[referenceName][google.genomics.v1.SearchAnnotationsRequest.reference_name\]
+    /// must be specified, Defaults to the length of the reference.
+    #[prost(int64, tag = "5")]
+    pub end: i64,
+    /// The continuation token, which is used to page through large result sets.
+    /// To get the next page of results, set this parameter to the value of
+    /// `nextPageToken` from the previous response.
+    #[prost(string, tag = "6")]
+    pub page_token: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single page. If unspecified,
+    /// defaults to 256. The maximum value is 2048.
+    #[prost(int32, tag = "7")]
+    pub page_size: i32,
+    /// Required. `reference_id` or `reference_name` must be set.
+    #[prost(oneof = "search_annotations_request::Reference", tags = "2, 3")]
+    pub reference: ::core::option::Option<search_annotations_request::Reference>,
+}
+/// Nested message and enum types in `SearchAnnotationsRequest`.
+pub mod search_annotations_request {
+    /// Required. `reference_id` or `reference_name` must be set.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Reference {
+        /// The ID of the reference to query.
+        #[prost(string, tag = "2")]
+        ReferenceId(::prost::alloc::string::String),
+        /// The name of the reference to query, within the reference set associated
+        /// with this query.
+        #[prost(string, tag = "3")]
+        ReferenceName(::prost::alloc::string::String),
+    }
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SearchAnnotationsResponse {
+    /// The matching annotations.
+    #[prost(message, repeated, tag = "1")]
+    pub annotations: ::prost::alloc::vec::Vec<Annotation>,
+    /// The continuation token, which is used to page through large result sets.
+    /// Provide this value in a subsequent request to return the next page of
+    /// results. This field will be empty if there aren't any additional results.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// When an \[Annotation][google.genomics.v1.Annotation\] or
+/// \[AnnotationSet][google.genomics.v1.AnnotationSet\] is created, if `type` is
+/// not specified it will be set to `GENERIC`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AnnotationType {
+    Unspecified = 0,
+    /// A `GENERIC` annotation type should be used when no other annotation
+    /// type will suffice. This represents an untyped annotation of the reference
+    /// genome.
+    Generic = 1,
+    /// A `VARIANT` annotation type.
+    Variant = 2,
+    /// A `GENE` annotation type represents the existence of a gene at the
+    /// associated reference coordinates. The start coordinate is typically the
+    /// gene's transcription start site and the end is typically the end of the
+    /// gene's last exon.
+    Gene = 3,
+    /// A `TRANSCRIPT` annotation type represents the assertion that a
+    /// particular region of the reference genome may be transcribed as RNA.
+    Transcript = 4,
+}
+impl AnnotationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AnnotationType::Unspecified => "ANNOTATION_TYPE_UNSPECIFIED",
+            AnnotationType::Generic => "GENERIC",
+            AnnotationType::Variant => "VARIANT",
+            AnnotationType::Gene => "GENE",
+            AnnotationType::Transcript => "TRANSCRIPT",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ANNOTATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "GENERIC" => Some(Self::Generic),
+            "VARIANT" => Some(Self::Variant),
+            "GENE" => Some(Self::Gene),
+            "TRANSCRIPT" => Some(Self::Transcript),
+            _ => None,
+        }
+    }
+}
+/// Generated client implementations.
+pub mod annotation_service_v1_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// This service provides storage and positional retrieval of genomic
+    /// reference annotations, including variant annotations.
+    #[derive(Debug, Clone)]
+    pub struct AnnotationServiceV1Client<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AnnotationServiceV1Client<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AnnotationServiceV1Client<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AnnotationServiceV1Client::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Creates a new annotation set. Caller must have WRITE permission for the
+        /// associated dataset.
+        ///
+        /// The following fields are required:
+        ///
+        ///   * [datasetId][google.genomics.v1.AnnotationSet.dataset_id]
+        ///   * [referenceSetId][google.genomics.v1.AnnotationSet.reference_set_id]
+        ///
+        /// All other fields may be optionally specified, unless documented as being
+        /// server-generated (for example, the `id` field).
+        pub async fn create_annotation_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateAnnotationSetRequest>,
+        ) -> std::result::Result<tonic::Response<super::AnnotationSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/CreateAnnotationSet",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "CreateAnnotationSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets an annotation set. Caller must have READ permission for
+        /// the associated dataset.
+        pub async fn get_annotation_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAnnotationSetRequest>,
+        ) -> std::result::Result<tonic::Response<super::AnnotationSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/GetAnnotationSet",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "GetAnnotationSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Updates an annotation set. The update must respect all mutability
+        /// restrictions and other invariants described on the annotation set resource.
+        /// Caller must have WRITE permission for the associated dataset.
+        pub async fn update_annotation_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateAnnotationSetRequest>,
+        ) -> std::result::Result<tonic::Response<super::AnnotationSet>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/UpdateAnnotationSet",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "UpdateAnnotationSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Deletes an annotation set. Caller must have WRITE permission
+        /// for the associated annotation set.
+        pub async fn delete_annotation_set(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteAnnotationSetRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/DeleteAnnotationSet",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "DeleteAnnotationSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Searches for annotation sets that match the given criteria. Annotation sets
+        /// are returned in an unspecified order. This order is consistent, such that
+        /// two queries for the same content (regardless of page size) yield annotation
+        /// sets in the same order across their respective streams of paginated
+        /// responses. Caller must have READ permission for the queried datasets.
+        pub async fn search_annotation_sets(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchAnnotationSetsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAnnotationSetsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/SearchAnnotationSets",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "SearchAnnotationSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates a new annotation. Caller must have WRITE permission
+        /// for the associated annotation set.
+        ///
+        /// The following fields are required:
+        ///
+        /// * [annotationSetId][google.genomics.v1.Annotation.annotation_set_id]
+        /// * [referenceName][google.genomics.v1.Annotation.reference_name] or
+        ///   [referenceId][google.genomics.v1.Annotation.reference_id]
+        ///
+        /// ### Transcripts
+        ///
+        /// For annotations of type TRANSCRIPT, the following fields of
+        /// [transcript][google.genomics.v1.Annotation.transcript] must be provided:
+        ///
+        /// * [exons.start][google.genomics.v1.Transcript.Exon.start]
+        /// * [exons.end][google.genomics.v1.Transcript.Exon.end]
+        ///
+        /// All other fields may be optionally specified, unless documented as being
+        /// server-generated (for example, the `id` field). The annotated
+        /// range must be no longer than 100Mbp (mega base pairs). See the
+        /// [Annotation resource][google.genomics.v1.Annotation]
+        /// for additional restrictions on each field.
+        pub async fn create_annotation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateAnnotationRequest>,
+        ) -> std::result::Result<tonic::Response<super::Annotation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/CreateAnnotation",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "CreateAnnotation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates one or more new annotations atomically. All annotations must
+        /// belong to the same annotation set. Caller must have WRITE
+        /// permission for this annotation set. For optimal performance, batch
+        /// positionally adjacent annotations together.
+        ///
+        /// If the request has a systemic issue, such as an attempt to write to
+        /// an inaccessible annotation set, the entire RPC will fail accordingly. For
+        /// lesser data issues, when possible an error will be isolated to the
+        /// corresponding batch entry in the response; the remaining well formed
+        /// annotations will be created normally.
+        ///
+        /// For details on the requirements for each individual annotation resource,
+        /// see
+        /// [CreateAnnotation][google.genomics.v1.AnnotationServiceV1.CreateAnnotation].
+        pub async fn batch_create_annotations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchCreateAnnotationsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::BatchCreateAnnotationsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/BatchCreateAnnotations",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "BatchCreateAnnotations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets an annotation. Caller must have READ permission
+        /// for the associated annotation set.
+        pub async fn get_annotation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAnnotationRequest>,
+        ) -> std::result::Result<tonic::Response<super::Annotation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/GetAnnotation",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "GetAnnotation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Updates an annotation. Caller must have
+        /// WRITE permission for the associated dataset.
+        pub async fn update_annotation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateAnnotationRequest>,
+        ) -> std::result::Result<tonic::Response<super::Annotation>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/UpdateAnnotation",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "UpdateAnnotation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Deletes an annotation. Caller must have WRITE permission for
+        /// the associated annotation set.
+        pub async fn delete_annotation(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteAnnotationRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/DeleteAnnotation",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "DeleteAnnotation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Searches for annotations that match the given criteria. Results are
+        /// ordered by genomic coordinate (by reference sequence, then position).
+        /// Annotations with equivalent genomic coordinates are returned in an
+        /// unspecified order. This order is consistent, such that two queries for the
+        /// same content (regardless of page size) yield annotations in the same order
+        /// across their respective streams of paginated responses. Caller must have
+        /// READ permission for the queried annotation sets.
+        pub async fn search_annotations(
+            &mut self,
+            request: impl tonic::IntoRequest<super::SearchAnnotationsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAnnotationsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.genomics.v1.AnnotationServiceV1/SearchAnnotations",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.AnnotationServiceV1",
+                        "SearchAnnotations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// A 0-based half-open genomic coordinate range for search requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Range {
+    /// The reference sequence name, for example `chr1`,
+    /// `1`, or `chrX`.
+    #[prost(string, tag = "1")]
+    pub reference_name: ::prost::alloc::string::String,
+    /// The start position of the range on the reference, 0-based inclusive.
+    #[prost(int64, tag = "2")]
+    pub start: i64,
+    /// The end position of the range on the reference, 0-based exclusive.
+    #[prost(int64, tag = "3")]
+    pub end: i64,
+}
+/// A read group is all the data that's processed the same way by the sequencer.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadGroup {
+    /// The server-generated read group ID, unique for all read groups.
+    /// Note: This is different than the @RG ID field in the SAM spec. For that
+    /// value, see \[name][google.genomics.v1.ReadGroup.name\].
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The dataset to which this read group belongs.
+    #[prost(string, tag = "2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The read group name. This corresponds to the @RG ID field in the SAM spec.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// A free-form text description of this read group.
+    #[prost(string, tag = "4")]
+    pub description: ::prost::alloc::string::String,
+    /// A client-supplied sample identifier for the reads in this read group.
+    #[prost(string, tag = "5")]
+    pub sample_id: ::prost::alloc::string::String,
+    /// The experiment used to generate this read group.
+    #[prost(message, optional, tag = "6")]
+    pub experiment: ::core::option::Option<read_group::Experiment>,
+    /// The predicted insert size of this read group. The insert size is the length
+    /// the sequenced DNA fragment from end-to-end, not including the adapters.
+    #[prost(int32, tag = "7")]
+    pub predicted_insert_size: i32,
+    /// The programs used to generate this read group. Programs are always
+    /// identical for all read groups within a read group set. For this reason,
+    /// only the first read group in a returned set will have this field
+    /// populated.
+    #[prost(message, repeated, tag = "10")]
+    pub programs: ::prost::alloc::vec::Vec<read_group::Program>,
+    /// The reference set the reads in this read group are aligned to.
+    #[prost(string, tag = "11")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// A map of additional read group information. This must be of the form
+    /// map<string, string[]> (string key mapping to a list of string values).
+    #[prost(btree_map = "string, message", tag = "12")]
+    pub info: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::ListValue,
+    >,
+}
+/// Nested message and enum types in `ReadGroup`.
+pub mod read_group {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Experiment {
+        /// A client-supplied library identifier; a library is a collection of DNA
+        /// fragments which have been prepared for sequencing from a sample. This
+        /// field is important for quality control as error or bias can be introduced
+        /// during sample preparation.
+        #[prost(string, tag = "1")]
+        pub library_id: ::prost::alloc::string::String,
+        /// The platform unit used as part of this experiment, for example
+        /// flowcell-barcode.lane for Illumina or slide for SOLiD. Corresponds to the
+        /// @RG PU field in the SAM spec.
+        #[prost(string, tag = "2")]
+        pub platform_unit: ::prost::alloc::string::String,
+        /// The sequencing center used as part of this experiment.
+        #[prost(string, tag = "3")]
+        pub sequencing_center: ::prost::alloc::string::String,
+        /// The instrument model used as part of this experiment. This maps to
+        /// sequencing technology in the SAM spec.
+        #[prost(string, tag = "4")]
+        pub instrument_model: ::prost::alloc::string::String,
+    }
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Program {
+        /// The command line used to run this program.
+        #[prost(string, tag = "1")]
+        pub command_line: ::prost::alloc::string::String,
+        /// The user specified locally unique ID of the program. Used along with
+        /// `prevProgramId` to define an ordering between programs.
+        #[prost(string, tag = "2")]
+        pub id: ::prost::alloc::string::String,
+        /// The display name of the program. This is typically the colloquial name of
+        /// the tool used, for example 'bwa' or 'picard'.
+        #[prost(string, tag = "3")]
+        pub name: ::prost::alloc::string::String,
+        /// The ID of the program run before this one.
+        #[prost(string, tag = "4")]
+        pub prev_program_id: ::prost::alloc::string::String,
+        /// The version of the program run.
+        #[prost(string, tag = "5")]
+        pub version: ::prost::alloc::string::String,
+    }
+}
+/// A read group set is a logical collection of read groups, which are
+/// collections of reads produced by a sequencer. A read group set typically
+/// models reads corresponding to one sample, sequenced one way, and aligned one
+/// way.
+///
+/// * A read group set belongs to one dataset.
+/// * A read group belongs to one read group set.
+/// * A read belongs to one read group.
+///
+/// For more genomics resource definitions, see [Fundamentals of Google
+/// Genomics](<https://cloud.google.com/genomics/fundamentals-of-google-genomics>)
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReadGroupSet {
+    /// The server-generated read group set ID, unique for all read group sets.
+    #[prost(string, tag = "1")]
+    pub id: ::prost::alloc::string::String,
+    /// The dataset to which this read group set belongs.
+    #[prost(string, tag = "2")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// The reference set to which the reads in this read group set are aligned.
+    #[prost(string, tag = "3")]
+    pub reference_set_id: ::prost::alloc::string::String,
+    /// The read group set name. By default this will be initialized to the sample
+    /// name of the sequenced data contained in this set.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// The filename of the original source file for this read group set, if any.
+    #[prost(string, tag = "5")]
+    pub filename: ::prost::alloc::string::String,
+    /// The read groups in this set. There are typically 1-10 read groups in a read
+    /// group set.
+    #[prost(message, repeated, tag = "6")]
+    pub read_groups: ::prost::alloc::vec::Vec<ReadGroup>,
+    /// A map of additional read group set information.
+    #[prost(btree_map = "string, message", tag = "7")]
     pub info: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
         ::prost_types::ListValue,
@@ -4292,12 +4792,28 @@ pub mod streaming_read_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns a stream of all the reads matching the search request, ordered
         /// by reference name, position, and ID.
         pub async fn stream_reads(
             &mut self,
             request: impl tonic::IntoRequest<super::StreamReadsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::StreamReadsResponse>>,
             tonic::Status,
         > {
@@ -4314,7 +4830,15 @@ pub mod streaming_read_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.StreamingReadService/StreamReads",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.StreamingReadService",
+                        "StreamReads",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }
@@ -4377,6 +4901,22 @@ pub mod read_service_v1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates read group sets by asynchronously importing the provided
         /// information.
         ///
@@ -4398,7 +4938,7 @@ pub mod read_service_v1_client {
         pub async fn import_read_group_sets(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportReadGroupSetsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4415,7 +4955,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/ImportReadGroupSets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "ImportReadGroupSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports a read group set to a BAM file in Google Cloud Storage.
         ///
@@ -4430,7 +4978,7 @@ pub mod read_service_v1_client {
         pub async fn export_read_group_set(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportReadGroupSetRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4447,7 +4995,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/ExportReadGroupSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "ExportReadGroupSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Searches for read group sets matching the criteria.
         ///
@@ -4460,7 +5016,10 @@ pub mod read_service_v1_client {
         pub async fn search_read_group_sets(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchReadGroupSetsRequest>,
-        ) -> Result<tonic::Response<super::SearchReadGroupSetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchReadGroupSetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4474,7 +5033,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/SearchReadGroupSets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "SearchReadGroupSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a read group set.
         ///
@@ -4486,7 +5053,7 @@ pub mod read_service_v1_client {
         pub async fn update_read_group_set(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateReadGroupSetRequest>,
-        ) -> Result<tonic::Response<super::ReadGroupSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ReadGroupSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4500,7 +5067,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/UpdateReadGroupSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "UpdateReadGroupSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a read group set.
         ///
@@ -4510,7 +5085,7 @@ pub mod read_service_v1_client {
         pub async fn delete_read_group_set(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteReadGroupSetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4524,7 +5099,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/DeleteReadGroupSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "DeleteReadGroupSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a read group set by ID.
         ///
@@ -4534,7 +5117,7 @@ pub mod read_service_v1_client {
         pub async fn get_read_group_set(
             &mut self,
             request: impl tonic::IntoRequest<super::GetReadGroupSetRequest>,
-        ) -> Result<tonic::Response<super::ReadGroupSet>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ReadGroupSet>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4548,7 +5131,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/GetReadGroupSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "GetReadGroupSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists fixed width coverage buckets for a read group set, each of which
         /// correspond to a range of a reference sequence. Each bucket summarizes
@@ -4566,7 +5157,10 @@ pub mod read_service_v1_client {
         pub async fn list_coverage_buckets(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCoverageBucketsRequest>,
-        ) -> Result<tonic::Response<super::ListCoverageBucketsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCoverageBucketsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4580,7 +5174,15 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/ListCoverageBuckets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.genomics.v1.ReadServiceV1",
+                        "ListCoverageBuckets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a list of reads for one or more read group sets.
         ///
@@ -4609,7 +5211,10 @@ pub mod read_service_v1_client {
         pub async fn search_reads(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchReadsRequest>,
-        ) -> Result<tonic::Response<super::SearchReadsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchReadsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4623,63 +5228,12 @@ pub mod read_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.genomics.v1.ReadServiceV1/SearchReads",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.genomics.v1.ReadServiceV1", "SearchReads"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
-}
-/// Metadata describing an \[Operation][google.longrunning.Operation\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadata {
-    /// The Google Cloud Project in which the job is scoped.
-    #[prost(string, tag = "1")]
-    pub project_id: ::prost::alloc::string::String,
-    /// The time at which the job was submitted to the Genomics service.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the job began to run.
-    #[prost(message, optional, tag = "3")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the job stopped running.
-    #[prost(message, optional, tag = "4")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The original request that started the operation. Note that this will be in
-    /// current version of the API. If the operation was started with v1beta2 API
-    /// and a GetOperation is performed on v1 API, a v1 request will be returned.
-    #[prost(message, optional, tag = "5")]
-    pub request: ::core::option::Option<::prost_types::Any>,
-    /// Optional event messages that were generated during the job's execution.
-    /// This also contains any warnings that were generated during import
-    /// or export.
-    #[prost(message, repeated, tag = "6")]
-    pub events: ::prost::alloc::vec::Vec<OperationEvent>,
-    /// This field is deprecated. Use `labels` instead. Optionally provided by the
-    /// caller when submitting the request that creates the operation.
-    #[prost(string, tag = "7")]
-    pub client_id: ::prost::alloc::string::String,
-    /// Runtime metadata on this Operation.
-    #[prost(message, optional, tag = "8")]
-    pub runtime_metadata: ::core::option::Option<::prost_types::Any>,
-    /// Optionally provided by the caller when submitting the request that creates
-    /// the operation.
-    #[prost(btree_map = "string, string", tag = "9")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// An event that occurred during an \[Operation][google.longrunning.Operation\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationEvent {
-    /// Optional time of when event started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Optional time of when event finished. An event can have a start time and no
-    /// finish time. If an event has a finish time, there must be a start time.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Required description of event.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
 }

@@ -264,6 +264,22 @@ pub mod asset_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Searches all the resources within a given accessible Resource Manager scope
         /// (project/folder/organization). This RPC gives callers especially
         /// administrators the ability to search all the resources within a scope, even
@@ -273,7 +289,10 @@ pub mod asset_service_client {
         pub async fn search_all_resources(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchAllResourcesRequest>,
-        ) -> Result<tonic::Response<super::SearchAllResourcesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAllResourcesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -287,7 +306,15 @@ pub mod asset_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.asset.v1p1beta1.AssetService/SearchAllResources",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.asset.v1p1beta1.AssetService",
+                        "SearchAllResources",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Searches all the IAM policies within a given accessible Resource Manager
         /// scope (project/folder/organization). This RPC gives callers especially
@@ -298,7 +325,7 @@ pub mod asset_service_client {
         pub async fn search_all_iam_policies(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchAllIamPoliciesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SearchAllIamPoliciesResponse>,
             tonic::Status,
         > {
@@ -315,7 +342,15 @@ pub mod asset_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.asset.v1p1beta1.AssetService/SearchAllIamPolicies",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.asset.v1p1beta1.AssetService",
+                        "SearchAllIamPolicies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

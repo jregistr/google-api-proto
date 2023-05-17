@@ -36,13 +36,4 @@ if [ $(git diff HEAD --name-only google-api-proto | wc -l) -gt 0 ]; then
 
   echo "Sync with the origin repository"
   git push origin master
-
-  echo "Publish to crates.io"
-  cargo release \
-        --execute \
-        --no-confirm \
-        --package google-api-proto \
-        --token "$CARGO_REGISTRY_TOKEN" \
-        --verbose \
-        minor
 fi

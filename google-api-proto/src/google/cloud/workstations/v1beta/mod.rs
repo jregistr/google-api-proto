@@ -1094,11 +1094,30 @@ pub mod workstations_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns the requested workstation cluster.
         pub async fn get_workstation_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWorkstationClusterRequest>,
-        ) -> Result<tonic::Response<super::WorkstationCluster>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::WorkstationCluster>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1112,13 +1131,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/GetWorkstationCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "GetWorkstationCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all workstation clusters in the specified location.
         pub async fn list_workstation_clusters(
             &mut self,
             request: impl tonic::IntoRequest<super::ListWorkstationClustersRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListWorkstationClustersResponse>,
             tonic::Status,
         > {
@@ -1135,13 +1162,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/ListWorkstationClusters",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "ListWorkstationClusters",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new workstation cluster.
         pub async fn create_workstation_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateWorkstationClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1158,13 +1193,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/CreateWorkstationCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "CreateWorkstationCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing workstation cluster.
         pub async fn update_workstation_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateWorkstationClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1181,13 +1224,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/UpdateWorkstationCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "UpdateWorkstationCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified workstation cluster.
         pub async fn delete_workstation_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteWorkstationClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1204,13 +1255,24 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/DeleteWorkstationCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "DeleteWorkstationCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the requested workstation configuration.
         pub async fn get_workstation_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWorkstationConfigRequest>,
-        ) -> Result<tonic::Response<super::WorkstationConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::WorkstationConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1224,13 +1286,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/GetWorkstationConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "GetWorkstationConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all workstation configurations in the specified cluster.
         pub async fn list_workstation_configs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListWorkstationConfigsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListWorkstationConfigsResponse>,
             tonic::Status,
         > {
@@ -1247,14 +1317,22 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/ListWorkstationConfigs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "ListWorkstationConfigs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all workstation configurations in the specified cluster on which
         /// the caller has the "workstations.workstation.create" permission.
         pub async fn list_usable_workstation_configs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUsableWorkstationConfigsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListUsableWorkstationConfigsResponse>,
             tonic::Status,
         > {
@@ -1271,13 +1349,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/ListUsableWorkstationConfigs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "ListUsableWorkstationConfigs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new workstation configuration.
         pub async fn create_workstation_config(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateWorkstationConfigRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1294,13 +1380,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/CreateWorkstationConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "CreateWorkstationConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing workstation configuration.
         pub async fn update_workstation_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateWorkstationConfigRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1317,13 +1411,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/UpdateWorkstationConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "UpdateWorkstationConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified workstation configuration.
         pub async fn delete_workstation_config(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteWorkstationConfigRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1340,13 +1442,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/DeleteWorkstationConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "DeleteWorkstationConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the requested workstation.
         pub async fn get_workstation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWorkstationRequest>,
-        ) -> Result<tonic::Response<super::Workstation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Workstation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1360,13 +1470,24 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/GetWorkstation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "GetWorkstation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all Workstations using the specified workstation configuration.
         pub async fn list_workstations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListWorkstationsRequest>,
-        ) -> Result<tonic::Response<super::ListWorkstationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListWorkstationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1380,14 +1501,22 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/ListWorkstations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "ListWorkstations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all workstations using the specified workstation configuration
         /// on which the caller has the "workstations.workstations.use" permission.
         pub async fn list_usable_workstations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUsableWorkstationsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListUsableWorkstationsResponse>,
             tonic::Status,
         > {
@@ -1404,13 +1533,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/ListUsableWorkstations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "ListUsableWorkstations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new workstation.
         pub async fn create_workstation(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateWorkstationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1427,13 +1564,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/CreateWorkstation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "CreateWorkstation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing workstation.
         pub async fn update_workstation(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateWorkstationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1450,13 +1595,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/UpdateWorkstation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "UpdateWorkstation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified workstation.
         pub async fn delete_workstation(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteWorkstationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1473,13 +1626,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/DeleteWorkstation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "DeleteWorkstation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Starts running a workstation so that users can connect to it.
         pub async fn start_workstation(
             &mut self,
             request: impl tonic::IntoRequest<super::StartWorkstationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1496,13 +1657,21 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/StartWorkstation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "StartWorkstation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Stops running a workstation, reducing costs.
         pub async fn stop_workstation(
             &mut self,
             request: impl tonic::IntoRequest<super::StopWorkstationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1519,14 +1688,25 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/StopWorkstation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "StopWorkstation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a short-lived credential that can be used to send authenticated and
         /// authorized traffic to a workstation.
         pub async fn generate_access_token(
             &mut self,
             request: impl tonic::IntoRequest<super::GenerateAccessTokenRequest>,
-        ) -> Result<tonic::Response<super::GenerateAccessTokenResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GenerateAccessTokenResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1540,7 +1720,15 @@ pub mod workstations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workstations.v1beta.Workstations/GenerateAccessToken",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workstations.v1beta.Workstations",
+                        "GenerateAccessToken",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

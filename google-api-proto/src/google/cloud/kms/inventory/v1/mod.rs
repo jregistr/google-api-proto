@@ -1,4 +1,146 @@
 /// Request message for
+/// \[KeyDashboardService.ListCryptoKeys][google.cloud.kms.inventory.v1.KeyDashboardService.ListCryptoKeys\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCryptoKeysRequest {
+    /// Required. The Google Cloud project for which to retrieve key metadata, in
+    /// the format `projects/*`
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. The maximum number of keys to return. The service may return
+    /// fewer than this value. If unspecified, at most 1000 keys will be returned.
+    /// The maximum value is 1000; values above 1000 will be coerced to 1000.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Optional. Pass this into a subsequent request in order to receive the next
+    /// page of results.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[KeyDashboardService.ListCryptoKeys][google.cloud.kms.inventory.v1.KeyDashboardService.ListCryptoKeys\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListCryptoKeysResponse {
+    /// The list of \[CryptoKeys][google.cloud.kms.v1.CryptoKey\].
+    #[prost(message, repeated, tag = "1")]
+    pub crypto_keys: ::prost::alloc::vec::Vec<super::super::v1::CryptoKey>,
+    /// The page token returned from the previous response if the next page is
+    /// desired.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod key_dashboard_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Provides a cross-region view of all Cloud KMS keys in a given Cloud project.
+    #[derive(Debug, Clone)]
+    pub struct KeyDashboardServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> KeyDashboardServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> KeyDashboardServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            KeyDashboardServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Returns cryptographic keys managed by Cloud KMS in a given Cloud project.
+        /// Note that this data is sourced from snapshots, meaning it may not
+        /// completely reflect the actual state of key metadata at call time.
+        pub async fn list_crypto_keys(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListCryptoKeysRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListCryptoKeysResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.kms.inventory.v1.KeyDashboardService/ListCryptoKeys",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.kms.inventory.v1.KeyDashboardService",
+                        "ListCryptoKeys",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Request message for
 /// \[KeyTrackingService.GetProtectedResourcesSummary][google.cloud.kms.inventory.v1.KeyTrackingService.GetProtectedResourcesSummary\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -201,6 +343,22 @@ pub mod key_tracking_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns aggregate information about the resources protected by the given
         /// Cloud KMS [CryptoKey][google.cloud.kms.v1.CryptoKey]. Only resources within
         /// the same Cloud organization as the key will be returned. The project that
@@ -209,7 +367,10 @@ pub mod key_tracking_service_client {
         pub async fn get_protected_resources_summary(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProtectedResourcesSummaryRequest>,
-        ) -> Result<tonic::Response<super::ProtectedResourcesSummary>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ProtectedResourcesSummary>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -223,14 +384,22 @@ pub mod key_tracking_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.kms.inventory.v1.KeyTrackingService/GetProtectedResourcesSummary",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.kms.inventory.v1.KeyTrackingService",
+                        "GetProtectedResourcesSummary",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns metadata about the resources protected by the given Cloud KMS
         /// [CryptoKey][google.cloud.kms.v1.CryptoKey] in the given Cloud organization.
         pub async fn search_protected_resources(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchProtectedResourcesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SearchProtectedResourcesResponse>,
             tonic::Status,
         > {
@@ -247,122 +416,15 @@ pub mod key_tracking_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.kms.inventory.v1.KeyTrackingService/SearchProtectedResources",
             );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[KeyDashboardService.ListCryptoKeys][google.cloud.kms.inventory.v1.KeyDashboardService.ListCryptoKeys\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCryptoKeysRequest {
-    /// Required. The Google Cloud project for which to retrieve key metadata, in
-    /// the format `projects/*`
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. The maximum number of keys to return. The service may return
-    /// fewer than this value. If unspecified, at most 1000 keys will be returned.
-    /// The maximum value is 1000; values above 1000 will be coerced to 1000.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Optional. Pass this into a subsequent request in order to receive the next
-    /// page of results.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[KeyDashboardService.ListCryptoKeys][google.cloud.kms.inventory.v1.KeyDashboardService.ListCryptoKeys\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListCryptoKeysResponse {
-    /// The list of \[CryptoKeys][google.cloud.kms.v1.CryptoKey\].
-    #[prost(message, repeated, tag = "1")]
-    pub crypto_keys: ::prost::alloc::vec::Vec<super::super::v1::CryptoKey>,
-    /// The page token returned from the previous response if the next page is
-    /// desired.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod key_dashboard_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Provides a cross-region view of all Cloud KMS keys in a given Cloud project.
-    #[derive(Debug, Clone)]
-    pub struct KeyDashboardServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> KeyDashboardServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> KeyDashboardServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            KeyDashboardServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Returns cryptographic keys managed by Cloud KMS in a given Cloud project.
-        /// Note that this data is sourced from snapshots, meaning it may not
-        /// completely reflect the actual state of key metadata at call time.
-        pub async fn list_crypto_keys(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListCryptoKeysRequest>,
-        ) -> Result<tonic::Response<super::ListCryptoKeysResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.kms.inventory.v1.KeyDashboardService/ListCryptoKeys",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.kms.inventory.v1.KeyTrackingService",
+                        "SearchProtectedResources",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

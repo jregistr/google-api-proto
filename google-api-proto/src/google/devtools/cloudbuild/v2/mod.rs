@@ -611,11 +611,27 @@ pub mod repository_manager_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a Connection.
         pub async fn create_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConnectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -632,13 +648,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/CreateConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "CreateConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single connection.
         pub async fn get_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectionRequest>,
-        ) -> Result<tonic::Response<super::Connection>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Connection>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -652,13 +676,24 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/GetConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "GetConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Connections in a given project and location.
         pub async fn list_connections(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectionsRequest>,
-        ) -> Result<tonic::Response<super::ListConnectionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListConnectionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -672,13 +707,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/ListConnections",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "ListConnections",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a single connection.
         pub async fn update_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateConnectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -695,13 +738,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/UpdateConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "UpdateConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single connection.
         pub async fn delete_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConnectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -718,13 +769,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/DeleteConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "DeleteConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a Repository.
         pub async fn create_repository(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateRepositoryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -741,13 +800,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/CreateRepository",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "CreateRepository",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates multiple repositories inside a connection.
         pub async fn batch_create_repositories(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchCreateRepositoriesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -764,13 +831,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/BatchCreateRepositories",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "BatchCreateRepositories",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single repository.
         pub async fn get_repository(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRepositoryRequest>,
-        ) -> Result<tonic::Response<super::Repository>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Repository>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -784,13 +859,24 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/GetRepository",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "GetRepository",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Repositories in a given connection.
         pub async fn list_repositories(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRepositoriesRequest>,
-        ) -> Result<tonic::Response<super::ListRepositoriesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListRepositoriesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -804,13 +890,21 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/ListRepositories",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "ListRepositories",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single repository.
         pub async fn delete_repository(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteRepositoryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -827,13 +921,24 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/DeleteRepository",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "DeleteRepository",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches read/write token of a given repository.
         pub async fn fetch_read_write_token(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchReadWriteTokenRequest>,
-        ) -> Result<tonic::Response<super::FetchReadWriteTokenResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::FetchReadWriteTokenResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -847,13 +952,24 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/FetchReadWriteToken",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "FetchReadWriteToken",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches read token of a given repository.
         pub async fn fetch_read_token(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchReadTokenRequest>,
-        ) -> Result<tonic::Response<super::FetchReadTokenResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::FetchReadTokenResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -867,14 +983,22 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/FetchReadToken",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "FetchReadToken",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// FetchLinkableRepositories get repositories from SCM that are
         /// accessible and could be added to the connection.
         pub async fn fetch_linkable_repositories(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchLinkableRepositoriesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::FetchLinkableRepositoriesResponse>,
             tonic::Status,
         > {
@@ -891,7 +1015,15 @@ pub mod repository_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v2.RepositoryManager/FetchLinkableRepositories",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v2.RepositoryManager",
+                        "FetchLinkableRepositories",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

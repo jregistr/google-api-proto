@@ -385,6 +385,22 @@ pub mod subscriber_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a subscription to a given topic for a given subscriber.
         /// If the subscription already exists, returns ALREADY_EXISTS.
         /// If the corresponding topic doesn't exist, returns NOT_FOUND.
@@ -394,7 +410,7 @@ pub mod subscriber_client {
         pub async fn create_subscription(
             &mut self,
             request: impl tonic::IntoRequest<super::Subscription>,
-        ) -> Result<tonic::Response<super::Subscription>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Subscription>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -408,13 +424,21 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/CreateSubscription",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Subscriber",
+                        "CreateSubscription",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the configuration details of a subscription.
         pub async fn get_subscription(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSubscriptionRequest>,
-        ) -> Result<tonic::Response<super::Subscription>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Subscription>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -428,13 +452,24 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/GetSubscription",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Subscriber",
+                        "GetSubscription",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists matching subscriptions.
         pub async fn list_subscriptions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListSubscriptionsRequest>,
-        ) -> Result<tonic::Response<super::ListSubscriptionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListSubscriptionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -448,7 +483,15 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/ListSubscriptions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Subscriber",
+                        "ListSubscriptions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing subscription. All pending messages in the subscription
         /// are immediately dropped. Calls to Pull after deletion will return
@@ -458,7 +501,7 @@ pub mod subscriber_client {
         pub async fn delete_subscription(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteSubscriptionRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -472,7 +515,15 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/DeleteSubscription",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Subscriber",
+                        "DeleteSubscription",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Modifies the ack deadline for a specific message. This method is useful to
         /// indicate that more time is needed to process a message by the subscriber,
@@ -481,7 +532,7 @@ pub mod subscriber_client {
         pub async fn modify_ack_deadline(
             &mut self,
             request: impl tonic::IntoRequest<super::ModifyAckDeadlineRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -495,7 +546,15 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/ModifyAckDeadline",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Subscriber",
+                        "ModifyAckDeadline",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Acknowledges the messages associated with the ack tokens in the
         /// AcknowledgeRequest. The Pub/Sub system can remove the relevant messages
@@ -507,7 +566,7 @@ pub mod subscriber_client {
         pub async fn acknowledge(
             &mut self,
             request: impl tonic::IntoRequest<super::AcknowledgeRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -521,7 +580,12 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/Acknowledge",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.pubsub.v1beta2.Subscriber", "Acknowledge"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Pulls messages from the server. Returns an empty list if there are no
         /// messages available in the backlog. The server may return UNAVAILABLE if
@@ -530,7 +594,7 @@ pub mod subscriber_client {
         pub async fn pull(
             &mut self,
             request: impl tonic::IntoRequest<super::PullRequest>,
-        ) -> Result<tonic::Response<super::PullResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PullResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -544,7 +608,10 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/Pull",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.pubsub.v1beta2.Subscriber", "Pull"));
+            self.inner.unary(req, path, codec).await
         }
         /// Modifies the PushConfig for a specified subscription.
         ///
@@ -556,7 +623,7 @@ pub mod subscriber_client {
         pub async fn modify_push_config(
             &mut self,
             request: impl tonic::IntoRequest<super::ModifyPushConfigRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -570,7 +637,15 @@ pub mod subscriber_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Subscriber/ModifyPushConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Subscriber",
+                        "ModifyPushConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -634,11 +709,27 @@ pub mod publisher_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates the given topic with the given name.
         pub async fn create_topic(
             &mut self,
             request: impl tonic::IntoRequest<super::Topic>,
-        ) -> Result<tonic::Response<super::Topic>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Topic>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -652,14 +743,22 @@ pub mod publisher_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Publisher/CreateTopic",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.pubsub.v1beta2.Publisher", "CreateTopic"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Adds one or more messages to the topic. Returns NOT_FOUND if the topic does
         /// not exist.
         pub async fn publish(
             &mut self,
             request: impl tonic::IntoRequest<super::PublishRequest>,
-        ) -> Result<tonic::Response<super::PublishResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::PublishResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -673,13 +772,16 @@ pub mod publisher_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Publisher/Publish",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.pubsub.v1beta2.Publisher", "Publish"));
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the configuration of a topic.
         pub async fn get_topic(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTopicRequest>,
-        ) -> Result<tonic::Response<super::Topic>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Topic>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -693,13 +795,19 @@ pub mod publisher_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Publisher/GetTopic",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.pubsub.v1beta2.Publisher", "GetTopic"));
+            self.inner.unary(req, path, codec).await
         }
         /// Lists matching topics.
         pub async fn list_topics(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTopicsRequest>,
-        ) -> Result<tonic::Response<super::ListTopicsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTopicsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -713,13 +821,18 @@ pub mod publisher_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Publisher/ListTopics",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.pubsub.v1beta2.Publisher", "ListTopics"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the name of the subscriptions for this topic.
         pub async fn list_topic_subscriptions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTopicSubscriptionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListTopicSubscriptionsResponse>,
             tonic::Status,
         > {
@@ -736,7 +849,15 @@ pub mod publisher_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Publisher/ListTopicSubscriptions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.pubsub.v1beta2.Publisher",
+                        "ListTopicSubscriptions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the topic with the given name. Returns NOT_FOUND if the topic does
         /// not exist. After a topic is deleted, a new topic may be created with the
@@ -746,7 +867,7 @@ pub mod publisher_client {
         pub async fn delete_topic(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTopicRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -760,7 +881,12 @@ pub mod publisher_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.pubsub.v1beta2.Publisher/DeleteTopic",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.pubsub.v1beta2.Publisher", "DeleteTopic"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

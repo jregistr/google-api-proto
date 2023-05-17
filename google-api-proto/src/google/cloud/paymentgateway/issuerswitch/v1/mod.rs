@@ -847,6 +847,536 @@ impl XmlApiType {
         }
     }
 }
+/// A rule that is executed by the issuer switch while processing an
+/// API transaction.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Rule {
+    /// The unique identifier for this resource.
+    /// Format: projects/{project}/rules/{rule}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The description of the rule.
+    #[prost(string, tag = "2")]
+    pub rule_description: ::prost::alloc::string::String,
+    /// The API Type for which this rule gets executed. A value of
+    /// `API_TYPE_UNSPECIFIED` indicates that the rule is executed for all API
+    /// transactions.
+    #[prost(enumeration = "ApiType", tag = "3")]
+    pub api_type: i32,
+    /// The transaction type for which this rule gets executed. A value of
+    /// `TRANSACTION_TYPE_UNSPECIFIED` indicates that the rule is executed for
+    /// all transaction types.
+    #[prost(enumeration = "TransactionType", tag = "4")]
+    pub transaction_type: i32,
+}
+/// The metadata associated with a rule. This defines data that are used by the
+/// rule during execution.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RuleMetadata {
+    /// The unique identifier for this resource.
+    /// Format: projects/{project}/rules/{rule}/metadata/{metadata}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The description of the rule metadata.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Type of rule metadata.
+    #[prost(enumeration = "rule_metadata::Type", tag = "3")]
+    pub r#type: i32,
+}
+/// Nested message and enum types in `RuleMetadata`.
+pub mod rule_metadata {
+    /// The type of metadata.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Type {
+        /// Unspecified type.
+        Unspecified = 0,
+        /// List type. Indicates that the metadata contains a list of values which
+        /// the rule requires for execution.
+        List = 1,
+    }
+    impl Type {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Type::Unspecified => "TYPE_UNSPECIFIED",
+                Type::List => "LIST",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "LIST" => Some(Self::List),
+                _ => None,
+            }
+        }
+    }
+}
+/// Represent a single value in a rule's metadata.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RuleMetadataValue {
+    /// Output only. The unique identifier for this resource.
+    /// Format: projects/{project}/rules/{rule}/metadata/{metadata}/values/{value}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The value of the resource which could be of type string or
+    /// AccountReference. The metadata values for rules
+    /// BlockedPayeeAccountReqPayDebitRule, BlockedPayerAccountReqPayDebitRule,
+    /// BlockedPayeeAccountReqPayCreditRule and BlockedPayerAccountReqPayCreditRule
+    /// should be of type AccountReference. For all other rules, metadata values
+    /// should be of type string.
+    ///
+    /// The length of the `value` field depends on the type of
+    /// the value being used for the rule metadata. The following are the minimum
+    /// and maximum lengths for the different types of values.
+    ///
+    /// Value Type | Minimum Length | Maximum Length |
+    /// -------- | -------- | -------- |
+    /// Bank account IFSC   | 11   | 11   |
+    /// Bank account number   | 1   | 255  |
+    /// Device identifier   | 1   | 255   |
+    /// Mobile number   | 12   | 12  |
+    /// Virtual private address (VPA)   | 3   | 255   |
+    #[prost(oneof = "rule_metadata_value::Value", tags = "2, 3")]
+    pub value: ::core::option::Option<rule_metadata_value::Value>,
+}
+/// Nested message and enum types in `RuleMetadataValue`.
+pub mod rule_metadata_value {
+    /// The value of the resource which could be of type string or
+    /// AccountReference. The metadata values for rules
+    /// BlockedPayeeAccountReqPayDebitRule, BlockedPayerAccountReqPayDebitRule,
+    /// BlockedPayeeAccountReqPayCreditRule and BlockedPayerAccountReqPayCreditRule
+    /// should be of type AccountReference. For all other rules, metadata values
+    /// should be of type string.
+    ///
+    /// The length of the `value` field depends on the type of
+    /// the value being used for the rule metadata. The following are the minimum
+    /// and maximum lengths for the different types of values.
+    ///
+    /// Value Type | Minimum Length | Maximum Length |
+    /// -------- | -------- | -------- |
+    /// Bank account IFSC   | 11   | 11   |
+    /// Bank account number   | 1   | 255  |
+    /// Device identifier   | 1   | 255   |
+    /// Mobile number   | 12   | 12  |
+    /// Virtual private address (VPA)   | 3   | 255   |
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// The value for string metadata.
+        #[prost(string, tag = "2")]
+        Id(::prost::alloc::string::String),
+        /// The value for account reference metadata.
+        #[prost(message, tag = "3")]
+        AccountReference(super::AccountReference),
+    }
+}
+/// Request body for the `ListRules` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRulesRequest {
+    /// Required. The parent resource must have the format of `projects/{project}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of rules to return. The service may return fewer
+    /// than this value. If unspecified or if the specified value is less than 50,
+    /// at most 50 rules will be returned. The maximum value is 1000; values above
+    /// 1000 will be coerced to 1000.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListRulesRequest` call.
+    /// Specify this parameter to retrieve the next page of rules.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response body for the `ListRules` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRulesResponse {
+    /// List of rules satisfying the specified filter criteria.
+    #[prost(message, repeated, tag = "1")]
+    pub rules: ::prost::alloc::vec::Vec<Rule>,
+    /// Pass this token in a subsequent `ListRulesRequest` call to continue to list
+    /// results. If all results have been returned, this field is an empty string
+    /// or not present in the response.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Total number of rules matching request criteria across all pages.
+    #[prost(int64, tag = "3")]
+    pub total_size: i64,
+}
+/// Request body for the `ListRuleMetadata` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRuleMetadataRequest {
+    /// Required. The parent resource. The format is
+    /// `projects/{project}/rules/{rule}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of rule metadata to return. The service may return fewer
+    /// than this value. If unspecified or if the specified value is less than 50,
+    /// at most 50 rule metadata will be returned. The maximum value is 1000;
+    /// values above 1000 will be coerced to 1000.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token, received from a previous `ListRuleMetadataRequest` call.
+    /// Specify this parameter to retrieve the next page of rule metadata.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response body for the `ListRuleMetadata` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRuleMetadataResponse {
+    /// List of rule metadata associated with the rule.
+    #[prost(message, repeated, tag = "1")]
+    pub rule_metadata: ::prost::alloc::vec::Vec<RuleMetadata>,
+    /// Pass this token in a subsequent `ListRuleMetadataRequest` call to continue
+    /// to list results. If all results have been returned, this field is an empty
+    /// string or not present in the response.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Total number of rule metadata matching request criteria across all pages.
+    #[prost(int64, tag = "3")]
+    pub total_size: i64,
+}
+/// Request body for the `ListRuleMetadataValues` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRuleMetadataValuesRequest {
+    /// Required. The parent resource. The format is
+    /// `projects/{project}/rules/{rule}/metadata/{metadata}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of metadata values to return. The service may return
+    /// fewer than this value. If unspecified or if the specified value is less
+    /// than 1, at most 50 rule metadata values will be returned. The maximum
+    /// value is 1000; values above 1000 will be coerced to 1000.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// A page token received from a previous `ListRuleMetadataValuesRequest`
+    /// call. Specify this parameter to retrieve the next page of rule metadata
+    /// values.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response body for ListRuleMetadataValues. Contains a List of values for a
+/// given rule metadata resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListRuleMetadataValuesResponse {
+    /// List of values for a given rule metadata resource identifier.
+    #[prost(message, repeated, tag = "1")]
+    pub rule_metadata_values: ::prost::alloc::vec::Vec<RuleMetadataValue>,
+    /// Pass this token in a subsequent `ListRuleMetadataValuesRequest` call to
+    /// continue to list results. If all results have been returned, this field is
+    /// an empty string or not present in the response.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// Request body for the `BatchCreateRuleMetadataValues` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchCreateRuleMetadataValuesRequest {
+    /// The parent resource shared by all ruleMetadataValue being created. The
+    /// format is `projects/{project}/rules/{rule}/metadata/{metadata}`. The
+    /// \[CreateRuleMetadataValueRequest.parent][google.cloud.paymentgateway.issuerswitch.v1.CreateRuleMetadataValueRequest.parent\]
+    /// field in the
+    /// \[CreateRuleMetadataValueRequest][google.cloud.paymentgateway.issuerswitch.v1.CreateRuleMetadataValueRequest\]
+    /// messages contained in this request must match this field.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The request message specifying the resources to create.
+    /// A maximum of 1000 RuleMetadataValues can be created in a batch.
+    #[prost(message, repeated, tag = "2")]
+    pub requests: ::prost::alloc::vec::Vec<CreateRuleMetadataValueRequest>,
+}
+/// Response body for the `BatchCreateRuleMetadataValues` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchCreateRuleMetadataValuesResponse {
+    /// List of RuleMetadataValue created.
+    #[prost(message, repeated, tag = "1")]
+    pub rule_metadata_value: ::prost::alloc::vec::Vec<RuleMetadataValue>,
+}
+/// Request for creating a single `RuleMetadataValue`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateRuleMetadataValueRequest {
+    /// Required. The parent resource where this RuleMetadataValue will be created.
+    /// The format is `projects/{project}/rules/{rule}/metadata/{metadata}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The rule metadata value to create or add to a list.
+    #[prost(message, optional, tag = "2")]
+    pub rule_metadata_value: ::core::option::Option<RuleMetadataValue>,
+}
+/// Request body for the `BatchDeleteRuleMetadataValues` method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchDeleteRuleMetadataValuesRequest {
+    /// The parent resource shared by all RuleMetadataValues being deleted. The
+    /// format is `projects/{project}/rules/{rule}/metadata/{metadata}`. If this is
+    /// set, the parent of all of the RuleMetadataValues specified in the
+    /// list of names must match this field.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The names of the rule metadata values to delete.
+    /// A maximum of 1000 RuleMetadataValue can be deleted in a batch.
+    /// Format: projects/{project}/rules/{rule}/metadata/{metadata}/values/{value}
+    #[prost(string, repeated, tag = "2")]
+    pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Generated client implementations.
+pub mod issuer_switch_rules_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Manages rules used by the issuer switch's rules engine.
+    #[derive(Debug, Clone)]
+    pub struct IssuerSwitchRulesClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> IssuerSwitchRulesClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> IssuerSwitchRulesClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            IssuerSwitchRulesClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// List all rules that are applied on transactions by the issuer switch. Rules
+        /// can be filtered on API type and transaction type.
+        pub async fn list_rules(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListRulesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListRulesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/ListRules",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules",
+                        "ListRules",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// List all rule metadata for a given rule identifier.
+        pub async fn list_rule_metadata(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListRuleMetadataRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListRuleMetadataResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/ListRuleMetadata",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules",
+                        "ListRuleMetadata",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// List all metadata values for a rule metadata identifier.
+        pub async fn list_rule_metadata_values(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListRuleMetadataValuesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListRuleMetadataValuesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/ListRuleMetadataValues",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules",
+                        "ListRuleMetadataValues",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Create (add) multiple values to the list of values under the specified rule
+        /// metadata resource.
+        pub async fn batch_create_rule_metadata_values(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchCreateRuleMetadataValuesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::BatchCreateRuleMetadataValuesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/BatchCreateRuleMetadataValues",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules",
+                        "BatchCreateRuleMetadataValues",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Delete (remove) multiple values from the list of values under the specified
+        /// rules metadata resource.
+        pub async fn batch_delete_rule_metadata_values(
+            &mut self,
+            request: impl tonic::IntoRequest<super::BatchDeleteRuleMetadataValuesRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/BatchDeleteRuleMetadataValues",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules",
+                        "BatchDeleteRuleMetadataValues",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// A complaint processed by the issuer switch.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2380,6 +2910,22 @@ pub mod issuer_switch_resolutions_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Create a complaint. The returned `Operation` type has
         /// the following method-specific fields:
         ///
@@ -2390,7 +2936,7 @@ pub mod issuer_switch_resolutions_client {
         pub async fn create_complaint(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateComplaintRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2407,7 +2953,15 @@ pub mod issuer_switch_resolutions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions/CreateComplaint",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions",
+                        "CreateComplaint",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resolve a complaint. The returned `Operation` type has
         /// the following method-specific fields:
@@ -2419,7 +2973,7 @@ pub mod issuer_switch_resolutions_client {
         pub async fn resolve_complaint(
             &mut self,
             request: impl tonic::IntoRequest<super::ResolveComplaintRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2436,7 +2990,15 @@ pub mod issuer_switch_resolutions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions/ResolveComplaint",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions",
+                        "ResolveComplaint",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Create a dispute. The returned `Operation` type has
         /// the following method-specific fields:
@@ -2448,7 +3010,7 @@ pub mod issuer_switch_resolutions_client {
         pub async fn create_dispute(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDisputeRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2465,7 +3027,15 @@ pub mod issuer_switch_resolutions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions/CreateDispute",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions",
+                        "CreateDispute",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resolve a dispute. The returned `Operation` type has
         /// the following method-specific fields:
@@ -2477,7 +3047,7 @@ pub mod issuer_switch_resolutions_client {
         pub async fn resolve_dispute(
             &mut self,
             request: impl tonic::IntoRequest<super::ResolveDisputeRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2494,7 +3064,15 @@ pub mod issuer_switch_resolutions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions/ResolveDispute",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchResolutions",
+                        "ResolveDispute",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -3746,11 +4324,27 @@ pub mod issuer_switch_transactions_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// List metadata transactions that satisfy the specified filter criteria.
         pub async fn list_metadata_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMetadataTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListMetadataTransactionsResponse>,
             tonic::Status,
         > {
@@ -3767,13 +4361,21 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ListMetadataTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ListMetadataTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List financial transactions that satisfy specified filter criteria.
         pub async fn list_financial_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListFinancialTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListFinancialTransactionsResponse>,
             tonic::Status,
         > {
@@ -3790,13 +4392,21 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ListFinancialTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ListFinancialTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List mandate transactions that satisfy specified filter criteria.
         pub async fn list_mandate_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListMandateTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListMandateTransactionsResponse>,
             tonic::Status,
         > {
@@ -3813,13 +4423,21 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ListMandateTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ListMandateTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List complaint transactions that satisfy specified filter criteria.
         pub async fn list_complaint_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListComplaintTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListComplaintTransactionsResponse>,
             tonic::Status,
         > {
@@ -3836,7 +4454,15 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ListComplaintTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ListComplaintTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Export financial transactions received within the specified time range as a
         /// file into a configured target location. The returned `Operation` type has
@@ -4045,7 +4671,7 @@ pub mod issuer_switch_transactions_client {
         pub async fn export_financial_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportFinancialTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4062,7 +4688,15 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ExportFinancialTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ExportFinancialTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Export metadata transactions received within the specified time range as a
         /// file into a configured target location. The returned `Operation` type has
@@ -4126,7 +4760,7 @@ pub mod issuer_switch_transactions_client {
         pub async fn export_metadata_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportMetadataTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4143,7 +4777,15 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ExportMetadataTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ExportMetadataTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Export mandate transactions received within the specified time range as a
         /// file into a configured target location. The returned `Operation` type has
@@ -4279,7 +4921,7 @@ pub mod issuer_switch_transactions_client {
         pub async fn export_mandate_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportMandateTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4296,7 +4938,15 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ExportMandateTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ExportMandateTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Export complaint transactions received within the specified time range as a
         /// file into a configured target location. The returned `Operation` type has
@@ -4436,7 +5086,7 @@ pub mod issuer_switch_transactions_client {
         pub async fn export_complaint_transactions(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportComplaintTransactionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4453,7 +5103,15 @@ pub mod issuer_switch_transactions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions/ExportComplaintTransactions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchTransactions",
+                        "ExportComplaintTransactions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -4527,473 +5185,5 @@ pub mod upi_transaction {
         /// The payload in XML format received by the issuer switch.
         #[prost(string, tag = "16")]
         Received(::prost::alloc::string::String),
-    }
-}
-/// A rule that is executed by the issuer switch while processing an
-/// API transaction.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Rule {
-    /// The unique identifier for this resource.
-    /// Format: projects/{project}/rules/{rule}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the rule.
-    #[prost(string, tag = "2")]
-    pub rule_description: ::prost::alloc::string::String,
-    /// The API Type for which this rule gets executed. A value of
-    /// `API_TYPE_UNSPECIFIED` indicates that the rule is executed for all API
-    /// transactions.
-    #[prost(enumeration = "ApiType", tag = "3")]
-    pub api_type: i32,
-    /// The transaction type for which this rule gets executed. A value of
-    /// `TRANSACTION_TYPE_UNSPECIFIED` indicates that the rule is executed for
-    /// all transaction types.
-    #[prost(enumeration = "TransactionType", tag = "4")]
-    pub transaction_type: i32,
-}
-/// The metadata associated with a rule. This defines data that are used by the
-/// rule during execution.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RuleMetadata {
-    /// The unique identifier for this resource.
-    /// Format: projects/{project}/rules/{rule}/metadata/{metadata}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The description of the rule metadata.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Type of rule metadata.
-    #[prost(enumeration = "rule_metadata::Type", tag = "3")]
-    pub r#type: i32,
-}
-/// Nested message and enum types in `RuleMetadata`.
-pub mod rule_metadata {
-    /// The type of metadata.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Type {
-        /// Unspecified type.
-        Unspecified = 0,
-        /// List type. Indicates that the metadata contains a list of values which
-        /// the rule requires for execution.
-        List = 1,
-    }
-    impl Type {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Type::Unspecified => "TYPE_UNSPECIFIED",
-                Type::List => "LIST",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "LIST" => Some(Self::List),
-                _ => None,
-            }
-        }
-    }
-}
-/// Represent a single value in a rule's metadata.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RuleMetadataValue {
-    /// Output only. The unique identifier for this resource.
-    /// Format: projects/{project}/rules/{rule}/metadata/{metadata}/values/{value}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The value of the resource which could be of type string or
-    /// AccountReference. The metadata values for rules
-    /// BlockedPayeeAccountReqPayDebitRule, BlockedPayerAccountReqPayDebitRule,
-    /// BlockedPayeeAccountReqPayCreditRule and BlockedPayerAccountReqPayCreditRule
-    /// should be of type AccountReference. For all other rules, metadata values
-    /// should be of type string.
-    ///
-    /// The length of the `value` field depends on the type of
-    /// the value being used for the rule metadata. The following are the minimum
-    /// and maximum lengths for the different types of values.
-    ///
-    /// Value Type | Minimum Length | Maximum Length |
-    /// -------- | -------- | -------- |
-    /// Bank account IFSC   | 11   | 11   |
-    /// Bank account number   | 1   | 255  |
-    /// Device identifier   | 1   | 255   |
-    /// Mobile number   | 12   | 12  |
-    /// Virtual private address (VPA)   | 3   | 255   |
-    #[prost(oneof = "rule_metadata_value::Value", tags = "2, 3")]
-    pub value: ::core::option::Option<rule_metadata_value::Value>,
-}
-/// Nested message and enum types in `RuleMetadataValue`.
-pub mod rule_metadata_value {
-    /// The value of the resource which could be of type string or
-    /// AccountReference. The metadata values for rules
-    /// BlockedPayeeAccountReqPayDebitRule, BlockedPayerAccountReqPayDebitRule,
-    /// BlockedPayeeAccountReqPayCreditRule and BlockedPayerAccountReqPayCreditRule
-    /// should be of type AccountReference. For all other rules, metadata values
-    /// should be of type string.
-    ///
-    /// The length of the `value` field depends on the type of
-    /// the value being used for the rule metadata. The following are the minimum
-    /// and maximum lengths for the different types of values.
-    ///
-    /// Value Type | Minimum Length | Maximum Length |
-    /// -------- | -------- | -------- |
-    /// Bank account IFSC   | 11   | 11   |
-    /// Bank account number   | 1   | 255  |
-    /// Device identifier   | 1   | 255   |
-    /// Mobile number   | 12   | 12  |
-    /// Virtual private address (VPA)   | 3   | 255   |
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// The value for string metadata.
-        #[prost(string, tag = "2")]
-        Id(::prost::alloc::string::String),
-        /// The value for account reference metadata.
-        #[prost(message, tag = "3")]
-        AccountReference(super::AccountReference),
-    }
-}
-/// Request body for the `ListRules` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListRulesRequest {
-    /// Required. The parent resource must have the format of `projects/{project}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of rules to return. The service may return fewer
-    /// than this value. If unspecified or if the specified value is less than 50,
-    /// at most 50 rules will be returned. The maximum value is 1000; values above
-    /// 1000 will be coerced to 1000.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A page token, received from a previous `ListRulesRequest` call.
-    /// Specify this parameter to retrieve the next page of rules.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response body for the `ListRules` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListRulesResponse {
-    /// List of rules satisfying the specified filter criteria.
-    #[prost(message, repeated, tag = "1")]
-    pub rules: ::prost::alloc::vec::Vec<Rule>,
-    /// Pass this token in a subsequent `ListRulesRequest` call to continue to list
-    /// results. If all results have been returned, this field is an empty string
-    /// or not present in the response.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Total number of rules matching request criteria across all pages.
-    #[prost(int64, tag = "3")]
-    pub total_size: i64,
-}
-/// Request body for the `ListRuleMetadata` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListRuleMetadataRequest {
-    /// Required. The parent resource. The format is
-    /// `projects/{project}/rules/{rule}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of rule metadata to return. The service may return fewer
-    /// than this value. If unspecified or if the specified value is less than 50,
-    /// at most 50 rule metadata will be returned. The maximum value is 1000;
-    /// values above 1000 will be coerced to 1000.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A page token, received from a previous `ListRuleMetadataRequest` call.
-    /// Specify this parameter to retrieve the next page of rule metadata.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response body for the `ListRuleMetadata` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListRuleMetadataResponse {
-    /// List of rule metadata associated with the rule.
-    #[prost(message, repeated, tag = "1")]
-    pub rule_metadata: ::prost::alloc::vec::Vec<RuleMetadata>,
-    /// Pass this token in a subsequent `ListRuleMetadataRequest` call to continue
-    /// to list results. If all results have been returned, this field is an empty
-    /// string or not present in the response.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Total number of rule metadata matching request criteria across all pages.
-    #[prost(int64, tag = "3")]
-    pub total_size: i64,
-}
-/// Request body for the `ListRuleMetadataValues` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListRuleMetadataValuesRequest {
-    /// Required. The parent resource. The format is
-    /// `projects/{project}/rules/{rule}/metadata/{metadata}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of metadata values to return. The service may return
-    /// fewer than this value. If unspecified or if the specified value is less
-    /// than 1, at most 50 rule metadata values will be returned. The maximum
-    /// value is 1000; values above 1000 will be coerced to 1000.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// A page token received from a previous `ListRuleMetadataValuesRequest`
-    /// call. Specify this parameter to retrieve the next page of rule metadata
-    /// values.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response body for ListRuleMetadataValues. Contains a List of values for a
-/// given rule metadata resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListRuleMetadataValuesResponse {
-    /// List of values for a given rule metadata resource identifier.
-    #[prost(message, repeated, tag = "1")]
-    pub rule_metadata_values: ::prost::alloc::vec::Vec<RuleMetadataValue>,
-    /// Pass this token in a subsequent `ListRuleMetadataValuesRequest` call to
-    /// continue to list results. If all results have been returned, this field is
-    /// an empty string or not present in the response.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// Request body for the `BatchCreateRuleMetadataValues` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchCreateRuleMetadataValuesRequest {
-    /// The parent resource shared by all ruleMetadataValue being created. The
-    /// format is `projects/{project}/rules/{rule}/metadata/{metadata}`. The
-    /// \[CreateRuleMetadataValueRequest.parent][google.cloud.paymentgateway.issuerswitch.v1.CreateRuleMetadataValueRequest.parent\]
-    /// field in the
-    /// \[CreateRuleMetadataValueRequest][google.cloud.paymentgateway.issuerswitch.v1.CreateRuleMetadataValueRequest\]
-    /// messages contained in this request must match this field.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The request message specifying the resources to create.
-    /// A maximum of 1000 RuleMetadataValues can be created in a batch.
-    #[prost(message, repeated, tag = "2")]
-    pub requests: ::prost::alloc::vec::Vec<CreateRuleMetadataValueRequest>,
-}
-/// Response body for the `BatchCreateRuleMetadataValues` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchCreateRuleMetadataValuesResponse {
-    /// List of RuleMetadataValue created.
-    #[prost(message, repeated, tag = "1")]
-    pub rule_metadata_value: ::prost::alloc::vec::Vec<RuleMetadataValue>,
-}
-/// Request for creating a single `RuleMetadataValue`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateRuleMetadataValueRequest {
-    /// Required. The parent resource where this RuleMetadataValue will be created.
-    /// The format is `projects/{project}/rules/{rule}/metadata/{metadata}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The rule metadata value to create or add to a list.
-    #[prost(message, optional, tag = "2")]
-    pub rule_metadata_value: ::core::option::Option<RuleMetadataValue>,
-}
-/// Request body for the `BatchDeleteRuleMetadataValues` method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchDeleteRuleMetadataValuesRequest {
-    /// The parent resource shared by all RuleMetadataValues being deleted. The
-    /// format is `projects/{project}/rules/{rule}/metadata/{metadata}`. If this is
-    /// set, the parent of all of the RuleMetadataValues specified in the
-    /// list of names must match this field.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The names of the rule metadata values to delete.
-    /// A maximum of 1000 RuleMetadataValue can be deleted in a batch.
-    /// Format: projects/{project}/rules/{rule}/metadata/{metadata}/values/{value}
-    #[prost(string, repeated, tag = "2")]
-    pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Generated client implementations.
-pub mod issuer_switch_rules_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Manages rules used by the issuer switch's rules engine.
-    #[derive(Debug, Clone)]
-    pub struct IssuerSwitchRulesClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> IssuerSwitchRulesClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> IssuerSwitchRulesClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            IssuerSwitchRulesClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// List all rules that are applied on transactions by the issuer switch. Rules
-        /// can be filtered on API type and transaction type.
-        pub async fn list_rules(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListRulesRequest>,
-        ) -> Result<tonic::Response<super::ListRulesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/ListRules",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// List all rule metadata for a given rule identifier.
-        pub async fn list_rule_metadata(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListRuleMetadataRequest>,
-        ) -> Result<tonic::Response<super::ListRuleMetadataResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/ListRuleMetadata",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// List all metadata values for a rule metadata identifier.
-        pub async fn list_rule_metadata_values(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListRuleMetadataValuesRequest>,
-        ) -> Result<
-            tonic::Response<super::ListRuleMetadataValuesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/ListRuleMetadataValues",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Create (add) multiple values to the list of values under the specified rule
-        /// metadata resource.
-        pub async fn batch_create_rule_metadata_values(
-            &mut self,
-            request: impl tonic::IntoRequest<super::BatchCreateRuleMetadataValuesRequest>,
-        ) -> Result<
-            tonic::Response<super::BatchCreateRuleMetadataValuesResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/BatchCreateRuleMetadataValues",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Delete (remove) multiple values from the list of values under the specified
-        /// rules metadata resource.
-        pub async fn batch_delete_rule_metadata_values(
-            &mut self,
-            request: impl tonic::IntoRequest<super::BatchDeleteRuleMetadataValuesRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.paymentgateway.issuerswitch.v1.IssuerSwitchRules/BatchDeleteRuleMetadataValues",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
     }
 }

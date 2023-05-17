@@ -357,6 +357,22 @@ pub mod api_keys_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new API key.
         ///
         /// NOTE: Key is a global resource; hence the only supported value for
@@ -364,7 +380,7 @@ pub mod api_keys_client {
         pub async fn create_key(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateKeyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -381,7 +397,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/CreateKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "CreateKey"));
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the API keys owned by a project. The key string of the API key
         /// isn't included in the response.
@@ -391,7 +410,10 @@ pub mod api_keys_client {
         pub async fn list_keys(
             &mut self,
             request: impl tonic::IntoRequest<super::ListKeysRequest>,
-        ) -> Result<tonic::Response<super::ListKeysResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListKeysResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -405,7 +427,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/ListKeys",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "ListKeys"));
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the metadata for an API key. The key string of the API key
         /// isn't included in the response.
@@ -415,7 +440,7 @@ pub mod api_keys_client {
         pub async fn get_key(
             &mut self,
             request: impl tonic::IntoRequest<super::GetKeyRequest>,
-        ) -> Result<tonic::Response<super::Key>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Key>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -429,7 +454,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/GetKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "GetKey"));
+            self.inner.unary(req, path, codec).await
         }
         /// Get the key string for an API key.
         ///
@@ -438,7 +466,10 @@ pub mod api_keys_client {
         pub async fn get_key_string(
             &mut self,
             request: impl tonic::IntoRequest<super::GetKeyStringRequest>,
-        ) -> Result<tonic::Response<super::GetKeyStringResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GetKeyStringResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -452,7 +483,12 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/GetKeyString",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "GetKeyString"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Patches the modifiable fields of an API key.
         /// The key string of the API key isn't included in the response.
@@ -462,7 +498,7 @@ pub mod api_keys_client {
         pub async fn update_key(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateKeyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -479,7 +515,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/UpdateKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "UpdateKey"));
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an API key. Deleted key can be retrieved within 30 days of
         /// deletion. Afterward, key will be purged from the project.
@@ -489,7 +528,7 @@ pub mod api_keys_client {
         pub async fn delete_key(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteKeyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -506,7 +545,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/DeleteKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "DeleteKey"));
+            self.inner.unary(req, path, codec).await
         }
         /// Undeletes an API key which was deleted within 30 days.
         ///
@@ -515,7 +557,7 @@ pub mod api_keys_client {
         pub async fn undelete_key(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeleteKeyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -532,7 +574,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/UndeleteKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "UndeleteKey"));
+            self.inner.unary(req, path, codec).await
         }
         /// Find the parent project and resource name of the API
         /// key that matches the key string in the request. If the API key has been
@@ -542,7 +587,10 @@ pub mod api_keys_client {
         pub async fn lookup_key(
             &mut self,
             request: impl tonic::IntoRequest<super::LookupKeyRequest>,
-        ) -> Result<tonic::Response<super::LookupKeyResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::LookupKeyResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -556,7 +604,10 @@ pub mod api_keys_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.api.apikeys.v2.ApiKeys/LookupKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.api.apikeys.v2.ApiKeys", "LookupKey"));
+            self.inner.unary(req, path, codec).await
         }
     }
 }

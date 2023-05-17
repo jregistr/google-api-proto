@@ -453,6 +453,22 @@ pub mod home_graph_api_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Requests Google to send an `action.devices.SYNC`
         /// [intent](https://developers.home.google.com/cloud-to-cloud/intents/sync)
         /// to your smart home Action to update device metadata for the given user.
@@ -466,7 +482,10 @@ pub mod home_graph_api_service_client {
         pub async fn request_sync_devices(
             &mut self,
             request: impl tonic::IntoRequest<super::RequestSyncDevicesRequest>,
-        ) -> Result<tonic::Response<super::RequestSyncDevicesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::RequestSyncDevicesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -480,7 +499,15 @@ pub mod home_graph_api_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.home.graph.v1.HomeGraphApiService/RequestSyncDevices",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.home.graph.v1.HomeGraphApiService",
+                        "RequestSyncDevices",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Reports device state and optionally sends device notifications.
         /// Called by your smart home Action when the state of a third-party device
@@ -502,7 +529,7 @@ pub mod home_graph_api_service_client {
         pub async fn report_state_and_notification(
             &mut self,
             request: impl tonic::IntoRequest<super::ReportStateAndNotificationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ReportStateAndNotificationResponse>,
             tonic::Status,
         > {
@@ -519,7 +546,15 @@ pub mod home_graph_api_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.home.graph.v1.HomeGraphApiService/ReportStateAndNotification",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.home.graph.v1.HomeGraphApiService",
+                        "ReportStateAndNotification",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Unlinks the given third-party user from your smart home Action.
         /// All data related to this user will be deleted.
@@ -536,7 +571,7 @@ pub mod home_graph_api_service_client {
         pub async fn delete_agent_user(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAgentUserRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -550,7 +585,15 @@ pub mod home_graph_api_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.home.graph.v1.HomeGraphApiService/DeleteAgentUser",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.home.graph.v1.HomeGraphApiService",
+                        "DeleteAgentUser",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the current states in Home Graph for the given set of the third-party
         /// user's devices.
@@ -562,7 +605,7 @@ pub mod home_graph_api_service_client {
         pub async fn query(
             &mut self,
             request: impl tonic::IntoRequest<super::QueryRequest>,
-        ) -> Result<tonic::Response<super::QueryResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::QueryResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -576,7 +619,12 @@ pub mod home_graph_api_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.home.graph.v1.HomeGraphApiService/Query",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.home.graph.v1.HomeGraphApiService", "Query"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets all the devices associated with the given third-party user.
         ///
@@ -587,7 +635,7 @@ pub mod home_graph_api_service_client {
         pub async fn sync(
             &mut self,
             request: impl tonic::IntoRequest<super::SyncRequest>,
-        ) -> Result<tonic::Response<super::SyncResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::SyncResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -601,7 +649,12 @@ pub mod home_graph_api_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.home.graph.v1.HomeGraphApiService/Sync",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.home.graph.v1.HomeGraphApiService", "Sync"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

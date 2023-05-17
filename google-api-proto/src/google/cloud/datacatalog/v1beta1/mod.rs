@@ -1,3 +1,273 @@
+/// Tags are used to attach custom metadata to Data Catalog resources. Tags
+/// conform to the specifications within their tag template.
+///
+/// See [Data Catalog
+/// IAM](<https://cloud.google.com/data-catalog/docs/concepts/iam>) for information
+/// on the permissions needed to create or view tags.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Tag {
+    /// The resource name of the tag in URL format. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}/tags/{tag_id}
+    ///
+    /// where `tag_id` is a system-generated identifier.
+    /// Note that this Tag may not actually be stored in the location in this name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The resource name of the tag template that this tag uses. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
+    ///
+    /// This field cannot be modified after creation.
+    #[prost(string, tag = "2")]
+    pub template: ::prost::alloc::string::String,
+    /// Output only. The display name of the tag template.
+    #[prost(string, tag = "5")]
+    pub template_display_name: ::prost::alloc::string::String,
+    /// Required. This maps the ID of a tag field to the value of and additional information
+    /// about that field. Valid field IDs are defined by the tag's template. A tag
+    /// must have at least 1 field and at most 500 fields.
+    #[prost(btree_map = "string, message", tag = "3")]
+    pub fields: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        TagField,
+    >,
+    /// The scope within the parent resource that this tag is attached to. If not
+    /// provided, the tag is attached to the parent resource itself.
+    /// Deleting the scope from the parent resource will delete all tags attached
+    /// to that scope. These fields cannot be updated after creation.
+    #[prost(oneof = "tag::Scope", tags = "4")]
+    pub scope: ::core::option::Option<tag::Scope>,
+}
+/// Nested message and enum types in `Tag`.
+pub mod tag {
+    /// The scope within the parent resource that this tag is attached to. If not
+    /// provided, the tag is attached to the parent resource itself.
+    /// Deleting the scope from the parent resource will delete all tags attached
+    /// to that scope. These fields cannot be updated after creation.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Scope {
+        /// Resources like Entry can have schemas associated with them. This scope
+        /// allows users to attach tags to an individual column based on that schema.
+        ///
+        /// For attaching a tag to a nested column, use `.` to separate the column
+        /// names. Example:
+        ///
+        /// * `outer_column.inner_column`
+        #[prost(string, tag = "4")]
+        Column(::prost::alloc::string::String),
+    }
+}
+/// Contains the value and supporting information for a field within
+/// a \[Tag][google.cloud.datacatalog.v1beta1.Tag\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagField {
+    /// Output only. The display name of this field.
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The order of this field with respect to other fields in this tag. It can be
+    /// set in \[Tag][google.cloud.datacatalog.v1beta1.TagTemplateField.order\]. For
+    /// example, a higher value can indicate a more important field. The value can
+    /// be negative. Multiple fields can have the same order, and field orders
+    /// within a tag do not have to be sequential.
+    #[prost(int32, tag = "7")]
+    pub order: i32,
+    /// Required. The value of this field.
+    #[prost(oneof = "tag_field::Kind", tags = "2, 3, 4, 5, 6")]
+    pub kind: ::core::option::Option<tag_field::Kind>,
+}
+/// Nested message and enum types in `TagField`.
+pub mod tag_field {
+    /// Holds an enum value.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EnumValue {
+        /// The display name of the enum value.
+        #[prost(string, tag = "1")]
+        pub display_name: ::prost::alloc::string::String,
+    }
+    /// Required. The value of this field.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Kind {
+        /// Holds the value for a tag field with double type.
+        #[prost(double, tag = "2")]
+        DoubleValue(f64),
+        /// Holds the value for a tag field with string type.
+        #[prost(string, tag = "3")]
+        StringValue(::prost::alloc::string::String),
+        /// Holds the value for a tag field with boolean type.
+        #[prost(bool, tag = "4")]
+        BoolValue(bool),
+        /// Holds the value for a tag field with timestamp type.
+        #[prost(message, tag = "5")]
+        TimestampValue(::prost_types::Timestamp),
+        /// Holds the value for a tag field with enum type. This value must be
+        /// one of the allowed values in the definition of this enum.
+        #[prost(message, tag = "6")]
+        EnumValue(EnumValue),
+    }
+}
+/// A tag template defines a tag, which can have one or more typed fields.
+/// The template is used to create and attach the tag to GCP resources.
+/// [Tag template
+/// roles](<https://cloud.google.com/iam/docs/understanding-roles#data-catalog-roles>)
+/// provide permissions to create, edit, and use the template. See, for example,
+/// the [TagTemplate
+/// User](<https://cloud.google.com/data-catalog/docs/how-to/template-user>) role,
+/// which includes permission to use the tag template to tag resources.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagTemplate {
+    /// The resource name of the tag template in URL format. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
+    ///
+    /// Note that this TagTemplate and its child resources may not actually be
+    /// stored in the location in this name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The display name for this template. Defaults to an empty string.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. Map of tag template field IDs to the settings for the field.
+    /// This map is an exhaustive list of the allowed fields. This map must contain
+    /// at least one field and at most 500 fields.
+    ///
+    /// The keys to this map are tag template field IDs. Field IDs can contain
+    /// letters (both uppercase and lowercase), numbers (0-9) and underscores (_).
+    /// Field IDs must be at least 1 character long and at most
+    /// 64 characters long. Field IDs must start with a letter or underscore.
+    #[prost(btree_map = "string, message", tag = "3")]
+    pub fields: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        TagTemplateField,
+    >,
+}
+/// The template for an individual field within a tag template.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TagTemplateField {
+    /// Output only. The resource name of the tag template field in URL format. Example:
+    ///
+    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template}/fields/{field}
+    ///
+    /// Note that this TagTemplateField may not actually be stored in the location
+    /// in this name.
+    #[prost(string, tag = "6")]
+    pub name: ::prost::alloc::string::String,
+    /// The display name for this field. Defaults to an empty string.
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The type of value this tag field can contain.
+    #[prost(message, optional, tag = "2")]
+    pub r#type: ::core::option::Option<FieldType>,
+    /// Whether this is a required field. Defaults to false.
+    #[prost(bool, tag = "3")]
+    pub is_required: bool,
+    /// The order of this field with respect to other fields in this tag
+    /// template.  A higher value indicates a more important field. The value can
+    /// be negative. Multiple fields can have the same order, and field orders
+    /// within a tag do not have to be sequential.
+    #[prost(int32, tag = "5")]
+    pub order: i32,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FieldType {
+    /// Required.
+    #[prost(oneof = "field_type::TypeDecl", tags = "1, 2")]
+    pub type_decl: ::core::option::Option<field_type::TypeDecl>,
+}
+/// Nested message and enum types in `FieldType`.
+pub mod field_type {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EnumType {
+        /// Required on create; optional on update. The set of allowed values for
+        /// this enum. This set must not be empty, the display names of the values in
+        /// this set must not be empty and the display names of the values must be
+        /// case-insensitively unique within this set. Currently, enum values can
+        /// only be added to the list of allowed values. Deletion and renaming of
+        /// enum values are not supported. Can have up to 500 allowed values.
+        #[prost(message, repeated, tag = "1")]
+        pub allowed_values: ::prost::alloc::vec::Vec<enum_type::EnumValue>,
+    }
+    /// Nested message and enum types in `EnumType`.
+    pub mod enum_type {
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct EnumValue {
+            /// Required. The display name of the enum value. Must not be an empty string.
+            #[prost(string, tag = "1")]
+            pub display_name: ::prost::alloc::string::String,
+        }
+    }
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum PrimitiveType {
+        /// This is the default invalid value for a type.
+        Unspecified = 0,
+        /// A double precision number.
+        Double = 1,
+        /// An UTF-8 string.
+        String = 2,
+        /// A boolean value.
+        Bool = 3,
+        /// A timestamp.
+        Timestamp = 4,
+    }
+    impl PrimitiveType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                PrimitiveType::Unspecified => "PRIMITIVE_TYPE_UNSPECIFIED",
+                PrimitiveType::Double => "DOUBLE",
+                PrimitiveType::String => "STRING",
+                PrimitiveType::Bool => "BOOL",
+                PrimitiveType::Timestamp => "TIMESTAMP",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PRIMITIVE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DOUBLE" => Some(Self::Double),
+                "STRING" => Some(Self::String),
+                "BOOL" => Some(Self::Bool),
+                "TIMESTAMP" => Some(Self::Timestamp),
+                _ => None,
+            }
+        }
+    }
+    /// Required.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum TypeDecl {
+        /// Represents primitive types - string, bool etc.
+        #[prost(enumeration = "PrimitiveType", tag = "1")]
+        PrimitiveType(i32),
+        /// Represents an enum type.
+        #[prost(message, tag = "2")]
+        EnumType(EnumType),
+    }
+}
 /// This enum describes all the possible systems that Data Catalog integrates
 /// with.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
@@ -297,276 +567,6 @@ impl TableSourceType {
             "BIGQUERY_TABLE" => Some(Self::BigqueryTable),
             _ => None,
         }
-    }
-}
-/// Tags are used to attach custom metadata to Data Catalog resources. Tags
-/// conform to the specifications within their tag template.
-///
-/// See [Data Catalog
-/// IAM](<https://cloud.google.com/data-catalog/docs/concepts/iam>) for information
-/// on the permissions needed to create or view tags.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Tag {
-    /// The resource name of the tag in URL format. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/entrygroups/{entry_group_id}/entries/{entry_id}/tags/{tag_id}
-    ///
-    /// where `tag_id` is a system-generated identifier.
-    /// Note that this Tag may not actually be stored in the location in this name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The resource name of the tag template that this tag uses. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
-    ///
-    /// This field cannot be modified after creation.
-    #[prost(string, tag = "2")]
-    pub template: ::prost::alloc::string::String,
-    /// Output only. The display name of the tag template.
-    #[prost(string, tag = "5")]
-    pub template_display_name: ::prost::alloc::string::String,
-    /// Required. This maps the ID of a tag field to the value of and additional information
-    /// about that field. Valid field IDs are defined by the tag's template. A tag
-    /// must have at least 1 field and at most 500 fields.
-    #[prost(btree_map = "string, message", tag = "3")]
-    pub fields: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        TagField,
-    >,
-    /// The scope within the parent resource that this tag is attached to. If not
-    /// provided, the tag is attached to the parent resource itself.
-    /// Deleting the scope from the parent resource will delete all tags attached
-    /// to that scope. These fields cannot be updated after creation.
-    #[prost(oneof = "tag::Scope", tags = "4")]
-    pub scope: ::core::option::Option<tag::Scope>,
-}
-/// Nested message and enum types in `Tag`.
-pub mod tag {
-    /// The scope within the parent resource that this tag is attached to. If not
-    /// provided, the tag is attached to the parent resource itself.
-    /// Deleting the scope from the parent resource will delete all tags attached
-    /// to that scope. These fields cannot be updated after creation.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Scope {
-        /// Resources like Entry can have schemas associated with them. This scope
-        /// allows users to attach tags to an individual column based on that schema.
-        ///
-        /// For attaching a tag to a nested column, use `.` to separate the column
-        /// names. Example:
-        ///
-        /// * `outer_column.inner_column`
-        #[prost(string, tag = "4")]
-        Column(::prost::alloc::string::String),
-    }
-}
-/// Contains the value and supporting information for a field within
-/// a \[Tag][google.cloud.datacatalog.v1beta1.Tag\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagField {
-    /// Output only. The display name of this field.
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. The order of this field with respect to other fields in this tag. It can be
-    /// set in \[Tag][google.cloud.datacatalog.v1beta1.TagTemplateField.order\]. For
-    /// example, a higher value can indicate a more important field. The value can
-    /// be negative. Multiple fields can have the same order, and field orders
-    /// within a tag do not have to be sequential.
-    #[prost(int32, tag = "7")]
-    pub order: i32,
-    /// Required. The value of this field.
-    #[prost(oneof = "tag_field::Kind", tags = "2, 3, 4, 5, 6")]
-    pub kind: ::core::option::Option<tag_field::Kind>,
-}
-/// Nested message and enum types in `TagField`.
-pub mod tag_field {
-    /// Holds an enum value.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EnumValue {
-        /// The display name of the enum value.
-        #[prost(string, tag = "1")]
-        pub display_name: ::prost::alloc::string::String,
-    }
-    /// Required. The value of this field.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Kind {
-        /// Holds the value for a tag field with double type.
-        #[prost(double, tag = "2")]
-        DoubleValue(f64),
-        /// Holds the value for a tag field with string type.
-        #[prost(string, tag = "3")]
-        StringValue(::prost::alloc::string::String),
-        /// Holds the value for a tag field with boolean type.
-        #[prost(bool, tag = "4")]
-        BoolValue(bool),
-        /// Holds the value for a tag field with timestamp type.
-        #[prost(message, tag = "5")]
-        TimestampValue(::prost_types::Timestamp),
-        /// Holds the value for a tag field with enum type. This value must be
-        /// one of the allowed values in the definition of this enum.
-        #[prost(message, tag = "6")]
-        EnumValue(EnumValue),
-    }
-}
-/// A tag template defines a tag, which can have one or more typed fields.
-/// The template is used to create and attach the tag to GCP resources.
-/// [Tag template
-/// roles](<https://cloud.google.com/iam/docs/understanding-roles#data-catalog-roles>)
-/// provide permissions to create, edit, and use the template. See, for example,
-/// the [TagTemplate
-/// User](<https://cloud.google.com/data-catalog/docs/how-to/template-user>) role,
-/// which includes permission to use the tag template to tag resources.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagTemplate {
-    /// The resource name of the tag template in URL format. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template_id}
-    ///
-    /// Note that this TagTemplate and its child resources may not actually be
-    /// stored in the location in this name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The display name for this template. Defaults to an empty string.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. Map of tag template field IDs to the settings for the field.
-    /// This map is an exhaustive list of the allowed fields. This map must contain
-    /// at least one field and at most 500 fields.
-    ///
-    /// The keys to this map are tag template field IDs. Field IDs can contain
-    /// letters (both uppercase and lowercase), numbers (0-9) and underscores (_).
-    /// Field IDs must be at least 1 character long and at most
-    /// 64 characters long. Field IDs must start with a letter or underscore.
-    #[prost(btree_map = "string, message", tag = "3")]
-    pub fields: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        TagTemplateField,
-    >,
-}
-/// The template for an individual field within a tag template.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TagTemplateField {
-    /// Output only. The resource name of the tag template field in URL format. Example:
-    ///
-    /// * projects/{project_id}/locations/{location}/tagTemplates/{tag_template}/fields/{field}
-    ///
-    /// Note that this TagTemplateField may not actually be stored in the location
-    /// in this name.
-    #[prost(string, tag = "6")]
-    pub name: ::prost::alloc::string::String,
-    /// The display name for this field. Defaults to an empty string.
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The type of value this tag field can contain.
-    #[prost(message, optional, tag = "2")]
-    pub r#type: ::core::option::Option<FieldType>,
-    /// Whether this is a required field. Defaults to false.
-    #[prost(bool, tag = "3")]
-    pub is_required: bool,
-    /// The order of this field with respect to other fields in this tag
-    /// template.  A higher value indicates a more important field. The value can
-    /// be negative. Multiple fields can have the same order, and field orders
-    /// within a tag do not have to be sequential.
-    #[prost(int32, tag = "5")]
-    pub order: i32,
-}
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FieldType {
-    /// Required.
-    #[prost(oneof = "field_type::TypeDecl", tags = "1, 2")]
-    pub type_decl: ::core::option::Option<field_type::TypeDecl>,
-}
-/// Nested message and enum types in `FieldType`.
-pub mod field_type {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EnumType {
-        /// Required on create; optional on update. The set of allowed values for
-        /// this enum. This set must not be empty, the display names of the values in
-        /// this set must not be empty and the display names of the values must be
-        /// case-insensitively unique within this set. Currently, enum values can
-        /// only be added to the list of allowed values. Deletion and renaming of
-        /// enum values are not supported. Can have up to 500 allowed values.
-        #[prost(message, repeated, tag = "1")]
-        pub allowed_values: ::prost::alloc::vec::Vec<enum_type::EnumValue>,
-    }
-    /// Nested message and enum types in `EnumType`.
-    pub mod enum_type {
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct EnumValue {
-            /// Required. The display name of the enum value. Must not be an empty string.
-            #[prost(string, tag = "1")]
-            pub display_name: ::prost::alloc::string::String,
-        }
-    }
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum PrimitiveType {
-        /// This is the default invalid value for a type.
-        Unspecified = 0,
-        /// A double precision number.
-        Double = 1,
-        /// An UTF-8 string.
-        String = 2,
-        /// A boolean value.
-        Bool = 3,
-        /// A timestamp.
-        Timestamp = 4,
-    }
-    impl PrimitiveType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                PrimitiveType::Unspecified => "PRIMITIVE_TYPE_UNSPECIFIED",
-                PrimitiveType::Double => "DOUBLE",
-                PrimitiveType::String => "STRING",
-                PrimitiveType::Bool => "BOOL",
-                PrimitiveType::Timestamp => "TIMESTAMP",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "PRIMITIVE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "DOUBLE" => Some(Self::Double),
-                "STRING" => Some(Self::String),
-                "BOOL" => Some(Self::Bool),
-                "TIMESTAMP" => Some(Self::Timestamp),
-                _ => None,
-            }
-        }
-    }
-    /// Required.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum TypeDecl {
-        /// Represents primitive types - string, bool etc.
-        #[prost(enumeration = "PrimitiveType", tag = "1")]
-        PrimitiveType(i32),
-        /// Represents an enum type.
-        #[prost(message, tag = "2")]
-        EnumType(EnumType),
     }
 }
 /// Request message for
@@ -1387,6 +1387,22 @@ pub mod data_catalog_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Searches Data Catalog for multiple resources like entries, tags that
         /// match a query.
         ///
@@ -1406,7 +1422,10 @@ pub mod data_catalog_client {
         pub async fn search_catalog(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchCatalogRequest>,
-        ) -> Result<tonic::Response<super::SearchCatalogResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchCatalogResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1420,7 +1439,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/SearchCatalog",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "SearchCatalog",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// A maximum of 10,000 entry groups may be created per organization across all
         /// locations.
@@ -1432,7 +1459,7 @@ pub mod data_catalog_client {
         pub async fn create_entry_group(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateEntryGroupRequest>,
-        ) -> Result<tonic::Response<super::EntryGroup>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::EntryGroup>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1446,7 +1473,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/CreateEntryGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "CreateEntryGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an EntryGroup. The user should enable the Data Catalog API in the
         /// project identified by the `entry_group.name` parameter (see [Data Catalog
@@ -1456,7 +1491,7 @@ pub mod data_catalog_client {
         pub async fn update_entry_group(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateEntryGroupRequest>,
-        ) -> Result<tonic::Response<super::EntryGroup>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::EntryGroup>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1470,13 +1505,21 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/UpdateEntryGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "UpdateEntryGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an EntryGroup.
         pub async fn get_entry_group(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEntryGroupRequest>,
-        ) -> Result<tonic::Response<super::EntryGroup>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::EntryGroup>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1490,7 +1533,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/GetEntryGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "GetEntryGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an EntryGroup. Only entry groups that do not contain entries can be
         /// deleted. Users should enable the Data Catalog API in the project
@@ -1500,7 +1551,7 @@ pub mod data_catalog_client {
         pub async fn delete_entry_group(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteEntryGroupRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1514,13 +1565,24 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/DeleteEntryGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "DeleteEntryGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists entry groups.
         pub async fn list_entry_groups(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEntryGroupsRequest>,
-        ) -> Result<tonic::Response<super::ListEntryGroupsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListEntryGroupsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1534,7 +1596,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/ListEntryGroups",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "ListEntryGroups",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an entry. Only entries of 'FILESET' type or user-specified type can
         /// be created.
@@ -1548,7 +1618,7 @@ pub mod data_catalog_client {
         pub async fn create_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateEntryRequest>,
-        ) -> Result<tonic::Response<super::Entry>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Entry>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1562,7 +1632,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/CreateEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "CreateEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing entry.
         /// Users should enable the Data Catalog API in the project identified by
@@ -1572,7 +1650,7 @@ pub mod data_catalog_client {
         pub async fn update_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateEntryRequest>,
-        ) -> Result<tonic::Response<super::Entry>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Entry>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1586,7 +1664,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/UpdateEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "UpdateEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing entry. Only entries created through
         /// [CreateEntry][google.cloud.datacatalog.v1beta1.DataCatalog.CreateEntry]
@@ -1598,7 +1684,7 @@ pub mod data_catalog_client {
         pub async fn delete_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteEntryRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1612,13 +1698,21 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/DeleteEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "DeleteEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an entry.
         pub async fn get_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEntryRequest>,
-        ) -> Result<tonic::Response<super::Entry>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Entry>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1632,7 +1726,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/GetEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "GetEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get an entry by target resource name. This method allows clients to use
         /// the resource name from the source Google Cloud Platform service to get the
@@ -1640,7 +1742,7 @@ pub mod data_catalog_client {
         pub async fn lookup_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::LookupEntryRequest>,
-        ) -> Result<tonic::Response<super::Entry>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Entry>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1654,13 +1756,24 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/LookupEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "LookupEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists entries.
         pub async fn list_entries(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEntriesRequest>,
-        ) -> Result<tonic::Response<super::ListEntriesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListEntriesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1674,7 +1787,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/ListEntries",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "ListEntries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a tag template. The user should enable the Data Catalog API in
         /// the project identified by the `parent` parameter (see [Data Catalog
@@ -1684,7 +1805,7 @@ pub mod data_catalog_client {
         pub async fn create_tag_template(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTagTemplateRequest>,
-        ) -> Result<tonic::Response<super::TagTemplate>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TagTemplate>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1698,13 +1819,21 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/CreateTagTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "CreateTagTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a tag template.
         pub async fn get_tag_template(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTagTemplateRequest>,
-        ) -> Result<tonic::Response<super::TagTemplate>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TagTemplate>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1718,7 +1847,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/GetTagTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "GetTagTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a tag template. This method cannot be used to update the fields of
         /// a template. The tag template fields are represented as separate resources
@@ -1730,7 +1867,7 @@ pub mod data_catalog_client {
         pub async fn update_tag_template(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTagTemplateRequest>,
-        ) -> Result<tonic::Response<super::TagTemplate>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TagTemplate>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1744,7 +1881,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/UpdateTagTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "UpdateTagTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a tag template and all tags using the template.
         /// Users should enable the Data Catalog API in the project identified by
@@ -1754,7 +1899,7 @@ pub mod data_catalog_client {
         pub async fn delete_tag_template(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTagTemplateRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1768,7 +1913,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/DeleteTagTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "DeleteTagTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a field in a tag template. The user should enable the Data Catalog
         /// API in the project identified by the `parent` parameter (see
@@ -1778,7 +1931,10 @@ pub mod data_catalog_client {
         pub async fn create_tag_template_field(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTagTemplateFieldRequest>,
-        ) -> Result<tonic::Response<super::TagTemplateField>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::TagTemplateField>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1792,7 +1948,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/CreateTagTemplateField",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "CreateTagTemplateField",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a field in a tag template. This method cannot be used to update the
         /// field type. Users should enable the Data Catalog API in the project
@@ -1802,7 +1966,10 @@ pub mod data_catalog_client {
         pub async fn update_tag_template_field(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTagTemplateFieldRequest>,
-        ) -> Result<tonic::Response<super::TagTemplateField>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::TagTemplateField>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1816,7 +1983,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/UpdateTagTemplateField",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "UpdateTagTemplateField",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Renames a field in a tag template. The user should enable the Data Catalog
         /// API in the project identified by the `name` parameter (see [Data Catalog
@@ -1826,7 +2001,10 @@ pub mod data_catalog_client {
         pub async fn rename_tag_template_field(
             &mut self,
             request: impl tonic::IntoRequest<super::RenameTagTemplateFieldRequest>,
-        ) -> Result<tonic::Response<super::TagTemplateField>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::TagTemplateField>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1840,7 +2018,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/RenameTagTemplateField",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "RenameTagTemplateField",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a field in a tag template and all uses of that field.
         /// Users should enable the Data Catalog API in the project identified by
@@ -1850,7 +2036,7 @@ pub mod data_catalog_client {
         pub async fn delete_tag_template_field(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTagTemplateFieldRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1864,7 +2050,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/DeleteTagTemplateField",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "DeleteTagTemplateField",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a tag on an [Entry][google.cloud.datacatalog.v1beta1.Entry].
         /// Note: The project identified by the `parent` parameter for the
@@ -1876,7 +2070,7 @@ pub mod data_catalog_client {
         pub async fn create_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTagRequest>,
-        ) -> Result<tonic::Response<super::Tag>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Tag>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1890,13 +2084,21 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/CreateTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "CreateTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing tag.
         pub async fn update_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTagRequest>,
-        ) -> Result<tonic::Response<super::Tag>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Tag>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1910,13 +2112,21 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/UpdateTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "UpdateTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a tag.
         pub async fn delete_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTagRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1930,13 +2140,24 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/DeleteTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "DeleteTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the tags on an [Entry][google.cloud.datacatalog.v1beta1.Entry].
         pub async fn list_tags(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTagsRequest>,
-        ) -> Result<tonic::Response<super::ListTagsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTagsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1950,7 +2171,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/ListTags",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "ListTags",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Sets the access control policy for a resource. Replaces any existing
         /// policy.
@@ -1971,7 +2200,7 @@ pub mod data_catalog_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::SetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -1988,7 +2217,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/SetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the access control policy for a resource. A `NOT_FOUND` error
         /// is returned if the resource does not exist. An empty policy is returned
@@ -2011,7 +2248,7 @@ pub mod data_catalog_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::GetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -2028,7 +2265,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/GetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the caller's permissions on a resource.
         /// If the resource does not exist, an empty set of permissions is returned
@@ -2048,7 +2293,7 @@ pub mod data_catalog_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::TestIamPermissionsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::iam::v1::TestIamPermissionsResponse,
             >,
@@ -2067,7 +2312,15 @@ pub mod data_catalog_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.DataCatalog/TestIamPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.DataCatalog",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -2393,11 +2646,27 @@ pub mod policy_tag_manager_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a taxonomy in the specified project.
         pub async fn create_taxonomy(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTaxonomyRequest>,
-        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Taxonomy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2411,14 +2680,22 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/CreateTaxonomy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "CreateTaxonomy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a taxonomy. This operation will also delete all
         /// policy tags in this taxonomy along with their associated policies.
         pub async fn delete_taxonomy(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTaxonomyRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2432,13 +2709,21 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/DeleteTaxonomy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "DeleteTaxonomy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a taxonomy.
         pub async fn update_taxonomy(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTaxonomyRequest>,
-        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Taxonomy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2452,14 +2737,25 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/UpdateTaxonomy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "UpdateTaxonomy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all taxonomies in a project in a particular location that the caller
         /// has permission to view.
         pub async fn list_taxonomies(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ListTaxonomiesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTaxonomiesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2473,13 +2769,21 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/ListTaxonomies",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "ListTaxonomies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a taxonomy.
         pub async fn get_taxonomy(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTaxonomyRequest>,
-        ) -> Result<tonic::Response<super::Taxonomy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Taxonomy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2493,13 +2797,21 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetTaxonomy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "GetTaxonomy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a policy tag in the specified taxonomy.
         pub async fn create_policy_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::CreatePolicyTagRequest>,
-        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PolicyTag>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2513,13 +2825,21 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/CreatePolicyTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "CreatePolicyTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a policy tag. Also deletes all of its descendant policy tags.
         pub async fn delete_policy_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::DeletePolicyTagRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2533,13 +2853,21 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/DeletePolicyTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "DeletePolicyTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a policy tag.
         pub async fn update_policy_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdatePolicyTagRequest>,
-        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PolicyTag>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2553,13 +2881,24 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/UpdatePolicyTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "UpdatePolicyTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all policy tags in a taxonomy.
         pub async fn list_policy_tags(
             &mut self,
             request: impl tonic::IntoRequest<super::ListPolicyTagsRequest>,
-        ) -> Result<tonic::Response<super::ListPolicyTagsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListPolicyTagsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2573,13 +2912,21 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/ListPolicyTags",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "ListPolicyTags",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a policy tag.
         pub async fn get_policy_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPolicyTagRequest>,
-        ) -> Result<tonic::Response<super::PolicyTag>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PolicyTag>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2593,7 +2940,15 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetPolicyTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "GetPolicyTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the IAM policy for a taxonomy or a policy tag.
         pub async fn get_iam_policy(
@@ -2601,7 +2956,7 @@ pub mod policy_tag_manager_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::GetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -2618,7 +2973,15 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/GetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Sets the IAM policy for a taxonomy or a policy tag.
         pub async fn set_iam_policy(
@@ -2626,7 +2989,7 @@ pub mod policy_tag_manager_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::SetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -2643,7 +3006,15 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/SetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the permissions that a caller has on the specified taxonomy or
         /// policy tag.
@@ -2652,7 +3023,7 @@ pub mod policy_tag_manager_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::TestIamPermissionsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::iam::v1::TestIamPermissionsResponse,
             >,
@@ -2671,7 +3042,15 @@ pub mod policy_tag_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManager/TestIamPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManager",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -2847,6 +3226,22 @@ pub mod policy_tag_manager_serialization_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Imports all taxonomies and their policy tags to a project as new
         /// taxonomies.
         ///
@@ -2855,7 +3250,10 @@ pub mod policy_tag_manager_serialization_client {
         pub async fn import_taxonomies(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ImportTaxonomiesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ImportTaxonomiesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2869,7 +3267,15 @@ pub mod policy_tag_manager_serialization_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ImportTaxonomies",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization",
+                        "ImportTaxonomies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports all taxonomies and their policy tags in a project.
         ///
@@ -2878,7 +3284,10 @@ pub mod policy_tag_manager_serialization_client {
         pub async fn export_taxonomies(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportTaxonomiesRequest>,
-        ) -> Result<tonic::Response<super::ExportTaxonomiesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ExportTaxonomiesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2892,7 +3301,15 @@ pub mod policy_tag_manager_serialization_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization/ExportTaxonomies",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.datacatalog.v1beta1.PolicyTagManagerSerialization",
+                        "ExportTaxonomies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

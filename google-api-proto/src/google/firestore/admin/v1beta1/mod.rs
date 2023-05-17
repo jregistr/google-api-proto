@@ -550,6 +550,22 @@ pub mod firestore_admin_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates the specified index.
         /// A newly created index's initial state is `CREATING`. On completion of the
         /// returned [google.longrunning.Operation][google.longrunning.Operation], the state will be `READY`.
@@ -566,7 +582,7 @@ pub mod firestore_admin_client {
         pub async fn create_index(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateIndexRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -583,13 +599,24 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1beta1.FirestoreAdmin/CreateIndex",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1beta1.FirestoreAdmin",
+                        "CreateIndex",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the indexes that match the specified filters.
         pub async fn list_indexes(
             &mut self,
             request: impl tonic::IntoRequest<super::ListIndexesRequest>,
-        ) -> Result<tonic::Response<super::ListIndexesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListIndexesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -603,13 +630,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1beta1.FirestoreAdmin/ListIndexes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1beta1.FirestoreAdmin",
+                        "ListIndexes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an index.
         pub async fn get_index(
             &mut self,
             request: impl tonic::IntoRequest<super::GetIndexRequest>,
-        ) -> Result<tonic::Response<super::Index>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Index>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -623,13 +658,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1beta1.FirestoreAdmin/GetIndex",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1beta1.FirestoreAdmin",
+                        "GetIndex",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an index.
         pub async fn delete_index(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteIndexRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -643,7 +686,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1beta1.FirestoreAdmin/DeleteIndex",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1beta1.FirestoreAdmin",
+                        "DeleteIndex",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports a copy of all or a subset of documents from Google Cloud Firestore
         /// to another storage system, such as Google Cloud Storage. Recent updates to
@@ -656,7 +707,7 @@ pub mod firestore_admin_client {
         pub async fn export_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -673,7 +724,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1beta1.FirestoreAdmin/ExportDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1beta1.FirestoreAdmin",
+                        "ExportDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Imports documents into Google Cloud Firestore. Existing documents with the
         /// same name are overwritten. The import occurs in the background and its
@@ -683,7 +742,7 @@ pub mod firestore_admin_client {
         pub async fn import_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -700,7 +759,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1beta1.FirestoreAdmin/ImportDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1beta1.FirestoreAdmin",
+                        "ImportDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

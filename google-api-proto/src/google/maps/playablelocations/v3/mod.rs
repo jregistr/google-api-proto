@@ -335,6 +335,22 @@ pub mod playable_locations_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns a set of playable locations that lie within a specified area,
         /// that satisfy optional filter criteria.
         ///
@@ -343,7 +359,7 @@ pub mod playable_locations_client {
         pub async fn sample_playable_locations(
             &mut self,
             request: impl tonic::IntoRequest<super::SamplePlayableLocationsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SamplePlayableLocationsResponse>,
             tonic::Status,
         > {
@@ -360,7 +376,15 @@ pub mod playable_locations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.playablelocations.v3.PlayableLocations/SamplePlayableLocations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.maps.playablelocations.v3.PlayableLocations",
+                        "SamplePlayableLocations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Logs bad playable location reports submitted by players.
         ///
@@ -369,7 +393,10 @@ pub mod playable_locations_client {
         pub async fn log_player_reports(
             &mut self,
             request: impl tonic::IntoRequest<super::LogPlayerReportsRequest>,
-        ) -> Result<tonic::Response<super::LogPlayerReportsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::LogPlayerReportsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -383,7 +410,15 @@ pub mod playable_locations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.playablelocations.v3.PlayableLocations/LogPlayerReports",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.maps.playablelocations.v3.PlayableLocations",
+                        "LogPlayerReports",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Logs new events when playable locations are displayed, and when they are
         /// interacted with.
@@ -393,7 +428,10 @@ pub mod playable_locations_client {
         pub async fn log_impressions(
             &mut self,
             request: impl tonic::IntoRequest<super::LogImpressionsRequest>,
-        ) -> Result<tonic::Response<super::LogImpressionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::LogImpressionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -407,7 +445,15 @@ pub mod playable_locations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.playablelocations.v3.PlayableLocations/LogImpressions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.maps.playablelocations.v3.PlayableLocations",
+                        "LogImpressions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

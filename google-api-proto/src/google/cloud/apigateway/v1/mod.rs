@@ -762,11 +762,30 @@ pub mod api_gateway_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists Gateways in a given project and location.
         pub async fn list_gateways(
             &mut self,
             request: impl tonic::IntoRequest<super::ListGatewaysRequest>,
-        ) -> Result<tonic::Response<super::ListGatewaysResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListGatewaysResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -780,13 +799,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/ListGateways",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "ListGateways",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Gateway.
         pub async fn get_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGatewayRequest>,
-        ) -> Result<tonic::Response<super::Gateway>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Gateway>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -800,13 +827,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/GetGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "GetGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Gateway in a given project and location.
         pub async fn create_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateGatewayRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -823,13 +858,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/CreateGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "CreateGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single Gateway.
         pub async fn update_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateGatewayRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -846,13 +889,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/UpdateGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "UpdateGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Gateway.
         pub async fn delete_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteGatewayRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -869,13 +920,24 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/DeleteGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "DeleteGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Apis in a given project and location.
         pub async fn list_apis(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApisRequest>,
-        ) -> Result<tonic::Response<super::ListApisResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListApisResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -889,13 +951,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/ListApis",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "ListApis",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Api.
         pub async fn get_api(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApiRequest>,
-        ) -> Result<tonic::Response<super::Api>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Api>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -909,13 +979,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/GetApi",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "GetApi",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Api in a given project and location.
         pub async fn create_api(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApiRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -932,13 +1010,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/CreateApi",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "CreateApi",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single Api.
         pub async fn update_api(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApiRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -955,13 +1041,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/UpdateApi",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "UpdateApi",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Api.
         pub async fn delete_api(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteApiRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -978,13 +1072,24 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/DeleteApi",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "DeleteApi",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists ApiConfigs in a given project and location.
         pub async fn list_api_configs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApiConfigsRequest>,
-        ) -> Result<tonic::Response<super::ListApiConfigsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListApiConfigsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -998,13 +1103,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/ListApiConfigs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "ListApiConfigs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single ApiConfig.
         pub async fn get_api_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApiConfigRequest>,
-        ) -> Result<tonic::Response<super::ApiConfig>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ApiConfig>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1018,13 +1131,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/GetApiConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "GetApiConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new ApiConfig in a given project and location.
         pub async fn create_api_config(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApiConfigRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1041,13 +1162,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/CreateApiConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "CreateApiConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single ApiConfig.
         pub async fn update_api_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApiConfigRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1064,13 +1193,21 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/UpdateApiConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "UpdateApiConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single ApiConfig.
         pub async fn delete_api_config(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteApiConfigRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1087,7 +1224,15 @@ pub mod api_gateway_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.apigateway.v1.ApiGatewayService/DeleteApiConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.apigateway.v1.ApiGatewayService",
+                        "DeleteApiConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

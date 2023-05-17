@@ -642,12 +642,31 @@ pub mod enterprise_knowledge_graph_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a EntityReconciliationJob. A EntityReconciliationJob once created
         /// will right away be attempted to start.
         pub async fn create_entity_reconciliation_job(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateEntityReconciliationJobRequest>,
-        ) -> Result<tonic::Response<super::EntityReconciliationJob>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EntityReconciliationJob>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -661,13 +680,24 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/CreateEntityReconciliationJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "CreateEntityReconciliationJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a EntityReconciliationJob.
         pub async fn get_entity_reconciliation_job(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEntityReconciliationJobRequest>,
-        ) -> Result<tonic::Response<super::EntityReconciliationJob>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EntityReconciliationJob>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -681,13 +711,21 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/GetEntityReconciliationJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "GetEntityReconciliationJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Entity Reconciliation Jobs.
         pub async fn list_entity_reconciliation_jobs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEntityReconciliationJobsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListEntityReconciliationJobsResponse>,
             tonic::Status,
         > {
@@ -704,14 +742,22 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/ListEntityReconciliationJobs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "ListEntityReconciliationJobs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Cancels a EntityReconciliationJob. Success of cancellation is not
         /// guaranteed.
         pub async fn cancel_entity_reconciliation_job(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelEntityReconciliationJobRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -725,7 +771,15 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/CancelEntityReconciliationJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "CancelEntityReconciliationJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a EntityReconciliationJob.
         /// It only deletes the job when the job state is in FAILED, SUCCEEDED, and
@@ -733,7 +787,7 @@ pub mod enterprise_knowledge_graph_service_client {
         pub async fn delete_entity_reconciliation_job(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteEntityReconciliationJobRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -747,13 +801,21 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/DeleteEntityReconciliationJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "DeleteEntityReconciliationJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Finds the Cloud KG entities with CKG ID(s).
         pub async fn lookup(
             &mut self,
             request: impl tonic::IntoRequest<super::LookupRequest>,
-        ) -> Result<tonic::Response<super::LookupResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::LookupResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -767,13 +829,21 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/Lookup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "Lookup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Searches the Cloud KG entities with entity name.
         pub async fn search(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchRequest>,
-        ) -> Result<tonic::Response<super::SearchResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::SearchResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -787,13 +857,24 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/Search",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "Search",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Finds the public KG entities with public KG ID(s).
         pub async fn lookup_public_kg(
             &mut self,
             request: impl tonic::IntoRequest<super::LookupPublicKgRequest>,
-        ) -> Result<tonic::Response<super::LookupPublicKgResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::LookupPublicKgResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -807,13 +888,24 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/LookupPublicKg",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "LookupPublicKg",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Searches the public KG entities with entity name.
         pub async fn search_public_kg(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchPublicKgRequest>,
-        ) -> Result<tonic::Response<super::SearchPublicKgResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchPublicKgResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -827,7 +919,15 @@ pub mod enterprise_knowledge_graph_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService/SearchPublicKg",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.enterpriseknowledgegraph.v1.EnterpriseKnowledgeGraphService",
+                        "SearchPublicKg",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

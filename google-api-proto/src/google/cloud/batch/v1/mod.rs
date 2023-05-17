@@ -1444,11 +1444,27 @@ pub mod batch_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Create a Job.
         pub async fn create_job(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Job>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1462,13 +1478,18 @@ pub mod batch_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.batch.v1.BatchService/CreateJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.batch.v1.BatchService", "CreateJob"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get a Job specified by its resource name.
         pub async fn get_job(
             &mut self,
             request: impl tonic::IntoRequest<super::GetJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Job>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1482,13 +1503,16 @@ pub mod batch_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.batch.v1.BatchService/GetJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.cloud.batch.v1.BatchService", "GetJob"));
+            self.inner.unary(req, path, codec).await
         }
         /// Delete a Job.
         pub async fn delete_job(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteJobRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1505,13 +1529,21 @@ pub mod batch_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.batch.v1.BatchService/DeleteJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.batch.v1.BatchService", "DeleteJob"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List all Jobs for a project within a region.
         pub async fn list_jobs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListJobsRequest>,
-        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListJobsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1525,13 +1557,18 @@ pub mod batch_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.batch.v1.BatchService/ListJobs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.batch.v1.BatchService", "ListJobs"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Return a single Task.
         pub async fn get_task(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTaskRequest>,
-        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Task>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1545,13 +1582,21 @@ pub mod batch_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.batch.v1.BatchService/GetTask",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.batch.v1.BatchService", "GetTask"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List Tasks associated with a job.
         pub async fn list_tasks(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTasksRequest>,
-        ) -> Result<tonic::Response<super::ListTasksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTasksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1565,7 +1610,12 @@ pub mod batch_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.batch.v1.BatchService/ListTasks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.batch.v1.BatchService", "ListTasks"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

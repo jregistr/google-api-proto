@@ -734,6 +734,22 @@ pub mod binauthz_management_service_v1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// A [policy][google.cloud.binaryauthorization.v1.Policy] specifies the [attestors][google.cloud.binaryauthorization.v1.Attestor] that must attest to
         /// a container image, before the project is allowed to deploy that
         /// image. There is at most one policy per project. All image admission
@@ -744,7 +760,7 @@ pub mod binauthz_management_service_v1_client {
         pub async fn get_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPolicyRequest>,
-        ) -> Result<tonic::Response<super::Policy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Policy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -758,7 +774,15 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/GetPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "GetPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates or updates a project's [policy][google.cloud.binaryauthorization.v1.Policy], and returns a copy of the
         /// new [policy][google.cloud.binaryauthorization.v1.Policy]. A policy is always updated as a whole, to avoid race
@@ -768,7 +792,7 @@ pub mod binauthz_management_service_v1_client {
         pub async fn update_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdatePolicyRequest>,
-        ) -> Result<tonic::Response<super::Policy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Policy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -782,7 +806,15 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/UpdatePolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "UpdatePolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an [attestor][google.cloud.binaryauthorization.v1.Attestor], and returns a copy of the new
         /// [attestor][google.cloud.binaryauthorization.v1.Attestor]. Returns NOT_FOUND if the project does not exist,
@@ -791,7 +823,7 @@ pub mod binauthz_management_service_v1_client {
         pub async fn create_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAttestorRequest>,
-        ) -> Result<tonic::Response<super::Attestor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Attestor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -805,14 +837,22 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/CreateAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "CreateAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an [attestor][google.cloud.binaryauthorization.v1.Attestor].
         /// Returns NOT_FOUND if the [attestor][google.cloud.binaryauthorization.v1.Attestor] does not exist.
         pub async fn get_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAttestorRequest>,
-        ) -> Result<tonic::Response<super::Attestor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Attestor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -826,14 +866,22 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/GetAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "GetAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an [attestor][google.cloud.binaryauthorization.v1.Attestor].
         /// Returns NOT_FOUND if the [attestor][google.cloud.binaryauthorization.v1.Attestor] does not exist.
         pub async fn update_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAttestorRequest>,
-        ) -> Result<tonic::Response<super::Attestor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Attestor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -847,14 +895,25 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/UpdateAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "UpdateAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists [attestors][google.cloud.binaryauthorization.v1.Attestor].
         /// Returns INVALID_ARGUMENT if the project does not exist.
         pub async fn list_attestors(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAttestorsRequest>,
-        ) -> Result<tonic::Response<super::ListAttestorsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAttestorsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -868,14 +927,22 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/ListAttestors",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "ListAttestors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an [attestor][google.cloud.binaryauthorization.v1.Attestor]. Returns NOT_FOUND if the
         /// [attestor][google.cloud.binaryauthorization.v1.Attestor] does not exist.
         pub async fn delete_attestor(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAttestorRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -889,7 +956,15 @@ pub mod binauthz_management_service_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1/DeleteAttestor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.BinauthzManagementServiceV1",
+                        "DeleteAttestor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -952,11 +1027,27 @@ pub mod system_policy_v1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets the current system policy in the specified location.
         pub async fn get_system_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSystemPolicyRequest>,
-        ) -> Result<tonic::Response<super::Policy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Policy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -970,7 +1061,15 @@ pub mod system_policy_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.SystemPolicyV1/GetSystemPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.SystemPolicyV1",
+                        "GetSystemPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -1033,12 +1132,28 @@ pub mod validation_helper_v1_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns whether the given Attestation for the given image URI
         /// was signed by the given Attestor
         pub async fn validate_attestation_occurrence(
             &mut self,
             request: impl tonic::IntoRequest<super::ValidateAttestationOccurrenceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ValidateAttestationOccurrenceResponse>,
             tonic::Status,
         > {
@@ -1055,7 +1170,15 @@ pub mod validation_helper_v1_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.binaryauthorization.v1.ValidationHelperV1/ValidateAttestationOccurrence",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.binaryauthorization.v1.ValidationHelperV1",
+                        "ValidateAttestationOccurrence",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

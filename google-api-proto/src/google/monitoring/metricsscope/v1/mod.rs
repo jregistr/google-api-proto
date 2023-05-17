@@ -229,11 +229,27 @@ pub mod metrics_scopes_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns a specific `Metrics Scope`.
         pub async fn get_metrics_scope(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMetricsScopeRequest>,
-        ) -> Result<tonic::Response<super::MetricsScope>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::MetricsScope>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -247,7 +263,15 @@ pub mod metrics_scopes_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.metricsscope.v1.MetricsScopes/GetMetricsScope",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.metricsscope.v1.MetricsScopes",
+                        "GetMetricsScope",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a list of every `Metrics Scope` that a specific `MonitoredProject`
         /// has been added to. The metrics scope representing the specified monitored
@@ -257,7 +281,7 @@ pub mod metrics_scopes_client {
             request: impl tonic::IntoRequest<
                 super::ListMetricsScopesByMonitoredProjectRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListMetricsScopesByMonitoredProjectResponse>,
             tonic::Status,
         > {
@@ -274,14 +298,22 @@ pub mod metrics_scopes_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.metricsscope.v1.MetricsScopes/ListMetricsScopesByMonitoredProject",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.metricsscope.v1.MetricsScopes",
+                        "ListMetricsScopesByMonitoredProject",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Adds a `MonitoredProject` with the given project ID
         /// to the specified `Metrics Scope`.
         pub async fn create_monitored_project(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateMonitoredProjectRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -298,13 +330,21 @@ pub mod metrics_scopes_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.metricsscope.v1.MetricsScopes/CreateMonitoredProject",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.metricsscope.v1.MetricsScopes",
+                        "CreateMonitoredProject",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `MonitoredProject` from the specified `Metrics Scope`.
         pub async fn delete_monitored_project(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteMonitoredProjectRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -321,7 +361,15 @@ pub mod metrics_scopes_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.metricsscope.v1.MetricsScopes/DeleteMonitoredProject",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.metricsscope.v1.MetricsScopes",
+                        "DeleteMonitoredProject",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

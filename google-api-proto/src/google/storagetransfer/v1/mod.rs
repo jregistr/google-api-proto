@@ -2278,6 +2278,22 @@ pub mod storage_transfer_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns the Google service account that is used by Storage Transfer
         /// Service to access buckets in the project where transfers
         /// run or in other projects. Each Google service account is associated
@@ -2289,7 +2305,10 @@ pub mod storage_transfer_service_client {
         pub async fn get_google_service_account(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGoogleServiceAccountRequest>,
-        ) -> Result<tonic::Response<super::GoogleServiceAccount>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GoogleServiceAccount>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2303,13 +2322,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/GetGoogleServiceAccount",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "GetGoogleServiceAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a transfer job that runs periodically.
         pub async fn create_transfer_job(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTransferJobRequest>,
-        ) -> Result<tonic::Response<super::TransferJob>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TransferJob>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2323,7 +2350,15 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/CreateTransferJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "CreateTransferJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a transfer job. Updating a job's transfer spec does not affect
         /// transfer operations that are running already.
@@ -2336,7 +2371,7 @@ pub mod storage_transfer_service_client {
         pub async fn update_transfer_job(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTransferJobRequest>,
-        ) -> Result<tonic::Response<super::TransferJob>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TransferJob>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2350,13 +2385,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/UpdateTransferJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "UpdateTransferJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a transfer job.
         pub async fn get_transfer_job(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTransferJobRequest>,
-        ) -> Result<tonic::Response<super::TransferJob>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TransferJob>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2370,13 +2413,24 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/GetTransferJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "GetTransferJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists transfer jobs.
         pub async fn list_transfer_jobs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTransferJobsRequest>,
-        ) -> Result<tonic::Response<super::ListTransferJobsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTransferJobsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2390,13 +2444,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/ListTransferJobs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "ListTransferJobs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Pauses a transfer operation.
         pub async fn pause_transfer_operation(
             &mut self,
             request: impl tonic::IntoRequest<super::PauseTransferOperationRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2410,13 +2472,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/PauseTransferOperation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "PauseTransferOperation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resumes a transfer operation that is paused.
         pub async fn resume_transfer_operation(
             &mut self,
             request: impl tonic::IntoRequest<super::ResumeTransferOperationRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2430,7 +2500,15 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/ResumeTransferOperation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "ResumeTransferOperation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Attempts to start a new TransferOperation for the current TransferJob. A
         /// TransferJob has a maximum of one active TransferOperation. If this method
@@ -2438,7 +2516,7 @@ pub mod storage_transfer_service_client {
         pub async fn run_transfer_job(
             &mut self,
             request: impl tonic::IntoRequest<super::RunTransferJobRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2455,14 +2533,22 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/RunTransferJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "RunTransferJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a transfer job. Deleting a transfer job sets its status to
         /// [DELETED][google.storagetransfer.v1.TransferJob.Status.DELETED].
         pub async fn delete_transfer_job(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTransferJobRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2476,13 +2562,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/DeleteTransferJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "DeleteTransferJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an agent pool resource.
         pub async fn create_agent_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAgentPoolRequest>,
-        ) -> Result<tonic::Response<super::AgentPool>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AgentPool>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2496,13 +2590,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/CreateAgentPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "CreateAgentPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing agent pool resource.
         pub async fn update_agent_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAgentPoolRequest>,
-        ) -> Result<tonic::Response<super::AgentPool>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AgentPool>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2516,13 +2618,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/UpdateAgentPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "UpdateAgentPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an agent pool.
         pub async fn get_agent_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAgentPoolRequest>,
-        ) -> Result<tonic::Response<super::AgentPool>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AgentPool>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2536,13 +2646,24 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/GetAgentPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "GetAgentPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists agent pools.
         pub async fn list_agent_pools(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAgentPoolsRequest>,
-        ) -> Result<tonic::Response<super::ListAgentPoolsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAgentPoolsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2556,13 +2677,21 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/ListAgentPools",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "ListAgentPools",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an agent pool.
         pub async fn delete_agent_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAgentPoolRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2576,7 +2705,15 @@ pub mod storage_transfer_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.storagetransfer.v1.StorageTransferService/DeleteAgentPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.storagetransfer.v1.StorageTransferService",
+                        "DeleteAgentPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

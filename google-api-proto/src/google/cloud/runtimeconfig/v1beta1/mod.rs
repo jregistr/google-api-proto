@@ -599,11 +599,30 @@ pub mod runtime_config_manager_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists all the RuntimeConfig resources within project.
         pub async fn list_configs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConfigsRequest>,
-        ) -> Result<tonic::Response<super::ListConfigsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListConfigsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -617,13 +636,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/ListConfigs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "ListConfigs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a RuntimeConfig resource.
         pub async fn get_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConfigRequest>,
-        ) -> Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -637,14 +664,22 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/GetConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "GetConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new RuntimeConfig resource. The configuration name must be
         /// unique within project.
         pub async fn create_config(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConfigRequest>,
-        ) -> Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -658,13 +693,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/CreateConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "CreateConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a RuntimeConfig resource. The configuration must exist beforehand.
         pub async fn update_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateConfigRequest>,
-        ) -> Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -678,13 +721,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/UpdateConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "UpdateConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a RuntimeConfig resource.
         pub async fn delete_config(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConfigRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -698,7 +749,15 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/DeleteConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "DeleteConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists variables within given a configuration, matching any provided
         /// filters. This only lists variable names, not the values, unless
@@ -707,7 +766,10 @@ pub mod runtime_config_manager_client {
         pub async fn list_variables(
             &mut self,
             request: impl tonic::IntoRequest<super::ListVariablesRequest>,
-        ) -> Result<tonic::Response<super::ListVariablesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListVariablesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -721,13 +783,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/ListVariables",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "ListVariables",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a single variable.
         pub async fn get_variable(
             &mut self,
             request: impl tonic::IntoRequest<super::GetVariableRequest>,
-        ) -> Result<tonic::Response<super::Variable>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variable>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -741,7 +811,15 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/GetVariable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "GetVariable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Watches a specific variable and waits for a change in the variable's value.
         /// When there is a change, this method returns the new value or times out.
@@ -760,7 +838,7 @@ pub mod runtime_config_manager_client {
         pub async fn watch_variable(
             &mut self,
             request: impl tonic::IntoRequest<super::WatchVariableRequest>,
-        ) -> Result<tonic::Response<super::Variable>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variable>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -774,7 +852,15 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/WatchVariable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "WatchVariable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a variable within the given configuration. You cannot create
         /// a variable with a name that is a prefix of an existing variable name, or a
@@ -787,7 +873,7 @@ pub mod runtime_config_manager_client {
         pub async fn create_variable(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateVariableRequest>,
-        ) -> Result<tonic::Response<super::Variable>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variable>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -801,13 +887,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/CreateVariable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "CreateVariable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing variable with a new value.
         pub async fn update_variable(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateVariableRequest>,
-        ) -> Result<tonic::Response<super::Variable>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Variable>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -821,7 +915,15 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/UpdateVariable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "UpdateVariable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a variable or multiple variables.
         ///
@@ -832,7 +934,7 @@ pub mod runtime_config_manager_client {
         pub async fn delete_variable(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteVariableRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -846,13 +948,24 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/DeleteVariable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "DeleteVariable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List waiters within the given configuration.
         pub async fn list_waiters(
             &mut self,
             request: impl tonic::IntoRequest<super::ListWaitersRequest>,
-        ) -> Result<tonic::Response<super::ListWaitersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListWaitersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -866,13 +979,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/ListWaiters",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "ListWaiters",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a single waiter.
         pub async fn get_waiter(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWaiterRequest>,
-        ) -> Result<tonic::Response<super::Waiter>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Waiter>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -886,7 +1007,15 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/GetWaiter",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "GetWaiter",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a Waiter resource. This operation returns a long-running Operation
         /// resource which can be polled for completion. However, a waiter with the
@@ -896,7 +1025,7 @@ pub mod runtime_config_manager_client {
         pub async fn create_waiter(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateWaiterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -913,13 +1042,21 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/CreateWaiter",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "CreateWaiter",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the waiter with the specified name.
         pub async fn delete_waiter(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteWaiterRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -933,7 +1070,15 @@ pub mod runtime_config_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager/DeleteWaiter",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.runtimeconfig.v1beta1.RuntimeConfigManager",
+                        "DeleteWaiter",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

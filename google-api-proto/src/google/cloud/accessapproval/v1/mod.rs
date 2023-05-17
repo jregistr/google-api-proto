@@ -630,13 +630,29 @@ pub mod access_approval_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists approval requests associated with a project, folder, or organization.
         /// Approval requests can be filtered by state (pending, active, dismissed).
         /// The order is reverse chronological.
         pub async fn list_approval_requests(
             &mut self,
             request: impl tonic::IntoRequest<super::ListApprovalRequestsMessage>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListApprovalRequestsResponse>,
             tonic::Status,
         > {
@@ -653,13 +669,24 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/ListApprovalRequests",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "ListApprovalRequests",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an approval request. Returns NOT_FOUND if the request does not exist.
         pub async fn get_approval_request(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApprovalRequestMessage>,
-        ) -> Result<tonic::Response<super::ApprovalRequest>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ApprovalRequest>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -673,7 +700,15 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/GetApprovalRequest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "GetApprovalRequest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Approves a request and returns the updated ApprovalRequest.
         ///
@@ -682,7 +717,10 @@ pub mod access_approval_client {
         pub async fn approve_approval_request(
             &mut self,
             request: impl tonic::IntoRequest<super::ApproveApprovalRequestMessage>,
-        ) -> Result<tonic::Response<super::ApprovalRequest>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ApprovalRequest>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -696,7 +734,15 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/ApproveApprovalRequest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "ApproveApprovalRequest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Dismisses a request. Returns the updated ApprovalRequest.
         ///
@@ -711,7 +757,10 @@ pub mod access_approval_client {
         pub async fn dismiss_approval_request(
             &mut self,
             request: impl tonic::IntoRequest<super::DismissApprovalRequestMessage>,
-        ) -> Result<tonic::Response<super::ApprovalRequest>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ApprovalRequest>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -725,7 +774,15 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/DismissApprovalRequest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "DismissApprovalRequest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Invalidates an existing ApprovalRequest. Returns the updated
         /// ApprovalRequest.
@@ -738,7 +795,10 @@ pub mod access_approval_client {
         pub async fn invalidate_approval_request(
             &mut self,
             request: impl tonic::IntoRequest<super::InvalidateApprovalRequestMessage>,
-        ) -> Result<tonic::Response<super::ApprovalRequest>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ApprovalRequest>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -752,13 +812,24 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/InvalidateApprovalRequest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "InvalidateApprovalRequest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the settings associated with a project, folder, or organization.
         pub async fn get_access_approval_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccessApprovalSettingsMessage>,
-        ) -> Result<tonic::Response<super::AccessApprovalSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AccessApprovalSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -772,14 +843,25 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/GetAccessApprovalSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "GetAccessApprovalSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the settings associated with a project, folder, or organization.
         /// Settings to update are determined by the value of field_mask.
         pub async fn update_access_approval_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAccessApprovalSettingsMessage>,
-        ) -> Result<tonic::Response<super::AccessApprovalSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AccessApprovalSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -793,7 +875,15 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/UpdateAccessApprovalSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "UpdateAccessApprovalSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the settings associated with a project, folder, or organization.
         /// This will have the effect of disabling Access Approval for the project,
@@ -804,7 +894,7 @@ pub mod access_approval_client {
         pub async fn delete_access_approval_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAccessApprovalSettingsMessage>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -818,7 +908,15 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/DeleteAccessApprovalSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "DeleteAccessApprovalSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves the service account that is used by Access Approval to access KMS
         /// keys for signing approved approval requests.
@@ -827,7 +925,7 @@ pub mod access_approval_client {
             request: impl tonic::IntoRequest<
                 super::GetAccessApprovalServiceAccountMessage,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::AccessApprovalServiceAccount>,
             tonic::Status,
         > {
@@ -844,7 +942,15 @@ pub mod access_approval_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.accessapproval.v1.AccessApproval/GetAccessApprovalServiceAccount",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.accessapproval.v1.AccessApproval",
+                        "GetAccessApprovalServiceAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

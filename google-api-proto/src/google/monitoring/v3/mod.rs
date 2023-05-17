@@ -607,6 +607,1182 @@ impl ServiceTier {
         }
     }
 }
+/// A single data point in a time series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Point {
+    /// The time interval to which the data point applies.  For `GAUGE` metrics,
+    /// the start time is optional, but if it is supplied, it must equal the
+    /// end time.  For `DELTA` metrics, the start
+    /// and end time should specify a non-zero interval, with subsequent points
+    /// specifying contiguous and non-overlapping intervals.  For `CUMULATIVE`
+    /// metrics, the start and end time should specify a non-zero interval, with
+    /// subsequent points specifying the same start time and increasing end times,
+    /// until an event resets the cumulative value to zero and sets a new start
+    /// time for the following points.
+    #[prost(message, optional, tag = "1")]
+    pub interval: ::core::option::Option<TimeInterval>,
+    /// The value of the data point.
+    #[prost(message, optional, tag = "2")]
+    pub value: ::core::option::Option<TypedValue>,
+}
+/// A collection of data points that describes the time-varying values
+/// of a metric. A time series is identified by a combination of a
+/// fully-specified monitored resource and a fully-specified metric.
+/// This type is used for both listing and creating time series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeries {
+    /// The associated metric. A fully-specified metric used to identify the time
+    /// series.
+    #[prost(message, optional, tag = "1")]
+    pub metric: ::core::option::Option<super::super::api::Metric>,
+    /// The associated monitored resource.  Custom metrics can use only certain
+    /// monitored resource types in their time series data. For more information,
+    /// see [Monitored resources for custom
+    /// metrics](<https://cloud.google.com/monitoring/custom-metrics/creating-metrics#custom-metric-resources>).
+    #[prost(message, optional, tag = "2")]
+    pub resource: ::core::option::Option<super::super::api::MonitoredResource>,
+    /// Output only. The associated monitored resource metadata. When reading a
+    /// time series, this field will include metadata labels that are explicitly
+    /// named in the reduction. When creating a time series, this field is ignored.
+    #[prost(message, optional, tag = "7")]
+    pub metadata: ::core::option::Option<super::super::api::MonitoredResourceMetadata>,
+    /// The metric kind of the time series. When listing time series, this metric
+    /// kind might be different from the metric kind of the associated metric if
+    /// this time series is an alignment or reduction of other time series.
+    ///
+    /// When creating a time series, this field is optional. If present, it must be
+    /// the same as the metric kind of the associated metric. If the associated
+    /// metric's descriptor must be auto-created, then this field specifies the
+    /// metric kind of the new descriptor and must be either `GAUGE` (the default)
+    /// or `CUMULATIVE`.
+    #[prost(enumeration = "super::super::api::metric_descriptor::MetricKind", tag = "3")]
+    pub metric_kind: i32,
+    /// The value type of the time series. When listing time series, this value
+    /// type might be different from the value type of the associated metric if
+    /// this time series is an alignment or reduction of other time series.
+    ///
+    /// When creating a time series, this field is optional. If present, it must be
+    /// the same as the type of the data in the `points` field.
+    #[prost(enumeration = "super::super::api::metric_descriptor::ValueType", tag = "4")]
+    pub value_type: i32,
+    /// The data points of this time series. When listing time series, points are
+    /// returned in reverse time order.
+    ///
+    /// When creating a time series, this field must contain exactly one point and
+    /// the point's type must be the same as the value type of the associated
+    /// metric. If the associated metric's descriptor must be auto-created, then
+    /// the value type of the descriptor is determined by the point's type, which
+    /// must be `BOOL`, `INT64`, `DOUBLE`, or `DISTRIBUTION`.
+    #[prost(message, repeated, tag = "5")]
+    pub points: ::prost::alloc::vec::Vec<Point>,
+    /// The units in which the metric value is reported. It is only applicable
+    /// if the `value_type` is `INT64`, `DOUBLE`, or `DISTRIBUTION`. The `unit`
+    /// defines the representation of the stored metric values.
+    #[prost(string, tag = "8")]
+    pub unit: ::prost::alloc::string::String,
+}
+/// A descriptor for the labels and points in a time series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeriesDescriptor {
+    /// Descriptors for the labels.
+    #[prost(message, repeated, tag = "1")]
+    pub label_descriptors: ::prost::alloc::vec::Vec<super::super::api::LabelDescriptor>,
+    /// Descriptors for the point data value columns.
+    #[prost(message, repeated, tag = "5")]
+    pub point_descriptors: ::prost::alloc::vec::Vec<
+        time_series_descriptor::ValueDescriptor,
+    >,
+}
+/// Nested message and enum types in `TimeSeriesDescriptor`.
+pub mod time_series_descriptor {
+    /// A descriptor for the value columns in a data point.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ValueDescriptor {
+        /// The value key.
+        #[prost(string, tag = "1")]
+        pub key: ::prost::alloc::string::String,
+        /// The value type.
+        #[prost(
+            enumeration = "super::super::super::api::metric_descriptor::ValueType",
+            tag = "2"
+        )]
+        pub value_type: i32,
+        /// The value stream kind.
+        #[prost(
+            enumeration = "super::super::super::api::metric_descriptor::MetricKind",
+            tag = "3"
+        )]
+        pub metric_kind: i32,
+        /// The unit in which `time_series` point values are reported. `unit`
+        /// follows the UCUM format for units as seen in
+        /// <https://unitsofmeasure.org/ucum.html.>
+        /// `unit` is only valid if `value_type` is INTEGER, DOUBLE, DISTRIBUTION.
+        #[prost(string, tag = "4")]
+        pub unit: ::prost::alloc::string::String,
+    }
+}
+/// Represents the values of a time series associated with a
+/// TimeSeriesDescriptor.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeriesData {
+    /// The values of the labels in the time series identifier, given in the same
+    /// order as the `label_descriptors` field of the TimeSeriesDescriptor
+    /// associated with this object. Each value must have a value of the type
+    /// given in the corresponding entry of `label_descriptors`.
+    #[prost(message, repeated, tag = "1")]
+    pub label_values: ::prost::alloc::vec::Vec<LabelValue>,
+    /// The points in the time series.
+    #[prost(message, repeated, tag = "2")]
+    pub point_data: ::prost::alloc::vec::Vec<time_series_data::PointData>,
+}
+/// Nested message and enum types in `TimeSeriesData`.
+pub mod time_series_data {
+    /// A point's value columns and time interval. Each point has one or more
+    /// point values corresponding to the entries in `point_descriptors` field in
+    /// the TimeSeriesDescriptor associated with this object.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct PointData {
+        /// The values that make up the point.
+        #[prost(message, repeated, tag = "1")]
+        pub values: ::prost::alloc::vec::Vec<super::TypedValue>,
+        /// The time interval associated with the point.
+        #[prost(message, optional, tag = "2")]
+        pub time_interval: ::core::option::Option<super::TimeInterval>,
+    }
+}
+/// A label value.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LabelValue {
+    /// The label value can be a bool, int64, or string.
+    #[prost(oneof = "label_value::Value", tags = "1, 2, 3")]
+    pub value: ::core::option::Option<label_value::Value>,
+}
+/// Nested message and enum types in `LabelValue`.
+pub mod label_value {
+    /// The label value can be a bool, int64, or string.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Value {
+        /// A bool label value.
+        #[prost(bool, tag = "1")]
+        BoolValue(bool),
+        /// An int64 label value.
+        #[prost(int64, tag = "2")]
+        Int64Value(i64),
+        /// A string label value.
+        #[prost(string, tag = "3")]
+        StringValue(::prost::alloc::string::String),
+    }
+}
+/// An error associated with a query in the time series query language format.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryError {
+    /// The location of the time series query language text that this error applies
+    /// to.
+    #[prost(message, optional, tag = "1")]
+    pub locator: ::core::option::Option<TextLocator>,
+    /// The error message.
+    #[prost(string, tag = "2")]
+    pub message: ::prost::alloc::string::String,
+}
+/// A locator for text. Indicates a particular part of the text of a request or
+/// of an object referenced in the request.
+///
+/// For example, suppose the request field `text` contains:
+///
+///    text: "The quick brown fox jumps over the lazy dog."
+///
+/// Then the locator:
+///
+///    source: "text"
+///    start_position {
+///      line: 1
+///      column: 17
+///    }
+///    end_position {
+///      line: 1
+///      column: 19
+///    }
+///
+/// refers to the part of the text: "fox".
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextLocator {
+    /// The source of the text. The source may be a field in the request, in which
+    /// case its format is the format of the
+    /// google.rpc.BadRequest.FieldViolation.field field in
+    /// <https://cloud.google.com/apis/design/errors#error_details.> It may also be
+    /// be a source other than the request field (e.g. a macro definition
+    /// referenced in the text of the query), in which case this is the name of
+    /// the source (e.g. the macro name).
+    #[prost(string, tag = "1")]
+    pub source: ::prost::alloc::string::String,
+    /// The position of the first byte within the text.
+    #[prost(message, optional, tag = "2")]
+    pub start_position: ::core::option::Option<text_locator::Position>,
+    /// The position of the last byte within the text.
+    #[prost(message, optional, tag = "3")]
+    pub end_position: ::core::option::Option<text_locator::Position>,
+    /// If `source`, `start_position`, and `end_position` describe a call on
+    /// some object (e.g. a macro in the time series query language text) and a
+    /// location is to be designated in that object's text, `nested_locator`
+    /// identifies the location within that object.
+    #[prost(message, optional, boxed, tag = "4")]
+    pub nested_locator: ::core::option::Option<::prost::alloc::boxed::Box<TextLocator>>,
+    /// When `nested_locator` is set, this field gives the reason for the nesting.
+    /// Usually, the reason is a macro invocation. In that case, the macro name
+    /// (including the leading '@') signals the location of the macro call
+    /// in the text and a macro argument name (including the leading '$') signals
+    /// the location of the macro argument inside the macro body that got
+    /// substituted away.
+    #[prost(string, tag = "5")]
+    pub nesting_reason: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `TextLocator`.
+pub mod text_locator {
+    /// The position of a byte within the text.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Position {
+        /// The line, starting with 1, where the byte is positioned.
+        #[prost(int32, tag = "1")]
+        pub line: i32,
+        /// The column within the line, starting with 1, where the byte is
+        /// positioned. This is a byte index even though the text is UTF-8.
+        #[prost(int32, tag = "2")]
+        pub column: i32,
+    }
+}
+/// The `ListMonitoredResourceDescriptors` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMonitoredResourceDescriptorsRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "5")]
+    pub name: ::prost::alloc::string::String,
+    /// An optional \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>)
+    /// describing the descriptors to be returned.  The filter can reference the
+    /// descriptor's type and labels. For example, the following filter returns
+    /// only Google Compute Engine descriptors that have an `id` label:
+    ///
+    ///      resource.type = starts_with("gce_") AND resource.label:id
+    #[prost(string, tag = "2")]
+    pub filter: ::prost::alloc::string::String,
+    /// A positive number that is the maximum number of results to return.
+    #[prost(int32, tag = "3")]
+    pub page_size: i32,
+    /// If this field is not empty then it must contain the `nextPageToken` value
+    /// returned by a previous call to this method.  Using this field causes the
+    /// method to return additional results from the previous method call.
+    #[prost(string, tag = "4")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The `ListMonitoredResourceDescriptors` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMonitoredResourceDescriptorsResponse {
+    /// The monitored resource descriptors that are available to this project
+    /// and that match `filter`, if present.
+    #[prost(message, repeated, tag = "1")]
+    pub resource_descriptors: ::prost::alloc::vec::Vec<
+        super::super::api::MonitoredResourceDescriptor,
+    >,
+    /// If there are more results than have been returned, then this field is set
+    /// to a non-empty value.  To see the additional results,
+    /// use that value as `page_token` in the next call to this method.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The `GetMonitoredResourceDescriptor` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetMonitoredResourceDescriptorRequest {
+    /// Required. The monitored resource descriptor to get.  The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/monitoredResourceDescriptors/[RESOURCE_TYPE\]
+    ///
+    /// The `\[RESOURCE_TYPE\]` is a predefined type, such as
+    /// `cloudsql_database`.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The `ListMetricDescriptors` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMetricDescriptorsRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "5")]
+    pub name: ::prost::alloc::string::String,
+    /// If this field is empty, all custom and
+    /// system-defined metric descriptors are returned.
+    /// Otherwise, the \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>)
+    /// specifies which metric descriptors are to be
+    /// returned. For example, the following filter matches all
+    /// [custom metrics](<https://cloud.google.com/monitoring/custom-metrics>):
+    ///
+    ///      metric.type = starts_with("custom.googleapis.com/")
+    #[prost(string, tag = "2")]
+    pub filter: ::prost::alloc::string::String,
+    /// A positive number that is the maximum number of results to return.
+    #[prost(int32, tag = "3")]
+    pub page_size: i32,
+    /// If this field is not empty then it must contain the `nextPageToken` value
+    /// returned by a previous call to this method.  Using this field causes the
+    /// method to return additional results from the previous method call.
+    #[prost(string, tag = "4")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The `ListMetricDescriptors` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListMetricDescriptorsResponse {
+    /// The metric descriptors that are available to the project
+    /// and that match the value of `filter`, if present.
+    #[prost(message, repeated, tag = "1")]
+    pub metric_descriptors: ::prost::alloc::vec::Vec<
+        super::super::api::MetricDescriptor,
+    >,
+    /// If there are more results than have been returned, then this field is set
+    /// to a non-empty value.  To see the additional results,
+    /// use that value as `page_token` in the next call to this method.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The `GetMetricDescriptor` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetMetricDescriptorRequest {
+    /// Required. The metric descriptor on which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/metricDescriptors/[METRIC_ID\]
+    ///
+    /// An example value of `\[METRIC_ID\]` is
+    /// `"compute.googleapis.com/instance/disk/read_bytes_count"`.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The `CreateMetricDescriptor` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateMetricDescriptorRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    /// 4
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The new [custom metric](<https://cloud.google.com/monitoring/custom-metrics>)
+    /// descriptor.
+    #[prost(message, optional, tag = "2")]
+    pub metric_descriptor: ::core::option::Option<super::super::api::MetricDescriptor>,
+}
+/// The `DeleteMetricDescriptor` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteMetricDescriptorRequest {
+    /// Required. The metric descriptor on which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/metricDescriptors/[METRIC_ID\]
+    ///
+    /// An example of `\[METRIC_ID\]` is:
+    /// `"custom.googleapis.com/my_test_metric"`.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The `ListTimeSeries` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTimeSeriesRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>),
+    /// organization or folder on which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    ///      organizations/\[ORGANIZATION_ID\]
+    ///      folders/\[FOLDER_ID\]
+    #[prost(string, tag = "10")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. A [monitoring filter](<https://cloud.google.com/monitoring/api/v3/filters>)
+    /// that specifies which time series should be returned.  The filter must
+    /// specify a single metric type, and can additionally specify metric labels
+    /// and other information. For example:
+    ///
+    ///      metric.type = "compute.googleapis.com/instance/cpu/usage_time" AND
+    ///          metric.labels.instance_name = "my-instance-name"
+    #[prost(string, tag = "2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Required. The time interval for which results should be returned. Only time series
+    /// that contain data points in the specified interval are included
+    /// in the response.
+    #[prost(message, optional, tag = "4")]
+    pub interval: ::core::option::Option<TimeInterval>,
+    /// Specifies the alignment of data points in individual time series as
+    /// well as how to combine the retrieved time series across specified labels.
+    ///
+    /// By default (if no `aggregation` is explicitly specified), the raw time
+    /// series data is returned.
+    #[prost(message, optional, tag = "5")]
+    pub aggregation: ::core::option::Option<Aggregation>,
+    /// Apply a second aggregation after `aggregation` is applied. May only be
+    /// specified if `aggregation` is specified.
+    #[prost(message, optional, tag = "11")]
+    pub secondary_aggregation: ::core::option::Option<Aggregation>,
+    /// Unsupported: must be left blank. The points in each time series are
+    /// currently returned in reverse time order (most recent to oldest).
+    #[prost(string, tag = "6")]
+    pub order_by: ::prost::alloc::string::String,
+    /// Required. Specifies which information is returned about the time series.
+    #[prost(enumeration = "list_time_series_request::TimeSeriesView", tag = "7")]
+    pub view: i32,
+    /// A positive number that is the maximum number of results to return. If
+    /// `page_size` is empty or more than 100,000 results, the effective
+    /// `page_size` is 100,000 results. If `view` is set to `FULL`, this is the
+    /// maximum number of `Points` returned. If `view` is set to `HEADERS`, this is
+    /// the maximum number of `TimeSeries` returned.
+    #[prost(int32, tag = "8")]
+    pub page_size: i32,
+    /// If this field is not empty then it must contain the `nextPageToken` value
+    /// returned by a previous call to this method.  Using this field causes the
+    /// method to return additional results from the previous method call.
+    #[prost(string, tag = "9")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ListTimeSeriesRequest`.
+pub mod list_time_series_request {
+    /// Controls which fields are returned by `ListTimeSeries`.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum TimeSeriesView {
+        /// Returns the identity of the metric(s), the time series,
+        /// and the time series data.
+        Full = 0,
+        /// Returns the identity of the metric and the time series resource,
+        /// but not the time series data.
+        Headers = 1,
+    }
+    impl TimeSeriesView {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TimeSeriesView::Full => "FULL",
+                TimeSeriesView::Headers => "HEADERS",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FULL" => Some(Self::Full),
+                "HEADERS" => Some(Self::Headers),
+                _ => None,
+            }
+        }
+    }
+}
+/// The `ListTimeSeries` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListTimeSeriesResponse {
+    /// One or more time series that match the filter included in the request.
+    #[prost(message, repeated, tag = "1")]
+    pub time_series: ::prost::alloc::vec::Vec<TimeSeries>,
+    /// If there are more results than have been returned, then this field is set
+    /// to a non-empty value.  To see the additional results,
+    /// use that value as `page_token` in the next call to this method.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Query execution errors that may have caused the time series data returned
+    /// to be incomplete.
+    #[prost(message, repeated, tag = "3")]
+    pub execution_errors: ::prost::alloc::vec::Vec<super::super::rpc::Status>,
+    /// The unit in which all `time_series` point values are reported. `unit`
+    /// follows the UCUM format for units as seen in
+    /// <https://unitsofmeasure.org/ucum.html.>
+    /// If different `time_series` have different units (for example, because they
+    /// come from different metric types, or a unit is absent), then `unit` will be
+    /// "{not_a_unit}".
+    #[prost(string, tag = "5")]
+    pub unit: ::prost::alloc::string::String,
+}
+/// The `CreateTimeSeries` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTimeSeriesRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The new data to be added to a list of time series.
+    /// Adds at most one data point to each of several time series.  The new data
+    /// point must be more recent than any other point in its time series.  Each
+    /// `TimeSeries` value must fully specify a unique time series by supplying
+    /// all label values for the metric and the monitored resource.
+    ///
+    /// The maximum number of `TimeSeries` objects per `Create` request is 200.
+    #[prost(message, repeated, tag = "2")]
+    pub time_series: ::prost::alloc::vec::Vec<TimeSeries>,
+}
+/// DEPRECATED. Used to hold per-time-series error status.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTimeSeriesError {
+    /// DEPRECATED. Time series ID that resulted in the `status` error.
+    #[deprecated]
+    #[prost(message, optional, tag = "1")]
+    pub time_series: ::core::option::Option<TimeSeries>,
+    /// DEPRECATED. The status of the requested write operation for `time_series`.
+    #[deprecated]
+    #[prost(message, optional, tag = "2")]
+    pub status: ::core::option::Option<super::super::rpc::Status>,
+}
+/// Summary of the result of a failed request to write data to a time series.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateTimeSeriesSummary {
+    /// The number of points in the request.
+    #[prost(int32, tag = "1")]
+    pub total_point_count: i32,
+    /// The number of points that were successfully written.
+    #[prost(int32, tag = "2")]
+    pub success_point_count: i32,
+    /// The number of points that failed to be written. Order is not guaranteed.
+    #[prost(message, repeated, tag = "3")]
+    pub errors: ::prost::alloc::vec::Vec<create_time_series_summary::Error>,
+}
+/// Nested message and enum types in `CreateTimeSeriesSummary`.
+pub mod create_time_series_summary {
+    /// Detailed information about an error category.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Error {
+        /// The status of the requested write operation.
+        #[prost(message, optional, tag = "1")]
+        pub status: ::core::option::Option<super::super::super::rpc::Status>,
+        /// The number of points that couldn't be written because of `status`.
+        #[prost(int32, tag = "2")]
+        pub point_count: i32,
+    }
+}
+/// The `QueryTimeSeries` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryTimeSeriesRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The query in the [Monitoring Query
+    /// Language](<https://cloud.google.com/monitoring/mql/reference>) format.
+    /// The default time zone is in UTC.
+    #[prost(string, tag = "7")]
+    pub query: ::prost::alloc::string::String,
+    /// A positive number that is the maximum number of time_series_data to return.
+    #[prost(int32, tag = "9")]
+    pub page_size: i32,
+    /// If this field is not empty then it must contain the `nextPageToken` value
+    /// returned by a previous call to this method.  Using this field causes the
+    /// method to return additional results from the previous method call.
+    #[prost(string, tag = "10")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The `QueryTimeSeries` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryTimeSeriesResponse {
+    /// The descriptor for the time series data.
+    #[prost(message, optional, tag = "8")]
+    pub time_series_descriptor: ::core::option::Option<TimeSeriesDescriptor>,
+    /// The time series data.
+    #[prost(message, repeated, tag = "9")]
+    pub time_series_data: ::prost::alloc::vec::Vec<TimeSeriesData>,
+    /// If there are more results than have been returned, then this field is set
+    /// to a non-empty value.  To see the additional results, use that value as
+    /// `page_token` in the next call to this method.
+    #[prost(string, tag = "10")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Query execution errors that may have caused the time series data returned
+    /// to be incomplete. The available data will be available in the
+    /// response.
+    #[prost(message, repeated, tag = "11")]
+    pub partial_errors: ::prost::alloc::vec::Vec<super::super::rpc::Status>,
+}
+/// This is an error detail intended to be used with INVALID_ARGUMENT errors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryErrorList {
+    /// Errors in parsing the time series query language text. The number of errors
+    /// in the response may be limited.
+    #[prost(message, repeated, tag = "1")]
+    pub errors: ::prost::alloc::vec::Vec<QueryError>,
+    /// A summary of all the errors.
+    #[prost(string, tag = "2")]
+    pub error_summary: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod metric_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Manages metric descriptors, monitored resource descriptors, and
+    /// time series data.
+    #[derive(Debug, Clone)]
+    pub struct MetricServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> MetricServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> MetricServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            MetricServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Lists monitored resource descriptors that match a filter. This method does not require a Workspace.
+        pub async fn list_monitored_resource_descriptors(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::ListMonitoredResourceDescriptorsRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::ListMonitoredResourceDescriptorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/ListMonitoredResourceDescriptors",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "ListMonitoredResourceDescriptors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a single monitored resource descriptor. This method does not require a Workspace.
+        pub async fn get_monitored_resource_descriptor(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::GetMonitoredResourceDescriptorRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::api::MonitoredResourceDescriptor>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/GetMonitoredResourceDescriptor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "GetMonitoredResourceDescriptor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Lists metric descriptors that match a filter. This method does not require a Workspace.
+        pub async fn list_metric_descriptors(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListMetricDescriptorsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListMetricDescriptorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/ListMetricDescriptors",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "ListMetricDescriptors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a single metric descriptor. This method does not require a Workspace.
+        pub async fn get_metric_descriptor(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetMetricDescriptorRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::api::MetricDescriptor>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/GetMetricDescriptor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "GetMetricDescriptor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates a new metric descriptor.
+        /// The creation is executed asynchronously and callers may check the returned
+        /// operation to track its progress.
+        /// User-created metric descriptors define
+        /// [custom metrics](https://cloud.google.com/monitoring/custom-metrics).
+        pub async fn create_metric_descriptor(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateMetricDescriptorRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::api::MetricDescriptor>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/CreateMetricDescriptor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "CreateMetricDescriptor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Deletes a metric descriptor. Only user-created
+        /// [custom metrics](https://cloud.google.com/monitoring/custom-metrics) can be
+        /// deleted.
+        pub async fn delete_metric_descriptor(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteMetricDescriptorRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/DeleteMetricDescriptor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "DeleteMetricDescriptor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Lists time series that match a filter. This method does not require a Workspace.
+        pub async fn list_time_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListTimeSeriesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListTimeSeriesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/ListTimeSeries",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "ListTimeSeries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates or adds data to one or more time series.
+        /// The response is empty if all time series in the request were written.
+        /// If any time series could not be written, a corresponding failure message is
+        /// included in the error response.
+        pub async fn create_time_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTimeSeriesRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/CreateTimeSeries",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "CreateTimeSeries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates or adds data to one or more service time series. A service time
+        /// series is a time series for a metric from a Google Cloud service. The
+        /// response is empty if all time series in the request were written. If any
+        /// time series could not be written, a corresponding failure message is
+        /// included in the error response. This endpoint rejects writes to
+        /// user-defined metrics.
+        /// This method is only for use by Google Cloud services. Use
+        /// [projects.timeSeries.create][google.monitoring.v3.MetricService.CreateTimeSeries]
+        /// instead.
+        pub async fn create_service_time_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateTimeSeriesRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.MetricService/CreateServiceTimeSeries",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.MetricService",
+                        "CreateServiceTimeSeries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Generated client implementations.
+pub mod query_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The QueryService API is used to manage time series data in Stackdriver
+    /// Monitoring. Time series data is a collection of data points that describes
+    /// the time-varying values of a metric.
+    #[derive(Debug, Clone)]
+    pub struct QueryServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> QueryServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> QueryServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            QueryServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Queries time series using Monitoring Query Language. This method does not require a Workspace.
+        pub async fn query_time_series(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryTimeSeriesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::QueryTimeSeriesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.QueryService/QueryTimeSeries",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.QueryService",
+                        "QueryTimeSeries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// The description of a dynamic collection of monitored resources. Each group
+/// has a filter that is matched against monitored resources and their associated
+/// metadata. If a group's filter matches an available monitored resource, then
+/// that resource is a member of that group.  Groups can contain any number of
+/// monitored resources, and each monitored resource can be a member of any
+/// number of groups.
+///
+/// Groups can be nested in parent-child hierarchies. The `parentName` field
+/// identifies an optional parent for each group.  If a group has a parent, then
+/// the only monitored resources available to be matched by the group's filter
+/// are the resources contained in the parent group.  In other words, a group
+/// contains the monitored resources that match its filter and the filters of all
+/// the group's ancestors.  A group without a parent can contain any monitored
+/// resource.
+///
+/// For example, consider an infrastructure running a set of instances with two
+/// user-defined tags: `"environment"` and `"role"`. A parent group has a filter,
+/// `environment="production"`.  A child of that parent group has a filter,
+/// `role="transcoder"`.  The parent group contains all instances in the
+/// production environment, regardless of their roles.  The child group contains
+/// instances that have the transcoder role *and* are in the production
+/// environment.
+///
+/// The monitored resources contained in a group can change at any moment,
+/// depending on what resources exist and what filters are associated with the
+/// group and its ancestors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Group {
+    /// Output only. The name of this group. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/groups/[GROUP_ID\]
+    ///
+    /// When creating a group, this field is ignored and a new name is created
+    /// consisting of the project specified in the call to `CreateGroup`
+    /// and a unique `\[GROUP_ID\]` that is generated automatically.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// A user-assigned name for this group, used only for display purposes.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The name of the group's parent, if it has one. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/groups/[GROUP_ID\]
+    ///
+    /// For groups with no parent, `parent_name` is the empty string, `""`.
+    #[prost(string, tag = "3")]
+    pub parent_name: ::prost::alloc::string::String,
+    /// The filter used to determine which monitored resources belong to this
+    /// group.
+    #[prost(string, tag = "5")]
+    pub filter: ::prost::alloc::string::String,
+    /// If true, the members of this group are considered to be a cluster.
+    /// The system can perform additional analysis on groups that are clusters.
+    #[prost(bool, tag = "6")]
+    pub is_cluster: bool,
+}
 /// Describes a change made to a configuration.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -807,6 +1983,941 @@ pub mod notification_channel {
             }
         }
     }
+}
+/// A description of the conditions under which some aspect of your system is
+/// considered to be "unhealthy" and the ways to notify people or services about
+/// this state. For an overview of alert policies, see
+/// [Introduction to Alerting](<https://cloud.google.com/monitoring/alerts/>).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AlertPolicy {
+    /// Required if the policy exists. The resource name for this policy. The
+    /// format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    ///
+    /// `\[ALERT_POLICY_ID\]` is assigned by Cloud Monitoring when the policy
+    /// is created. When calling the
+    /// \[alertPolicies.create][google.monitoring.v3.AlertPolicyService.CreateAlertPolicy\]
+    /// method, do not include the `name` field in the alerting policy passed as
+    /// part of the request.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// A short name or phrase used to identify the policy in dashboards,
+    /// notifications, and incidents. To avoid confusion, don't use the same
+    /// display name for multiple policies in the same project. The name is
+    /// limited to 512 Unicode characters.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Documentation that is included with notifications and incidents related to
+    /// this policy. Best practice is for the documentation to include information
+    /// to help responders understand, mitigate, escalate, and correct the
+    /// underlying problems detected by the alerting policy. Notification channels
+    /// that have limited capacity might not show this documentation.
+    #[prost(message, optional, tag = "13")]
+    pub documentation: ::core::option::Option<alert_policy::Documentation>,
+    /// User-supplied key/value data to be used for organizing and
+    /// identifying the `AlertPolicy` objects.
+    ///
+    /// The field can contain up to 64 entries. Each key and value is limited to
+    /// 63 Unicode characters or 128 bytes, whichever is smaller. Labels and
+    /// values can contain only lowercase letters, numerals, underscores, and
+    /// dashes. Keys must begin with a letter.
+    #[prost(btree_map = "string, string", tag = "16")]
+    pub user_labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// A list of conditions for the policy. The conditions are combined by AND or
+    /// OR according to the `combiner` field. If the combined conditions evaluate
+    /// to true, then an incident is created. A policy can have from one to six
+    /// conditions.
+    /// If `condition_time_series_query_language` is present, it must be the only
+    /// `condition`.
+    #[prost(message, repeated, tag = "12")]
+    pub conditions: ::prost::alloc::vec::Vec<alert_policy::Condition>,
+    /// How to combine the results of multiple conditions to determine if an
+    /// incident should be opened.
+    /// If `condition_time_series_query_language` is present, this must be
+    /// `COMBINE_UNSPECIFIED`.
+    #[prost(enumeration = "alert_policy::ConditionCombinerType", tag = "6")]
+    pub combiner: i32,
+    /// Whether or not the policy is enabled. On write, the default interpretation
+    /// if unset is that the policy is enabled. On read, clients should not make
+    /// any assumption about the state if it has not been populated. The
+    /// field should always be populated on List and Get operations, unless
+    /// a field projection has been specified that strips it out.
+    #[prost(message, optional, tag = "17")]
+    pub enabled: ::core::option::Option<bool>,
+    /// Read-only description of how the alert policy is invalid. OK if the alert
+    /// policy is valid. If not OK, the alert policy will not generate incidents.
+    #[prost(message, optional, tag = "18")]
+    pub validity: ::core::option::Option<super::super::rpc::Status>,
+    /// Identifies the notification channels to which notifications should be sent
+    /// when incidents are opened or closed or when new violations occur on
+    /// an already opened incident. Each element of this array corresponds to
+    /// the `name` field in each of the
+    /// \[`NotificationChannel`][google.monitoring.v3.NotificationChannel\]
+    /// objects that are returned from the \[`ListNotificationChannels`\]
+    /// \[google.monitoring.v3.NotificationChannelService.ListNotificationChannels\]
+    /// method. The format of the entries in this field is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID\]
+    #[prost(string, repeated, tag = "14")]
+    pub notification_channels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// A read-only record of the creation of the alerting policy. If provided
+    /// in a call to create or update, this field will be ignored.
+    #[prost(message, optional, tag = "10")]
+    pub creation_record: ::core::option::Option<MutationRecord>,
+    /// A read-only record of the most recent change to the alerting policy. If
+    /// provided in a call to create or update, this field will be ignored.
+    #[prost(message, optional, tag = "11")]
+    pub mutation_record: ::core::option::Option<MutationRecord>,
+    /// Control over how this alert policy's notification channels are notified.
+    #[prost(message, optional, tag = "21")]
+    pub alert_strategy: ::core::option::Option<alert_policy::AlertStrategy>,
+}
+/// Nested message and enum types in `AlertPolicy`.
+pub mod alert_policy {
+    /// A content string and a MIME type that describes the content string's
+    /// format.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Documentation {
+        /// The text of the documentation, interpreted according to `mime_type`.
+        /// The content may not exceed 8,192 Unicode characters and may not exceed
+        /// more than 10,240 bytes when encoded in UTF-8 format, whichever is
+        /// smaller. This text can be [templatized by using
+        /// variables](<https://cloud.google.com/monitoring/alerts/doc-variables>).
+        #[prost(string, tag = "1")]
+        pub content: ::prost::alloc::string::String,
+        /// The format of the `content` field. Presently, only the value
+        /// `"text/markdown"` is supported. See
+        /// \[Markdown\](<https://en.wikipedia.org/wiki/Markdown>) for more information.
+        #[prost(string, tag = "2")]
+        pub mime_type: ::prost::alloc::string::String,
+    }
+    /// A condition is a true/false test that determines when an alerting policy
+    /// should open an incident. If a condition evaluates to true, it signifies
+    /// that something is wrong.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Condition {
+        /// Required if the condition exists. The unique resource name for this
+        /// condition. Its format is:
+        ///
+        ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[POLICY_ID]/conditions/[CONDITION_ID\]
+        ///
+        /// `\[CONDITION_ID\]` is assigned by Cloud Monitoring when the
+        /// condition is created as part of a new or updated alerting policy.
+        ///
+        /// When calling the
+        /// \[alertPolicies.create][google.monitoring.v3.AlertPolicyService.CreateAlertPolicy\]
+        /// method, do not include the `name` field in the conditions of the
+        /// requested alerting policy. Cloud Monitoring creates the
+        /// condition identifiers and includes them in the new policy.
+        ///
+        /// When calling the
+        /// \[alertPolicies.update][google.monitoring.v3.AlertPolicyService.UpdateAlertPolicy\]
+        /// method to update a policy, including a condition `name` causes the
+        /// existing condition to be updated. Conditions without names are added to
+        /// the updated policy. Existing conditions are deleted if they are not
+        /// updated.
+        ///
+        /// Best practice is to preserve `\[CONDITION_ID\]` if you make only small
+        /// changes, such as those to condition thresholds, durations, or trigger
+        /// values.  Otherwise, treat the change as a new condition and let the
+        /// existing condition be deleted.
+        #[prost(string, tag = "12")]
+        pub name: ::prost::alloc::string::String,
+        /// A short name or phrase used to identify the condition in dashboards,
+        /// notifications, and incidents. To avoid confusion, don't use the same
+        /// display name for multiple conditions in the same policy.
+        #[prost(string, tag = "6")]
+        pub display_name: ::prost::alloc::string::String,
+        /// Only one of the following condition types will be specified.
+        #[prost(oneof = "condition::Condition", tags = "1, 2, 20, 19")]
+        pub condition: ::core::option::Option<condition::Condition>,
+    }
+    /// Nested message and enum types in `Condition`.
+    pub mod condition {
+        /// Specifies how many time series must fail a predicate to trigger a
+        /// condition. If not specified, then a `{count: 1}` trigger is used.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Trigger {
+            /// A type of trigger.
+            #[prost(oneof = "trigger::Type", tags = "1, 2")]
+            pub r#type: ::core::option::Option<trigger::Type>,
+        }
+        /// Nested message and enum types in `Trigger`.
+        pub mod trigger {
+            /// A type of trigger.
+            #[allow(clippy::derive_partial_eq_without_eq)]
+            #[derive(Clone, PartialEq, ::prost::Oneof)]
+            pub enum Type {
+                /// The absolute number of time series that must fail
+                /// the predicate for the condition to be triggered.
+                #[prost(int32, tag = "1")]
+                Count(i32),
+                /// The percentage of time series that must fail the
+                /// predicate for the condition to be triggered.
+                #[prost(double, tag = "2")]
+                Percent(f64),
+            }
+        }
+        /// A condition type that compares a collection of time series
+        /// against a threshold.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MetricThreshold {
+            /// Required. A \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>) that
+            /// identifies which time series should be compared with the threshold.
+            ///
+            /// The filter is similar to the one that is specified in the
+            /// [`ListTimeSeries`
+            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>)
+            /// (that call is useful to verify the time series that will be retrieved /
+            /// processed). The filter must specify the metric type and the resource
+            /// type. Optionally, it can specify resource labels and metric labels.
+            /// This field must not exceed 2048 Unicode characters in length.
+            #[prost(string, tag = "2")]
+            pub filter: ::prost::alloc::string::String,
+            /// Specifies the alignment of data points in individual time series as
+            /// well as how to combine the retrieved time series together (such as
+            /// when aggregating multiple streams on each resource to a single
+            /// stream for each resource or when aggregating streams across all
+            /// members of a group of resources). Multiple aggregations
+            /// are applied in the order specified.
+            ///
+            /// This field is similar to the one in the [`ListTimeSeries`
+            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>).
+            /// It is advisable to use the `ListTimeSeries` method when debugging this
+            /// field.
+            #[prost(message, repeated, tag = "8")]
+            pub aggregations: ::prost::alloc::vec::Vec<super::super::Aggregation>,
+            /// A \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>) that
+            /// identifies a time series that should be used as the denominator of a
+            /// ratio that will be compared with the threshold. If a
+            /// `denominator_filter` is specified, the time series specified by the
+            /// `filter` field will be used as the numerator.
+            ///
+            /// The filter must specify the metric type and optionally may contain
+            /// restrictions on resource type, resource labels, and metric labels.
+            /// This field may not exceed 2048 Unicode characters in length.
+            #[prost(string, tag = "9")]
+            pub denominator_filter: ::prost::alloc::string::String,
+            /// Specifies the alignment of data points in individual time series
+            /// selected by `denominatorFilter` as
+            /// well as how to combine the retrieved time series together (such as
+            /// when aggregating multiple streams on each resource to a single
+            /// stream for each resource or when aggregating streams across all
+            /// members of a group of resources).
+            ///
+            /// When computing ratios, the `aggregations` and
+            /// `denominator_aggregations` fields must use the same alignment period
+            /// and produce time series that have the same periodicity and labels.
+            #[prost(message, repeated, tag = "10")]
+            pub denominator_aggregations: ::prost::alloc::vec::Vec<
+                super::super::Aggregation,
+            >,
+            /// The comparison to apply between the time series (indicated by `filter`
+            /// and `aggregation`) and the threshold (indicated by `threshold_value`).
+            /// The comparison is applied on each time series, with the time series
+            /// on the left-hand side and the threshold on the right-hand side.
+            ///
+            /// Only `COMPARISON_LT` and `COMPARISON_GT` are supported currently.
+            #[prost(enumeration = "super::super::ComparisonType", tag = "4")]
+            pub comparison: i32,
+            /// A value against which to compare the time series.
+            #[prost(double, tag = "5")]
+            pub threshold_value: f64,
+            /// The amount of time that a time series must violate the
+            /// threshold to be considered failing. Currently, only values
+            /// that are a multiple of a minute--e.g., 0, 60, 120, or 300
+            /// seconds--are supported. If an invalid value is given, an
+            /// error will be returned. When choosing a duration, it is useful to
+            /// keep in mind the frequency of the underlying time series data
+            /// (which may also be affected by any alignments specified in the
+            /// `aggregations` field); a good duration is long enough so that a single
+            /// outlier does not generate spurious alerts, but short enough that
+            /// unhealthy states are detected and alerted on quickly.
+            #[prost(message, optional, tag = "6")]
+            pub duration: ::core::option::Option<::prost_types::Duration>,
+            /// The number/percent of time series for which the comparison must hold
+            /// in order for the condition to trigger. If unspecified, then the
+            /// condition will trigger if the comparison is true for any of the
+            /// time series that have been identified by `filter` and `aggregations`,
+            /// or by the ratio, if `denominator_filter` and `denominator_aggregations`
+            /// are specified.
+            #[prost(message, optional, tag = "7")]
+            pub trigger: ::core::option::Option<Trigger>,
+            /// A condition control that determines how metric-threshold conditions
+            /// are evaluated when data stops arriving.
+            #[prost(enumeration = "EvaluationMissingData", tag = "11")]
+            pub evaluation_missing_data: i32,
+        }
+        /// A condition type that checks that monitored resources
+        /// are reporting data. The configuration defines a metric and
+        /// a set of monitored resources. The predicate is considered in violation
+        /// when a time series for the specified metric of a monitored
+        /// resource does not include any data in the specified `duration`.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MetricAbsence {
+            /// Required. A \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>) that
+            /// identifies which time series should be compared with the threshold.
+            ///
+            /// The filter is similar to the one that is specified in the
+            /// [`ListTimeSeries`
+            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>)
+            /// (that call is useful to verify the time series that will be retrieved /
+            /// processed). The filter must specify the metric type and the resource
+            /// type. Optionally, it can specify resource labels and metric labels.
+            /// This field must not exceed 2048 Unicode characters in length.
+            #[prost(string, tag = "1")]
+            pub filter: ::prost::alloc::string::String,
+            /// Specifies the alignment of data points in individual time series as
+            /// well as how to combine the retrieved time series together (such as
+            /// when aggregating multiple streams on each resource to a single
+            /// stream for each resource or when aggregating streams across all
+            /// members of a group of resources). Multiple aggregations
+            /// are applied in the order specified.
+            ///
+            /// This field is similar to the one in the [`ListTimeSeries`
+            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>).
+            /// It is advisable to use the `ListTimeSeries` method when debugging this
+            /// field.
+            #[prost(message, repeated, tag = "5")]
+            pub aggregations: ::prost::alloc::vec::Vec<super::super::Aggregation>,
+            /// The amount of time that a time series must fail to report new
+            /// data to be considered failing. The minimum value of this field
+            /// is 120 seconds. Larger values that are a multiple of a
+            /// minute--for example, 240 or 300 seconds--are supported.
+            /// If an invalid value is given, an
+            /// error will be returned. The `Duration.nanos` field is
+            /// ignored.
+            #[prost(message, optional, tag = "2")]
+            pub duration: ::core::option::Option<::prost_types::Duration>,
+            /// The number/percent of time series for which the comparison must hold
+            /// in order for the condition to trigger. If unspecified, then the
+            /// condition will trigger if the comparison is true for any of the
+            /// time series that have been identified by `filter` and `aggregations`.
+            #[prost(message, optional, tag = "3")]
+            pub trigger: ::core::option::Option<Trigger>,
+        }
+        /// A condition type that checks whether a log message in the [scoping
+        /// project](<https://cloud.google.com/monitoring/api/v3#project_name>)
+        /// satisfies the given filter. Logs from other projects in the metrics
+        /// scope are not evaluated.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct LogMatch {
+            /// Required. A logs-based filter. See [Advanced Logs
+            /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>)
+            /// for how this filter should be constructed.
+            #[prost(string, tag = "1")]
+            pub filter: ::prost::alloc::string::String,
+            /// Optional. A map from a label key to an extractor expression, which is
+            /// used to extract the value for this label key. Each entry in this map is
+            /// a specification for how data should be extracted from log entries that
+            /// match `filter`. Each combination of extracted values is treated as a
+            /// separate rule for the purposes of triggering notifications. Label keys
+            /// and corresponding values can be used in notifications generated by this
+            /// condition.
+            ///
+            /// Please see [the documentation on logs-based metric
+            /// `valueExtractor`s](<https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics#LogMetric.FIELDS.value_extractor>)
+            /// for syntax and examples.
+            #[prost(btree_map = "string, string", tag = "2")]
+            pub label_extractors: ::prost::alloc::collections::BTreeMap<
+                ::prost::alloc::string::String,
+                ::prost::alloc::string::String,
+            >,
+        }
+        /// A condition type that allows alert policies to be defined using
+        /// [Monitoring Query Language](<https://cloud.google.com/monitoring/mql>).
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct MonitoringQueryLanguageCondition {
+            /// [Monitoring Query Language](<https://cloud.google.com/monitoring/mql>)
+            /// query that outputs a boolean stream.
+            #[prost(string, tag = "1")]
+            pub query: ::prost::alloc::string::String,
+            /// The amount of time that a time series must violate the
+            /// threshold to be considered failing. Currently, only values
+            /// that are a multiple of a minute--e.g., 0, 60, 120, or 300
+            /// seconds--are supported. If an invalid value is given, an
+            /// error will be returned. When choosing a duration, it is useful to
+            /// keep in mind the frequency of the underlying time series data
+            /// (which may also be affected by any alignments specified in the
+            /// `aggregations` field); a good duration is long enough so that a single
+            /// outlier does not generate spurious alerts, but short enough that
+            /// unhealthy states are detected and alerted on quickly.
+            #[prost(message, optional, tag = "2")]
+            pub duration: ::core::option::Option<::prost_types::Duration>,
+            /// The number/percent of time series for which the comparison must hold
+            /// in order for the condition to trigger. If unspecified, then the
+            /// condition will trigger if the comparison is true for any of the
+            /// time series that have been identified by `filter` and `aggregations`,
+            /// or by the ratio, if `denominator_filter` and `denominator_aggregations`
+            /// are specified.
+            #[prost(message, optional, tag = "3")]
+            pub trigger: ::core::option::Option<Trigger>,
+            /// A condition control that determines how metric-threshold conditions
+            /// are evaluated when data stops arriving.
+            #[prost(enumeration = "EvaluationMissingData", tag = "4")]
+            pub evaluation_missing_data: i32,
+        }
+        /// A condition control that determines how metric-threshold conditions
+        /// are evaluated when data stops arriving.
+        /// This control doesn't affect metric-absence policies.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum EvaluationMissingData {
+            /// An unspecified evaluation missing data option.  Equivalent to
+            /// EVALUATION_MISSING_DATA_NO_OP.
+            Unspecified = 0,
+            /// If there is no data to evaluate the condition, then evaluate the
+            /// condition as false.
+            Inactive = 1,
+            /// If there is no data to evaluate the condition, then evaluate the
+            /// condition as true.
+            Active = 2,
+            /// Do not evaluate the condition to any value if there is no data.
+            NoOp = 3,
+        }
+        impl EvaluationMissingData {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    EvaluationMissingData::Unspecified => {
+                        "EVALUATION_MISSING_DATA_UNSPECIFIED"
+                    }
+                    EvaluationMissingData::Inactive => "EVALUATION_MISSING_DATA_INACTIVE",
+                    EvaluationMissingData::Active => "EVALUATION_MISSING_DATA_ACTIVE",
+                    EvaluationMissingData::NoOp => "EVALUATION_MISSING_DATA_NO_OP",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "EVALUATION_MISSING_DATA_UNSPECIFIED" => Some(Self::Unspecified),
+                    "EVALUATION_MISSING_DATA_INACTIVE" => Some(Self::Inactive),
+                    "EVALUATION_MISSING_DATA_ACTIVE" => Some(Self::Active),
+                    "EVALUATION_MISSING_DATA_NO_OP" => Some(Self::NoOp),
+                    _ => None,
+                }
+            }
+        }
+        /// Only one of the following condition types will be specified.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Condition {
+            /// A condition that compares a time series against a threshold.
+            #[prost(message, tag = "1")]
+            ConditionThreshold(MetricThreshold),
+            /// A condition that checks that a time series continues to
+            /// receive new data points.
+            #[prost(message, tag = "2")]
+            ConditionAbsent(MetricAbsence),
+            /// A condition that checks for log messages matching given constraints. If
+            /// set, no other conditions can be present.
+            #[prost(message, tag = "20")]
+            ConditionMatchedLog(LogMatch),
+            /// A condition that uses the Monitoring Query Language to define
+            /// alerts.
+            #[prost(message, tag = "19")]
+            ConditionMonitoringQueryLanguage(MonitoringQueryLanguageCondition),
+        }
+    }
+    /// Control over how the notification channels in `notification_channels`
+    /// are notified when this alert fires.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct AlertStrategy {
+        /// Required for alert policies with a `LogMatch` condition.
+        ///
+        /// This limit is not implemented for alert policies that are not log-based.
+        #[prost(message, optional, tag = "1")]
+        pub notification_rate_limit: ::core::option::Option<
+            alert_strategy::NotificationRateLimit,
+        >,
+        /// If an alert policy that was active has no data for this long, any open
+        /// incidents will close
+        #[prost(message, optional, tag = "3")]
+        pub auto_close: ::core::option::Option<::prost_types::Duration>,
+    }
+    /// Nested message and enum types in `AlertStrategy`.
+    pub mod alert_strategy {
+        /// Control over the rate of notifications sent to this alert policy's
+        /// notification channels.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct NotificationRateLimit {
+            /// Not more than one notification per `period`.
+            #[prost(message, optional, tag = "1")]
+            pub period: ::core::option::Option<::prost_types::Duration>,
+        }
+    }
+    /// Operators for combining conditions.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ConditionCombinerType {
+        /// An unspecified combiner.
+        CombineUnspecified = 0,
+        /// Combine conditions using the logical `AND` operator. An
+        /// incident is created only if all the conditions are met
+        /// simultaneously. This combiner is satisfied if all conditions are
+        /// met, even if they are met on completely different resources.
+        And = 1,
+        /// Combine conditions using the logical `OR` operator. An incident
+        /// is created if any of the listed conditions is met.
+        Or = 2,
+        /// Combine conditions using logical `AND` operator, but unlike the regular
+        /// `AND` option, an incident is created only if all conditions are met
+        /// simultaneously on at least one resource.
+        AndWithMatchingResource = 3,
+    }
+    impl ConditionCombinerType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConditionCombinerType::CombineUnspecified => "COMBINE_UNSPECIFIED",
+                ConditionCombinerType::And => "AND",
+                ConditionCombinerType::Or => "OR",
+                ConditionCombinerType::AndWithMatchingResource => {
+                    "AND_WITH_MATCHING_RESOURCE"
+                }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "COMBINE_UNSPECIFIED" => Some(Self::CombineUnspecified),
+                "AND" => Some(Self::And),
+                "OR" => Some(Self::Or),
+                "AND_WITH_MATCHING_RESOURCE" => Some(Self::AndWithMatchingResource),
+                _ => None,
+            }
+        }
+    }
+}
+/// The protocol for the `CreateAlertPolicy` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateAlertPolicyRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) in
+    /// which to create the alerting policy. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    ///
+    /// Note that this field names the parent container in which the alerting
+    /// policy will be written, not the name of the created policy. |name| must be
+    /// a host project of a Metrics Scope, otherwise INVALID_ARGUMENT error will
+    /// return. The alerting policy that is returned will have a name that contains
+    /// a normalized representation of this name as a prefix but adds a suffix of
+    /// the form `/alertPolicies/\[ALERT_POLICY_ID\]`, identifying the policy in the
+    /// container.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The requested alerting policy. You should omit the `name` field in this
+    /// policy. The name will be returned in the new policy, including
+    /// a new `\[ALERT_POLICY_ID\]` value.
+    #[prost(message, optional, tag = "2")]
+    pub alert_policy: ::core::option::Option<AlertPolicy>,
+}
+/// The protocol for the `GetAlertPolicy` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetAlertPolicyRequest {
+    /// Required. The alerting policy to retrieve. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The protocol for the `ListAlertPolicies` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAlertPoliciesRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>)
+    /// whose alert policies are to be listed. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    ///
+    /// Note that this field names the parent container in which the alerting
+    /// policies to be listed are stored. To retrieve a single alerting policy
+    /// by name, use the
+    /// \[GetAlertPolicy][google.monitoring.v3.AlertPolicyService.GetAlertPolicy\]
+    /// operation, instead.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// If provided, this field specifies the criteria that must be met by
+    /// alert policies to be included in the response.
+    ///
+    /// For more details, see [sorting and
+    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
+    #[prost(string, tag = "5")]
+    pub filter: ::prost::alloc::string::String,
+    /// A comma-separated list of fields by which to sort the result. Supports
+    /// the same set of field references as the `filter` field. Entries can be
+    /// prefixed with a minus sign to sort by the field in descending order.
+    ///
+    /// For more details, see [sorting and
+    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
+    #[prost(string, tag = "6")]
+    pub order_by: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single response.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// If this field is not empty then it must contain the `nextPageToken` value
+    /// returned by a previous call to this method.  Using this field causes the
+    /// method to return more results from the previous method call.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The protocol for the `ListAlertPolicies` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListAlertPoliciesResponse {
+    /// The returned alert policies.
+    #[prost(message, repeated, tag = "3")]
+    pub alert_policies: ::prost::alloc::vec::Vec<AlertPolicy>,
+    /// If there might be more results than were returned, then this field is set
+    /// to a non-empty value. To see the additional results,
+    /// use that value as `page_token` in the next call to this method.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// The total number of alert policies in all pages. This number is only an
+    /// estimate, and may change in subsequent pages. <https://aip.dev/158>
+    #[prost(int32, tag = "4")]
+    pub total_size: i32,
+}
+/// The protocol for the `UpdateAlertPolicy` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateAlertPolicyRequest {
+    /// Optional. A list of alerting policy field names. If this field is not
+    /// empty, each listed field in the existing alerting policy is set to the
+    /// value of the corresponding field in the supplied policy (`alert_policy`),
+    /// or to the field's default value if the field is not in the supplied
+    /// alerting policy.  Fields not listed retain their previous value.
+    ///
+    /// Examples of valid field masks include `display_name`, `documentation`,
+    /// `documentation.content`, `documentation.mime_type`, `user_labels`,
+    /// `user_label.nameofkey`, `enabled`, `conditions`, `combiner`, etc.
+    ///
+    /// If this field is empty, then the supplied alerting policy replaces the
+    /// existing policy. It is the same as deleting the existing policy and
+    /// adding the supplied policy, except for the following:
+    ///
+    /// +   The new policy will have the same `\[ALERT_POLICY_ID\]` as the former
+    ///      policy. This gives you continuity with the former policy in your
+    ///      notifications and incidents.
+    /// +   Conditions in the new policy will keep their former `\[CONDITION_ID\]` if
+    ///      the supplied condition includes the `name` field with that
+    ///      `\[CONDITION_ID\]`. If the supplied condition omits the `name` field,
+    ///      then a new `\[CONDITION_ID\]` is created.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. The updated alerting policy or the updated values for the
+    /// fields listed in `update_mask`.
+    /// If `update_mask` is not empty, any fields in this policy that are
+    /// not in `update_mask` are ignored.
+    #[prost(message, optional, tag = "3")]
+    pub alert_policy: ::core::option::Option<AlertPolicy>,
+}
+/// The protocol for the `DeleteAlertPolicy` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteAlertPolicyRequest {
+    /// Required. The alerting policy to delete. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    ///
+    /// For more information, see \[AlertPolicy][google.monitoring.v3.AlertPolicy\].
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod alert_policy_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The AlertPolicyService API is used to manage (list, create, delete,
+    /// edit) alert policies in Cloud Monitoring. An alerting policy is
+    /// a description of the conditions under which some aspect of your
+    /// system is considered to be "unhealthy" and the ways to notify
+    /// people or services about this state. In addition to using this API, alert
+    /// policies can also be managed through
+    /// [Cloud Monitoring](https://cloud.google.com/monitoring/docs/),
+    /// which can be reached by clicking the "Monitoring" tab in
+    /// [Cloud console](https://console.cloud.google.com/).
+    #[derive(Debug, Clone)]
+    pub struct AlertPolicyServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> AlertPolicyServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> AlertPolicyServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            AlertPolicyServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Lists the existing alerting policies for the workspace.
+        pub async fn list_alert_policies(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListAlertPoliciesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListAlertPoliciesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.AlertPolicyService/ListAlertPolicies",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.AlertPolicyService",
+                        "ListAlertPolicies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a single alerting policy.
+        pub async fn get_alert_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetAlertPolicyRequest>,
+        ) -> std::result::Result<tonic::Response<super::AlertPolicy>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.AlertPolicyService/GetAlertPolicy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.AlertPolicyService",
+                        "GetAlertPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates a new alerting policy.
+        pub async fn create_alert_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateAlertPolicyRequest>,
+        ) -> std::result::Result<tonic::Response<super::AlertPolicy>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.AlertPolicyService/CreateAlertPolicy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.AlertPolicyService",
+                        "CreateAlertPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Deletes an alerting policy.
+        pub async fn delete_alert_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteAlertPolicyRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.AlertPolicyService/DeleteAlertPolicy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.AlertPolicyService",
+                        "DeleteAlertPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Updates an alerting policy. You can either replace the entire policy with
+        /// a new one or replace only certain fields in the current alerting policy by
+        /// specifying the fields to be updated via `updateMask`. Returns the
+        /// updated alerting policy.
+        pub async fn update_alert_policy(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateAlertPolicyRequest>,
+        ) -> std::result::Result<tonic::Response<super::AlertPolicy>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.AlertPolicyService/UpdateAlertPolicy",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.AlertPolicyService",
+                        "UpdateAlertPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// The context of a span. This is attached to an
+/// \[Exemplar][google.api.Distribution.Exemplar\]
+/// in \[Distribution][google.api.Distribution\] values during aggregation.
+///
+/// It contains the name of a span with format:
+///
+///      projects/\[PROJECT_ID_OR_NUMBER]/traces/[TRACE_ID]/spans/[SPAN_ID\]
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SpanContext {
+    /// The resource name of the span. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/traces/[TRACE_ID]/spans/[SPAN_ID\]
+    ///
+    /// `\[TRACE_ID\]` is a unique identifier for a trace within a project;
+    /// it is a 32-character hexadecimal encoding of a 16-byte array.
+    ///
+    /// `\[SPAN_ID\]` is a unique identifier for a span within a trace; it
+    /// is a 16-character hexadecimal encoding of an 8-byte array.
+    #[prost(string, tag = "1")]
+    pub span_name: ::prost::alloc::string::String,
 }
 /// An internal checker allows Uptime checks to run on private/internal GCP
 /// resources.
@@ -1893,12 +4004,28 @@ pub mod uptime_check_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the existing valid Uptime check configurations for the project
         /// (leaving out any invalid configurations).
         pub async fn list_uptime_check_configs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUptimeCheckConfigsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListUptimeCheckConfigsResponse>,
             tonic::Status,
         > {
@@ -1915,13 +4042,24 @@ pub mod uptime_check_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.UptimeCheckService/ListUptimeCheckConfigs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.UptimeCheckService",
+                        "ListUptimeCheckConfigs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a single Uptime check configuration.
         pub async fn get_uptime_check_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUptimeCheckConfigRequest>,
-        ) -> Result<tonic::Response<super::UptimeCheckConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::UptimeCheckConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1935,13 +4073,24 @@ pub mod uptime_check_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.UptimeCheckService/GetUptimeCheckConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.UptimeCheckService",
+                        "GetUptimeCheckConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Uptime check configuration.
         pub async fn create_uptime_check_config(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateUptimeCheckConfigRequest>,
-        ) -> Result<tonic::Response<super::UptimeCheckConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::UptimeCheckConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1955,7 +4104,15 @@ pub mod uptime_check_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.UptimeCheckService/CreateUptimeCheckConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.UptimeCheckService",
+                        "CreateUptimeCheckConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an Uptime check configuration. You can either replace the entire
         /// configuration with a new one or replace only certain fields in the current
@@ -1964,7 +4121,10 @@ pub mod uptime_check_service_client {
         pub async fn update_uptime_check_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateUptimeCheckConfigRequest>,
-        ) -> Result<tonic::Response<super::UptimeCheckConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::UptimeCheckConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1978,7 +4138,15 @@ pub mod uptime_check_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.UptimeCheckService/UpdateUptimeCheckConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.UptimeCheckService",
+                        "UpdateUptimeCheckConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an Uptime check configuration. Note that this method will fail
         /// if the Uptime check configuration is referenced by an alert policy or
@@ -1986,7 +4154,7 @@ pub mod uptime_check_service_client {
         pub async fn delete_uptime_check_config(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteUptimeCheckConfigRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2000,13 +4168,24 @@ pub mod uptime_check_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.UptimeCheckService/DeleteUptimeCheckConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.UptimeCheckService",
+                        "DeleteUptimeCheckConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the list of IP addresses that checkers run from
         pub async fn list_uptime_check_ips(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUptimeCheckIpsRequest>,
-        ) -> Result<tonic::Response<super::ListUptimeCheckIpsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListUptimeCheckIpsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2020,861 +4199,15 @@ pub mod uptime_check_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.UptimeCheckService/ListUptimeCheckIps",
             );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A description of the conditions under which some aspect of your system is
-/// considered to be "unhealthy" and the ways to notify people or services about
-/// this state. For an overview of alert policies, see
-/// [Introduction to Alerting](<https://cloud.google.com/monitoring/alerts/>).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AlertPolicy {
-    /// Required if the policy exists. The resource name for this policy. The
-    /// format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    ///
-    /// `\[ALERT_POLICY_ID\]` is assigned by Cloud Monitoring when the policy
-    /// is created. When calling the
-    /// \[alertPolicies.create][google.monitoring.v3.AlertPolicyService.CreateAlertPolicy\]
-    /// method, do not include the `name` field in the alerting policy passed as
-    /// part of the request.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// A short name or phrase used to identify the policy in dashboards,
-    /// notifications, and incidents. To avoid confusion, don't use the same
-    /// display name for multiple policies in the same project. The name is
-    /// limited to 512 Unicode characters.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Documentation that is included with notifications and incidents related to
-    /// this policy. Best practice is for the documentation to include information
-    /// to help responders understand, mitigate, escalate, and correct the
-    /// underlying problems detected by the alerting policy. Notification channels
-    /// that have limited capacity might not show this documentation.
-    #[prost(message, optional, tag = "13")]
-    pub documentation: ::core::option::Option<alert_policy::Documentation>,
-    /// User-supplied key/value data to be used for organizing and
-    /// identifying the `AlertPolicy` objects.
-    ///
-    /// The field can contain up to 64 entries. Each key and value is limited to
-    /// 63 Unicode characters or 128 bytes, whichever is smaller. Labels and
-    /// values can contain only lowercase letters, numerals, underscores, and
-    /// dashes. Keys must begin with a letter.
-    #[prost(btree_map = "string, string", tag = "16")]
-    pub user_labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// A list of conditions for the policy. The conditions are combined by AND or
-    /// OR according to the `combiner` field. If the combined conditions evaluate
-    /// to true, then an incident is created. A policy can have from one to six
-    /// conditions.
-    /// If `condition_time_series_query_language` is present, it must be the only
-    /// `condition`.
-    #[prost(message, repeated, tag = "12")]
-    pub conditions: ::prost::alloc::vec::Vec<alert_policy::Condition>,
-    /// How to combine the results of multiple conditions to determine if an
-    /// incident should be opened.
-    /// If `condition_time_series_query_language` is present, this must be
-    /// `COMBINE_UNSPECIFIED`.
-    #[prost(enumeration = "alert_policy::ConditionCombinerType", tag = "6")]
-    pub combiner: i32,
-    /// Whether or not the policy is enabled. On write, the default interpretation
-    /// if unset is that the policy is enabled. On read, clients should not make
-    /// any assumption about the state if it has not been populated. The
-    /// field should always be populated on List and Get operations, unless
-    /// a field projection has been specified that strips it out.
-    #[prost(message, optional, tag = "17")]
-    pub enabled: ::core::option::Option<bool>,
-    /// Read-only description of how the alert policy is invalid. OK if the alert
-    /// policy is valid. If not OK, the alert policy will not generate incidents.
-    #[prost(message, optional, tag = "18")]
-    pub validity: ::core::option::Option<super::super::rpc::Status>,
-    /// Identifies the notification channels to which notifications should be sent
-    /// when incidents are opened or closed or when new violations occur on
-    /// an already opened incident. Each element of this array corresponds to
-    /// the `name` field in each of the
-    /// \[`NotificationChannel`][google.monitoring.v3.NotificationChannel\]
-    /// objects that are returned from the \[`ListNotificationChannels`\]
-    /// \[google.monitoring.v3.NotificationChannelService.ListNotificationChannels\]
-    /// method. The format of the entries in this field is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID\]
-    #[prost(string, repeated, tag = "14")]
-    pub notification_channels: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// A read-only record of the creation of the alerting policy. If provided
-    /// in a call to create or update, this field will be ignored.
-    #[prost(message, optional, tag = "10")]
-    pub creation_record: ::core::option::Option<MutationRecord>,
-    /// A read-only record of the most recent change to the alerting policy. If
-    /// provided in a call to create or update, this field will be ignored.
-    #[prost(message, optional, tag = "11")]
-    pub mutation_record: ::core::option::Option<MutationRecord>,
-    /// Control over how this alert policy's notification channels are notified.
-    #[prost(message, optional, tag = "21")]
-    pub alert_strategy: ::core::option::Option<alert_policy::AlertStrategy>,
-}
-/// Nested message and enum types in `AlertPolicy`.
-pub mod alert_policy {
-    /// A content string and a MIME type that describes the content string's
-    /// format.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Documentation {
-        /// The text of the documentation, interpreted according to `mime_type`.
-        /// The content may not exceed 8,192 Unicode characters and may not exceed
-        /// more than 10,240 bytes when encoded in UTF-8 format, whichever is
-        /// smaller. This text can be [templatized by using
-        /// variables](<https://cloud.google.com/monitoring/alerts/doc-variables>).
-        #[prost(string, tag = "1")]
-        pub content: ::prost::alloc::string::String,
-        /// The format of the `content` field. Presently, only the value
-        /// `"text/markdown"` is supported. See
-        /// \[Markdown\](<https://en.wikipedia.org/wiki/Markdown>) for more information.
-        #[prost(string, tag = "2")]
-        pub mime_type: ::prost::alloc::string::String,
-    }
-    /// A condition is a true/false test that determines when an alerting policy
-    /// should open an incident. If a condition evaluates to true, it signifies
-    /// that something is wrong.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Condition {
-        /// Required if the condition exists. The unique resource name for this
-        /// condition. Its format is:
-        ///
-        ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[POLICY_ID]/conditions/[CONDITION_ID\]
-        ///
-        /// `\[CONDITION_ID\]` is assigned by Cloud Monitoring when the
-        /// condition is created as part of a new or updated alerting policy.
-        ///
-        /// When calling the
-        /// \[alertPolicies.create][google.monitoring.v3.AlertPolicyService.CreateAlertPolicy\]
-        /// method, do not include the `name` field in the conditions of the
-        /// requested alerting policy. Cloud Monitoring creates the
-        /// condition identifiers and includes them in the new policy.
-        ///
-        /// When calling the
-        /// \[alertPolicies.update][google.monitoring.v3.AlertPolicyService.UpdateAlertPolicy\]
-        /// method to update a policy, including a condition `name` causes the
-        /// existing condition to be updated. Conditions without names are added to
-        /// the updated policy. Existing conditions are deleted if they are not
-        /// updated.
-        ///
-        /// Best practice is to preserve `\[CONDITION_ID\]` if you make only small
-        /// changes, such as those to condition thresholds, durations, or trigger
-        /// values.  Otherwise, treat the change as a new condition and let the
-        /// existing condition be deleted.
-        #[prost(string, tag = "12")]
-        pub name: ::prost::alloc::string::String,
-        /// A short name or phrase used to identify the condition in dashboards,
-        /// notifications, and incidents. To avoid confusion, don't use the same
-        /// display name for multiple conditions in the same policy.
-        #[prost(string, tag = "6")]
-        pub display_name: ::prost::alloc::string::String,
-        /// Only one of the following condition types will be specified.
-        #[prost(oneof = "condition::Condition", tags = "1, 2, 20, 19")]
-        pub condition: ::core::option::Option<condition::Condition>,
-    }
-    /// Nested message and enum types in `Condition`.
-    pub mod condition {
-        /// Specifies how many time series must fail a predicate to trigger a
-        /// condition. If not specified, then a `{count: 1}` trigger is used.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Trigger {
-            /// A type of trigger.
-            #[prost(oneof = "trigger::Type", tags = "1, 2")]
-            pub r#type: ::core::option::Option<trigger::Type>,
-        }
-        /// Nested message and enum types in `Trigger`.
-        pub mod trigger {
-            /// A type of trigger.
-            #[allow(clippy::derive_partial_eq_without_eq)]
-            #[derive(Clone, PartialEq, ::prost::Oneof)]
-            pub enum Type {
-                /// The absolute number of time series that must fail
-                /// the predicate for the condition to be triggered.
-                #[prost(int32, tag = "1")]
-                Count(i32),
-                /// The percentage of time series that must fail the
-                /// predicate for the condition to be triggered.
-                #[prost(double, tag = "2")]
-                Percent(f64),
-            }
-        }
-        /// A condition type that compares a collection of time series
-        /// against a threshold.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MetricThreshold {
-            /// Required. A \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>) that
-            /// identifies which time series should be compared with the threshold.
-            ///
-            /// The filter is similar to the one that is specified in the
-            /// [`ListTimeSeries`
-            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>)
-            /// (that call is useful to verify the time series that will be retrieved /
-            /// processed). The filter must specify the metric type and the resource
-            /// type. Optionally, it can specify resource labels and metric labels.
-            /// This field must not exceed 2048 Unicode characters in length.
-            #[prost(string, tag = "2")]
-            pub filter: ::prost::alloc::string::String,
-            /// Specifies the alignment of data points in individual time series as
-            /// well as how to combine the retrieved time series together (such as
-            /// when aggregating multiple streams on each resource to a single
-            /// stream for each resource or when aggregating streams across all
-            /// members of a group of resources). Multiple aggregations
-            /// are applied in the order specified.
-            ///
-            /// This field is similar to the one in the [`ListTimeSeries`
-            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>).
-            /// It is advisable to use the `ListTimeSeries` method when debugging this
-            /// field.
-            #[prost(message, repeated, tag = "8")]
-            pub aggregations: ::prost::alloc::vec::Vec<super::super::Aggregation>,
-            /// A \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>) that
-            /// identifies a time series that should be used as the denominator of a
-            /// ratio that will be compared with the threshold. If a
-            /// `denominator_filter` is specified, the time series specified by the
-            /// `filter` field will be used as the numerator.
-            ///
-            /// The filter must specify the metric type and optionally may contain
-            /// restrictions on resource type, resource labels, and metric labels.
-            /// This field may not exceed 2048 Unicode characters in length.
-            #[prost(string, tag = "9")]
-            pub denominator_filter: ::prost::alloc::string::String,
-            /// Specifies the alignment of data points in individual time series
-            /// selected by `denominatorFilter` as
-            /// well as how to combine the retrieved time series together (such as
-            /// when aggregating multiple streams on each resource to a single
-            /// stream for each resource or when aggregating streams across all
-            /// members of a group of resources).
-            ///
-            /// When computing ratios, the `aggregations` and
-            /// `denominator_aggregations` fields must use the same alignment period
-            /// and produce time series that have the same periodicity and labels.
-            #[prost(message, repeated, tag = "10")]
-            pub denominator_aggregations: ::prost::alloc::vec::Vec<
-                super::super::Aggregation,
-            >,
-            /// The comparison to apply between the time series (indicated by `filter`
-            /// and `aggregation`) and the threshold (indicated by `threshold_value`).
-            /// The comparison is applied on each time series, with the time series
-            /// on the left-hand side and the threshold on the right-hand side.
-            ///
-            /// Only `COMPARISON_LT` and `COMPARISON_GT` are supported currently.
-            #[prost(enumeration = "super::super::ComparisonType", tag = "4")]
-            pub comparison: i32,
-            /// A value against which to compare the time series.
-            #[prost(double, tag = "5")]
-            pub threshold_value: f64,
-            /// The amount of time that a time series must violate the
-            /// threshold to be considered failing. Currently, only values
-            /// that are a multiple of a minute--e.g., 0, 60, 120, or 300
-            /// seconds--are supported. If an invalid value is given, an
-            /// error will be returned. When choosing a duration, it is useful to
-            /// keep in mind the frequency of the underlying time series data
-            /// (which may also be affected by any alignments specified in the
-            /// `aggregations` field); a good duration is long enough so that a single
-            /// outlier does not generate spurious alerts, but short enough that
-            /// unhealthy states are detected and alerted on quickly.
-            #[prost(message, optional, tag = "6")]
-            pub duration: ::core::option::Option<::prost_types::Duration>,
-            /// The number/percent of time series for which the comparison must hold
-            /// in order for the condition to trigger. If unspecified, then the
-            /// condition will trigger if the comparison is true for any of the
-            /// time series that have been identified by `filter` and `aggregations`,
-            /// or by the ratio, if `denominator_filter` and `denominator_aggregations`
-            /// are specified.
-            #[prost(message, optional, tag = "7")]
-            pub trigger: ::core::option::Option<Trigger>,
-            /// A condition control that determines how metric-threshold conditions
-            /// are evaluated when data stops arriving.
-            #[prost(enumeration = "EvaluationMissingData", tag = "11")]
-            pub evaluation_missing_data: i32,
-        }
-        /// A condition type that checks that monitored resources
-        /// are reporting data. The configuration defines a metric and
-        /// a set of monitored resources. The predicate is considered in violation
-        /// when a time series for the specified metric of a monitored
-        /// resource does not include any data in the specified `duration`.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MetricAbsence {
-            /// Required. A \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>) that
-            /// identifies which time series should be compared with the threshold.
-            ///
-            /// The filter is similar to the one that is specified in the
-            /// [`ListTimeSeries`
-            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>)
-            /// (that call is useful to verify the time series that will be retrieved /
-            /// processed). The filter must specify the metric type and the resource
-            /// type. Optionally, it can specify resource labels and metric labels.
-            /// This field must not exceed 2048 Unicode characters in length.
-            #[prost(string, tag = "1")]
-            pub filter: ::prost::alloc::string::String,
-            /// Specifies the alignment of data points in individual time series as
-            /// well as how to combine the retrieved time series together (such as
-            /// when aggregating multiple streams on each resource to a single
-            /// stream for each resource or when aggregating streams across all
-            /// members of a group of resources). Multiple aggregations
-            /// are applied in the order specified.
-            ///
-            /// This field is similar to the one in the [`ListTimeSeries`
-            /// request](<https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.timeSeries/list>).
-            /// It is advisable to use the `ListTimeSeries` method when debugging this
-            /// field.
-            #[prost(message, repeated, tag = "5")]
-            pub aggregations: ::prost::alloc::vec::Vec<super::super::Aggregation>,
-            /// The amount of time that a time series must fail to report new
-            /// data to be considered failing. The minimum value of this field
-            /// is 120 seconds. Larger values that are a multiple of a
-            /// minute--for example, 240 or 300 seconds--are supported.
-            /// If an invalid value is given, an
-            /// error will be returned. The `Duration.nanos` field is
-            /// ignored.
-            #[prost(message, optional, tag = "2")]
-            pub duration: ::core::option::Option<::prost_types::Duration>,
-            /// The number/percent of time series for which the comparison must hold
-            /// in order for the condition to trigger. If unspecified, then the
-            /// condition will trigger if the comparison is true for any of the
-            /// time series that have been identified by `filter` and `aggregations`.
-            #[prost(message, optional, tag = "3")]
-            pub trigger: ::core::option::Option<Trigger>,
-        }
-        /// A condition type that checks whether a log message in the [scoping
-        /// project](<https://cloud.google.com/monitoring/api/v3#project_name>)
-        /// satisfies the given filter. Logs from other projects in the metrics
-        /// scope are not evaluated.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct LogMatch {
-            /// Required. A logs-based filter. See [Advanced Logs
-            /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>)
-            /// for how this filter should be constructed.
-            #[prost(string, tag = "1")]
-            pub filter: ::prost::alloc::string::String,
-            /// Optional. A map from a label key to an extractor expression, which is
-            /// used to extract the value for this label key. Each entry in this map is
-            /// a specification for how data should be extracted from log entries that
-            /// match `filter`. Each combination of extracted values is treated as a
-            /// separate rule for the purposes of triggering notifications. Label keys
-            /// and corresponding values can be used in notifications generated by this
-            /// condition.
-            ///
-            /// Please see [the documentation on logs-based metric
-            /// `valueExtractor`s](<https://cloud.google.com/logging/docs/reference/v2/rest/v2/projects.metrics#LogMetric.FIELDS.value_extractor>)
-            /// for syntax and examples.
-            #[prost(btree_map = "string, string", tag = "2")]
-            pub label_extractors: ::prost::alloc::collections::BTreeMap<
-                ::prost::alloc::string::String,
-                ::prost::alloc::string::String,
-            >,
-        }
-        /// A condition type that allows alert policies to be defined using
-        /// [Monitoring Query Language](<https://cloud.google.com/monitoring/mql>).
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct MonitoringQueryLanguageCondition {
-            /// [Monitoring Query Language](<https://cloud.google.com/monitoring/mql>)
-            /// query that outputs a boolean stream.
-            #[prost(string, tag = "1")]
-            pub query: ::prost::alloc::string::String,
-            /// The amount of time that a time series must violate the
-            /// threshold to be considered failing. Currently, only values
-            /// that are a multiple of a minute--e.g., 0, 60, 120, or 300
-            /// seconds--are supported. If an invalid value is given, an
-            /// error will be returned. When choosing a duration, it is useful to
-            /// keep in mind the frequency of the underlying time series data
-            /// (which may also be affected by any alignments specified in the
-            /// `aggregations` field); a good duration is long enough so that a single
-            /// outlier does not generate spurious alerts, but short enough that
-            /// unhealthy states are detected and alerted on quickly.
-            #[prost(message, optional, tag = "2")]
-            pub duration: ::core::option::Option<::prost_types::Duration>,
-            /// The number/percent of time series for which the comparison must hold
-            /// in order for the condition to trigger. If unspecified, then the
-            /// condition will trigger if the comparison is true for any of the
-            /// time series that have been identified by `filter` and `aggregations`,
-            /// or by the ratio, if `denominator_filter` and `denominator_aggregations`
-            /// are specified.
-            #[prost(message, optional, tag = "3")]
-            pub trigger: ::core::option::Option<Trigger>,
-            /// A condition control that determines how metric-threshold conditions
-            /// are evaluated when data stops arriving.
-            #[prost(enumeration = "EvaluationMissingData", tag = "4")]
-            pub evaluation_missing_data: i32,
-        }
-        /// A condition control that determines how metric-threshold conditions
-        /// are evaluated when data stops arriving.
-        /// This control doesn't affect metric-absence policies.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum EvaluationMissingData {
-            /// An unspecified evaluation missing data option.  Equivalent to
-            /// EVALUATION_MISSING_DATA_NO_OP.
-            Unspecified = 0,
-            /// If there is no data to evaluate the condition, then evaluate the
-            /// condition as false.
-            Inactive = 1,
-            /// If there is no data to evaluate the condition, then evaluate the
-            /// condition as true.
-            Active = 2,
-            /// Do not evaluate the condition to any value if there is no data.
-            NoOp = 3,
-        }
-        impl EvaluationMissingData {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    EvaluationMissingData::Unspecified => {
-                        "EVALUATION_MISSING_DATA_UNSPECIFIED"
-                    }
-                    EvaluationMissingData::Inactive => "EVALUATION_MISSING_DATA_INACTIVE",
-                    EvaluationMissingData::Active => "EVALUATION_MISSING_DATA_ACTIVE",
-                    EvaluationMissingData::NoOp => "EVALUATION_MISSING_DATA_NO_OP",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "EVALUATION_MISSING_DATA_UNSPECIFIED" => Some(Self::Unspecified),
-                    "EVALUATION_MISSING_DATA_INACTIVE" => Some(Self::Inactive),
-                    "EVALUATION_MISSING_DATA_ACTIVE" => Some(Self::Active),
-                    "EVALUATION_MISSING_DATA_NO_OP" => Some(Self::NoOp),
-                    _ => None,
-                }
-            }
-        }
-        /// Only one of the following condition types will be specified.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Condition {
-            /// A condition that compares a time series against a threshold.
-            #[prost(message, tag = "1")]
-            ConditionThreshold(MetricThreshold),
-            /// A condition that checks that a time series continues to
-            /// receive new data points.
-            #[prost(message, tag = "2")]
-            ConditionAbsent(MetricAbsence),
-            /// A condition that checks for log messages matching given constraints. If
-            /// set, no other conditions can be present.
-            #[prost(message, tag = "20")]
-            ConditionMatchedLog(LogMatch),
-            /// A condition that uses the Monitoring Query Language to define
-            /// alerts.
-            #[prost(message, tag = "19")]
-            ConditionMonitoringQueryLanguage(MonitoringQueryLanguageCondition),
-        }
-    }
-    /// Control over how the notification channels in `notification_channels`
-    /// are notified when this alert fires.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct AlertStrategy {
-        /// Required for alert policies with a `LogMatch` condition.
-        ///
-        /// This limit is not implemented for alert policies that are not log-based.
-        #[prost(message, optional, tag = "1")]
-        pub notification_rate_limit: ::core::option::Option<
-            alert_strategy::NotificationRateLimit,
-        >,
-        /// If an alert policy that was active has no data for this long, any open
-        /// incidents will close
-        #[prost(message, optional, tag = "3")]
-        pub auto_close: ::core::option::Option<::prost_types::Duration>,
-    }
-    /// Nested message and enum types in `AlertStrategy`.
-    pub mod alert_strategy {
-        /// Control over the rate of notifications sent to this alert policy's
-        /// notification channels.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct NotificationRateLimit {
-            /// Not more than one notification per `period`.
-            #[prost(message, optional, tag = "1")]
-            pub period: ::core::option::Option<::prost_types::Duration>,
-        }
-    }
-    /// Operators for combining conditions.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ConditionCombinerType {
-        /// An unspecified combiner.
-        CombineUnspecified = 0,
-        /// Combine conditions using the logical `AND` operator. An
-        /// incident is created only if all the conditions are met
-        /// simultaneously. This combiner is satisfied if all conditions are
-        /// met, even if they are met on completely different resources.
-        And = 1,
-        /// Combine conditions using the logical `OR` operator. An incident
-        /// is created if any of the listed conditions is met.
-        Or = 2,
-        /// Combine conditions using logical `AND` operator, but unlike the regular
-        /// `AND` option, an incident is created only if all conditions are met
-        /// simultaneously on at least one resource.
-        AndWithMatchingResource = 3,
-    }
-    impl ConditionCombinerType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ConditionCombinerType::CombineUnspecified => "COMBINE_UNSPECIFIED",
-                ConditionCombinerType::And => "AND",
-                ConditionCombinerType::Or => "OR",
-                ConditionCombinerType::AndWithMatchingResource => {
-                    "AND_WITH_MATCHING_RESOURCE"
-                }
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "COMBINE_UNSPECIFIED" => Some(Self::CombineUnspecified),
-                "AND" => Some(Self::And),
-                "OR" => Some(Self::Or),
-                "AND_WITH_MATCHING_RESOURCE" => Some(Self::AndWithMatchingResource),
-                _ => None,
-            }
-        }
-    }
-}
-/// The protocol for the `CreateAlertPolicy` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateAlertPolicyRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) in
-    /// which to create the alerting policy. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    ///
-    /// Note that this field names the parent container in which the alerting
-    /// policy will be written, not the name of the created policy. |name| must be
-    /// a host project of a Metrics Scope, otherwise INVALID_ARGUMENT error will
-    /// return. The alerting policy that is returned will have a name that contains
-    /// a normalized representation of this name as a prefix but adds a suffix of
-    /// the form `/alertPolicies/\[ALERT_POLICY_ID\]`, identifying the policy in the
-    /// container.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The requested alerting policy. You should omit the `name` field in this
-    /// policy. The name will be returned in the new policy, including
-    /// a new `\[ALERT_POLICY_ID\]` value.
-    #[prost(message, optional, tag = "2")]
-    pub alert_policy: ::core::option::Option<AlertPolicy>,
-}
-/// The protocol for the `GetAlertPolicy` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetAlertPolicyRequest {
-    /// Required. The alerting policy to retrieve. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The protocol for the `ListAlertPolicies` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAlertPoliciesRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>)
-    /// whose alert policies are to be listed. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    ///
-    /// Note that this field names the parent container in which the alerting
-    /// policies to be listed are stored. To retrieve a single alerting policy
-    /// by name, use the
-    /// \[GetAlertPolicy][google.monitoring.v3.AlertPolicyService.GetAlertPolicy\]
-    /// operation, instead.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// If provided, this field specifies the criteria that must be met by
-    /// alert policies to be included in the response.
-    ///
-    /// For more details, see [sorting and
-    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
-    #[prost(string, tag = "5")]
-    pub filter: ::prost::alloc::string::String,
-    /// A comma-separated list of fields by which to sort the result. Supports
-    /// the same set of field references as the `filter` field. Entries can be
-    /// prefixed with a minus sign to sort by the field in descending order.
-    ///
-    /// For more details, see [sorting and
-    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
-    #[prost(string, tag = "6")]
-    pub order_by: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single response.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// If this field is not empty then it must contain the `nextPageToken` value
-    /// returned by a previous call to this method.  Using this field causes the
-    /// method to return more results from the previous method call.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The protocol for the `ListAlertPolicies` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListAlertPoliciesResponse {
-    /// The returned alert policies.
-    #[prost(message, repeated, tag = "3")]
-    pub alert_policies: ::prost::alloc::vec::Vec<AlertPolicy>,
-    /// If there might be more results than were returned, then this field is set
-    /// to a non-empty value. To see the additional results,
-    /// use that value as `page_token` in the next call to this method.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// The total number of alert policies in all pages. This number is only an
-    /// estimate, and may change in subsequent pages. <https://aip.dev/158>
-    #[prost(int32, tag = "4")]
-    pub total_size: i32,
-}
-/// The protocol for the `UpdateAlertPolicy` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateAlertPolicyRequest {
-    /// Optional. A list of alerting policy field names. If this field is not
-    /// empty, each listed field in the existing alerting policy is set to the
-    /// value of the corresponding field in the supplied policy (`alert_policy`),
-    /// or to the field's default value if the field is not in the supplied
-    /// alerting policy.  Fields not listed retain their previous value.
-    ///
-    /// Examples of valid field masks include `display_name`, `documentation`,
-    /// `documentation.content`, `documentation.mime_type`, `user_labels`,
-    /// `user_label.nameofkey`, `enabled`, `conditions`, `combiner`, etc.
-    ///
-    /// If this field is empty, then the supplied alerting policy replaces the
-    /// existing policy. It is the same as deleting the existing policy and
-    /// adding the supplied policy, except for the following:
-    ///
-    /// +   The new policy will have the same `\[ALERT_POLICY_ID\]` as the former
-    ///      policy. This gives you continuity with the former policy in your
-    ///      notifications and incidents.
-    /// +   Conditions in the new policy will keep their former `\[CONDITION_ID\]` if
-    ///      the supplied condition includes the `name` field with that
-    ///      `\[CONDITION_ID\]`. If the supplied condition omits the `name` field,
-    ///      then a new `\[CONDITION_ID\]` is created.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. The updated alerting policy or the updated values for the
-    /// fields listed in `update_mask`.
-    /// If `update_mask` is not empty, any fields in this policy that are
-    /// not in `update_mask` are ignored.
-    #[prost(message, optional, tag = "3")]
-    pub alert_policy: ::core::option::Option<AlertPolicy>,
-}
-/// The protocol for the `DeleteAlertPolicy` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteAlertPolicyRequest {
-    /// Required. The alerting policy to delete. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    ///
-    /// For more information, see \[AlertPolicy][google.monitoring.v3.AlertPolicy\].
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod alert_policy_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The AlertPolicyService API is used to manage (list, create, delete,
-    /// edit) alert policies in Cloud Monitoring. An alerting policy is
-    /// a description of the conditions under which some aspect of your
-    /// system is considered to be "unhealthy" and the ways to notify
-    /// people or services about this state. In addition to using this API, alert
-    /// policies can also be managed through
-    /// [Cloud Monitoring](https://cloud.google.com/monitoring/docs/),
-    /// which can be reached by clicking the "Monitoring" tab in
-    /// [Cloud console](https://console.cloud.google.com/).
-    #[derive(Debug, Clone)]
-    pub struct AlertPolicyServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> AlertPolicyServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> AlertPolicyServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            AlertPolicyServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists the existing alerting policies for the workspace.
-        pub async fn list_alert_policies(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListAlertPoliciesRequest>,
-        ) -> Result<tonic::Response<super::ListAlertPoliciesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.AlertPolicyService/ListAlertPolicies",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a single alerting policy.
-        pub async fn get_alert_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetAlertPolicyRequest>,
-        ) -> Result<tonic::Response<super::AlertPolicy>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.AlertPolicyService/GetAlertPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new alerting policy.
-        pub async fn create_alert_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateAlertPolicyRequest>,
-        ) -> Result<tonic::Response<super::AlertPolicy>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.AlertPolicyService/CreateAlertPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes an alerting policy.
-        pub async fn delete_alert_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteAlertPolicyRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.AlertPolicyService/DeleteAlertPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates an alerting policy. You can either replace the entire policy with
-        /// a new one or replace only certain fields in the current alerting policy by
-        /// specifying the fields to be updated via `updateMask`. Returns the
-        /// updated alerting policy.
-        pub async fn update_alert_policy(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateAlertPolicyRequest>,
-        ) -> Result<tonic::Response<super::AlertPolicy>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.AlertPolicyService/UpdateAlertPolicy",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.UptimeCheckService",
+                        "ListUptimeCheckIps",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -2926,1360 +4259,6 @@ pub mod snooze {
         #[prost(string, repeated, tag = "1")]
         pub policies: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
     }
-}
-/// The message definition for creating a `Snooze`. Users must provide the body
-/// of the `Snooze` to be created but must omit the `Snooze` field, `name`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateSnoozeRequest {
-    /// Required. The
-    /// \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) in which
-    /// a `Snooze` should be created. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. The `Snooze` to create. Omit the `name` field, as it will be
-    /// filled in by the API.
-    #[prost(message, optional, tag = "2")]
-    pub snooze: ::core::option::Option<Snooze>,
-}
-/// The message definition for listing `Snooze`s associated with the given
-/// `parent`, satisfying the optional `filter`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSnoozesRequest {
-    /// Required. The
-    /// \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) whose
-    /// `Snooze`s should be listed. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Optional. Optional filter to restrict results to the given criteria. The
-    /// following fields are supported.
-    ///
-    ///    * `interval.start_time`
-    ///    * `interval.end_time`
-    ///
-    /// For example:
-    ///
-    ///      ```
-    ///      interval.start_time > "2022-03-11T00:00:00-08:00" AND
-    ///          interval.end_time < "2022-03-12T00:00:00-08:00"
-    ///      ```
-    #[prost(string, tag = "2")]
-    pub filter: ::prost::alloc::string::String,
-    /// Optional. The maximum number of results to return for a single query. The
-    /// server may further constrain the maximum number of results returned in a
-    /// single page. The value should be in the range [1, 1000]. If the value given
-    /// is outside this range, the server will decide the number of results to be
-    /// returned.
-    #[prost(int32, tag = "4")]
-    pub page_size: i32,
-    /// Optional. The `next_page_token` from a previous call to
-    /// `ListSnoozesRequest` to get the next page of results.
-    #[prost(string, tag = "5")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The results of a successful `ListSnoozes` call, containing the matching
-/// `Snooze`s.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListSnoozesResponse {
-    /// `Snooze`s matching this list call.
-    #[prost(message, repeated, tag = "1")]
-    pub snoozes: ::prost::alloc::vec::Vec<Snooze>,
-    /// Page token for repeated calls to `ListSnoozes`, to fetch additional pages
-    /// of results. If this is empty or missing, there are no more pages.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The message definition for retrieving a `Snooze`. Users must specify the
-/// field, `name`, which identifies the `Snooze`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetSnoozeRequest {
-    /// Required. The ID of the `Snooze` to retrieve. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/snoozes/[SNOOZE_ID\]
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The message definition for updating a `Snooze`. The field, `snooze.name`
-/// identifies the `Snooze` to be updated. The remainder of `snooze` gives the
-/// content the `Snooze` in question will be assigned.
-///
-/// What fields can be updated depends on the start time and end time of the
-/// `Snooze`.
-///
-///    * end time is in the past: These `Snooze`s are considered
-///      read-only and cannot be updated.
-///    * start time is in the past and end time is in the future: `display_name`
-///      and `interval.end_time` can be updated.
-///    * start time is in the future: `display_name`, `interval.start_time` and
-///      `interval.end_time` can be updated.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateSnoozeRequest {
-    /// Required. The `Snooze` to update. Must have the name field present.
-    #[prost(message, optional, tag = "1")]
-    pub snooze: ::core::option::Option<Snooze>,
-    /// Required. The fields to update.
-    ///
-    /// For each field listed in `update_mask`:
-    ///
-    ///    * If the `Snooze` object supplied in the `UpdateSnoozeRequest` has a
-    ///      value for that field, the value of the field in the existing `Snooze`
-    ///      will be set to the value of the field in the supplied `Snooze`.
-    ///    * If the field does not have a value in the supplied `Snooze`, the field
-    ///      in the existing `Snooze` is set to its default value.
-    ///
-    /// Fields not listed retain their existing value.
-    ///
-    /// The following are the field names that are accepted in `update_mask`:
-    ///
-    ///    * `display_name`
-    ///    * `interval.start_time`
-    ///    * `interval.end_time`
-    ///
-    /// That said, the start time and end time of the `Snooze` determines which
-    /// fields can legally be updated. Before attempting an update, users should
-    /// consult the documentation for `UpdateSnoozeRequest`, which talks about
-    /// which fields can be updated.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-}
-/// Generated client implementations.
-pub mod snooze_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The SnoozeService API is used to temporarily prevent an alert policy from
-    /// generating alerts. A Snooze is a description of the criteria under which one
-    /// or more alert policies should not fire alerts for the specified duration.
-    #[derive(Debug, Clone)]
-    pub struct SnoozeServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> SnoozeServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> SnoozeServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            SnoozeServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Creates a `Snooze` that will prevent alerts, which match the provided
-        /// criteria, from being opened. The `Snooze` applies for a specific time
-        /// interval.
-        pub async fn create_snooze(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateSnoozeRequest>,
-        ) -> Result<tonic::Response<super::Snooze>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.SnoozeService/CreateSnooze",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists the `Snooze`s associated with a project. Can optionally pass in
-        /// `filter`, which specifies predicates to match `Snooze`s.
-        pub async fn list_snoozes(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListSnoozesRequest>,
-        ) -> Result<tonic::Response<super::ListSnoozesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.SnoozeService/ListSnoozes",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Retrieves a `Snooze` by `name`.
-        pub async fn get_snooze(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetSnoozeRequest>,
-        ) -> Result<tonic::Response<super::Snooze>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.SnoozeService/GetSnooze",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a `Snooze`, identified by its `name`, with the parameters in the
-        /// given `Snooze` object.
-        pub async fn update_snooze(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateSnoozeRequest>,
-        ) -> Result<tonic::Response<super::Snooze>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.SnoozeService/UpdateSnooze",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A single data point in a time series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Point {
-    /// The time interval to which the data point applies.  For `GAUGE` metrics,
-    /// the start time is optional, but if it is supplied, it must equal the
-    /// end time.  For `DELTA` metrics, the start
-    /// and end time should specify a non-zero interval, with subsequent points
-    /// specifying contiguous and non-overlapping intervals.  For `CUMULATIVE`
-    /// metrics, the start and end time should specify a non-zero interval, with
-    /// subsequent points specifying the same start time and increasing end times,
-    /// until an event resets the cumulative value to zero and sets a new start
-    /// time for the following points.
-    #[prost(message, optional, tag = "1")]
-    pub interval: ::core::option::Option<TimeInterval>,
-    /// The value of the data point.
-    #[prost(message, optional, tag = "2")]
-    pub value: ::core::option::Option<TypedValue>,
-}
-/// A collection of data points that describes the time-varying values
-/// of a metric. A time series is identified by a combination of a
-/// fully-specified monitored resource and a fully-specified metric.
-/// This type is used for both listing and creating time series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeries {
-    /// The associated metric. A fully-specified metric used to identify the time
-    /// series.
-    #[prost(message, optional, tag = "1")]
-    pub metric: ::core::option::Option<super::super::api::Metric>,
-    /// The associated monitored resource.  Custom metrics can use only certain
-    /// monitored resource types in their time series data. For more information,
-    /// see [Monitored resources for custom
-    /// metrics](<https://cloud.google.com/monitoring/custom-metrics/creating-metrics#custom-metric-resources>).
-    #[prost(message, optional, tag = "2")]
-    pub resource: ::core::option::Option<super::super::api::MonitoredResource>,
-    /// Output only. The associated monitored resource metadata. When reading a
-    /// time series, this field will include metadata labels that are explicitly
-    /// named in the reduction. When creating a time series, this field is ignored.
-    #[prost(message, optional, tag = "7")]
-    pub metadata: ::core::option::Option<super::super::api::MonitoredResourceMetadata>,
-    /// The metric kind of the time series. When listing time series, this metric
-    /// kind might be different from the metric kind of the associated metric if
-    /// this time series is an alignment or reduction of other time series.
-    ///
-    /// When creating a time series, this field is optional. If present, it must be
-    /// the same as the metric kind of the associated metric. If the associated
-    /// metric's descriptor must be auto-created, then this field specifies the
-    /// metric kind of the new descriptor and must be either `GAUGE` (the default)
-    /// or `CUMULATIVE`.
-    #[prost(enumeration = "super::super::api::metric_descriptor::MetricKind", tag = "3")]
-    pub metric_kind: i32,
-    /// The value type of the time series. When listing time series, this value
-    /// type might be different from the value type of the associated metric if
-    /// this time series is an alignment or reduction of other time series.
-    ///
-    /// When creating a time series, this field is optional. If present, it must be
-    /// the same as the type of the data in the `points` field.
-    #[prost(enumeration = "super::super::api::metric_descriptor::ValueType", tag = "4")]
-    pub value_type: i32,
-    /// The data points of this time series. When listing time series, points are
-    /// returned in reverse time order.
-    ///
-    /// When creating a time series, this field must contain exactly one point and
-    /// the point's type must be the same as the value type of the associated
-    /// metric. If the associated metric's descriptor must be auto-created, then
-    /// the value type of the descriptor is determined by the point's type, which
-    /// must be `BOOL`, `INT64`, `DOUBLE`, or `DISTRIBUTION`.
-    #[prost(message, repeated, tag = "5")]
-    pub points: ::prost::alloc::vec::Vec<Point>,
-    /// The units in which the metric value is reported. It is only applicable
-    /// if the `value_type` is `INT64`, `DOUBLE`, or `DISTRIBUTION`. The `unit`
-    /// defines the representation of the stored metric values.
-    #[prost(string, tag = "8")]
-    pub unit: ::prost::alloc::string::String,
-}
-/// A descriptor for the labels and points in a time series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeriesDescriptor {
-    /// Descriptors for the labels.
-    #[prost(message, repeated, tag = "1")]
-    pub label_descriptors: ::prost::alloc::vec::Vec<super::super::api::LabelDescriptor>,
-    /// Descriptors for the point data value columns.
-    #[prost(message, repeated, tag = "5")]
-    pub point_descriptors: ::prost::alloc::vec::Vec<
-        time_series_descriptor::ValueDescriptor,
-    >,
-}
-/// Nested message and enum types in `TimeSeriesDescriptor`.
-pub mod time_series_descriptor {
-    /// A descriptor for the value columns in a data point.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ValueDescriptor {
-        /// The value key.
-        #[prost(string, tag = "1")]
-        pub key: ::prost::alloc::string::String,
-        /// The value type.
-        #[prost(
-            enumeration = "super::super::super::api::metric_descriptor::ValueType",
-            tag = "2"
-        )]
-        pub value_type: i32,
-        /// The value stream kind.
-        #[prost(
-            enumeration = "super::super::super::api::metric_descriptor::MetricKind",
-            tag = "3"
-        )]
-        pub metric_kind: i32,
-        /// The unit in which `time_series` point values are reported. `unit`
-        /// follows the UCUM format for units as seen in
-        /// <https://unitsofmeasure.org/ucum.html.>
-        /// `unit` is only valid if `value_type` is INTEGER, DOUBLE, DISTRIBUTION.
-        #[prost(string, tag = "4")]
-        pub unit: ::prost::alloc::string::String,
-    }
-}
-/// Represents the values of a time series associated with a
-/// TimeSeriesDescriptor.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeriesData {
-    /// The values of the labels in the time series identifier, given in the same
-    /// order as the `label_descriptors` field of the TimeSeriesDescriptor
-    /// associated with this object. Each value must have a value of the type
-    /// given in the corresponding entry of `label_descriptors`.
-    #[prost(message, repeated, tag = "1")]
-    pub label_values: ::prost::alloc::vec::Vec<LabelValue>,
-    /// The points in the time series.
-    #[prost(message, repeated, tag = "2")]
-    pub point_data: ::prost::alloc::vec::Vec<time_series_data::PointData>,
-}
-/// Nested message and enum types in `TimeSeriesData`.
-pub mod time_series_data {
-    /// A point's value columns and time interval. Each point has one or more
-    /// point values corresponding to the entries in `point_descriptors` field in
-    /// the TimeSeriesDescriptor associated with this object.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct PointData {
-        /// The values that make up the point.
-        #[prost(message, repeated, tag = "1")]
-        pub values: ::prost::alloc::vec::Vec<super::TypedValue>,
-        /// The time interval associated with the point.
-        #[prost(message, optional, tag = "2")]
-        pub time_interval: ::core::option::Option<super::TimeInterval>,
-    }
-}
-/// A label value.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LabelValue {
-    /// The label value can be a bool, int64, or string.
-    #[prost(oneof = "label_value::Value", tags = "1, 2, 3")]
-    pub value: ::core::option::Option<label_value::Value>,
-}
-/// Nested message and enum types in `LabelValue`.
-pub mod label_value {
-    /// The label value can be a bool, int64, or string.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Value {
-        /// A bool label value.
-        #[prost(bool, tag = "1")]
-        BoolValue(bool),
-        /// An int64 label value.
-        #[prost(int64, tag = "2")]
-        Int64Value(i64),
-        /// A string label value.
-        #[prost(string, tag = "3")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
-/// An error associated with a query in the time series query language format.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryError {
-    /// The location of the time series query language text that this error applies
-    /// to.
-    #[prost(message, optional, tag = "1")]
-    pub locator: ::core::option::Option<TextLocator>,
-    /// The error message.
-    #[prost(string, tag = "2")]
-    pub message: ::prost::alloc::string::String,
-}
-/// A locator for text. Indicates a particular part of the text of a request or
-/// of an object referenced in the request.
-///
-/// For example, suppose the request field `text` contains:
-///
-///    text: "The quick brown fox jumps over the lazy dog."
-///
-/// Then the locator:
-///
-///    source: "text"
-///    start_position {
-///      line: 1
-///      column: 17
-///    }
-///    end_position {
-///      line: 1
-///      column: 19
-///    }
-///
-/// refers to the part of the text: "fox".
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextLocator {
-    /// The source of the text. The source may be a field in the request, in which
-    /// case its format is the format of the
-    /// google.rpc.BadRequest.FieldViolation.field field in
-    /// <https://cloud.google.com/apis/design/errors#error_details.> It may also be
-    /// be a source other than the request field (e.g. a macro definition
-    /// referenced in the text of the query), in which case this is the name of
-    /// the source (e.g. the macro name).
-    #[prost(string, tag = "1")]
-    pub source: ::prost::alloc::string::String,
-    /// The position of the first byte within the text.
-    #[prost(message, optional, tag = "2")]
-    pub start_position: ::core::option::Option<text_locator::Position>,
-    /// The position of the last byte within the text.
-    #[prost(message, optional, tag = "3")]
-    pub end_position: ::core::option::Option<text_locator::Position>,
-    /// If `source`, `start_position`, and `end_position` describe a call on
-    /// some object (e.g. a macro in the time series query language text) and a
-    /// location is to be designated in that object's text, `nested_locator`
-    /// identifies the location within that object.
-    #[prost(message, optional, boxed, tag = "4")]
-    pub nested_locator: ::core::option::Option<::prost::alloc::boxed::Box<TextLocator>>,
-    /// When `nested_locator` is set, this field gives the reason for the nesting.
-    /// Usually, the reason is a macro invocation. In that case, the macro name
-    /// (including the leading '@') signals the location of the macro call
-    /// in the text and a macro argument name (including the leading '$') signals
-    /// the location of the macro argument inside the macro body that got
-    /// substituted away.
-    #[prost(string, tag = "5")]
-    pub nesting_reason: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `TextLocator`.
-pub mod text_locator {
-    /// The position of a byte within the text.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Position {
-        /// The line, starting with 1, where the byte is positioned.
-        #[prost(int32, tag = "1")]
-        pub line: i32,
-        /// The column within the line, starting with 1, where the byte is
-        /// positioned. This is a byte index even though the text is UTF-8.
-        #[prost(int32, tag = "2")]
-        pub column: i32,
-    }
-}
-/// The `ListMonitoredResourceDescriptors` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMonitoredResourceDescriptorsRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "5")]
-    pub name: ::prost::alloc::string::String,
-    /// An optional \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>)
-    /// describing the descriptors to be returned.  The filter can reference the
-    /// descriptor's type and labels. For example, the following filter returns
-    /// only Google Compute Engine descriptors that have an `id` label:
-    ///
-    ///      resource.type = starts_with("gce_") AND resource.label:id
-    #[prost(string, tag = "2")]
-    pub filter: ::prost::alloc::string::String,
-    /// A positive number that is the maximum number of results to return.
-    #[prost(int32, tag = "3")]
-    pub page_size: i32,
-    /// If this field is not empty then it must contain the `nextPageToken` value
-    /// returned by a previous call to this method.  Using this field causes the
-    /// method to return additional results from the previous method call.
-    #[prost(string, tag = "4")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The `ListMonitoredResourceDescriptors` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMonitoredResourceDescriptorsResponse {
-    /// The monitored resource descriptors that are available to this project
-    /// and that match `filter`, if present.
-    #[prost(message, repeated, tag = "1")]
-    pub resource_descriptors: ::prost::alloc::vec::Vec<
-        super::super::api::MonitoredResourceDescriptor,
-    >,
-    /// If there are more results than have been returned, then this field is set
-    /// to a non-empty value.  To see the additional results,
-    /// use that value as `page_token` in the next call to this method.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The `GetMonitoredResourceDescriptor` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMonitoredResourceDescriptorRequest {
-    /// Required. The monitored resource descriptor to get.  The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/monitoredResourceDescriptors/[RESOURCE_TYPE\]
-    ///
-    /// The `\[RESOURCE_TYPE\]` is a predefined type, such as
-    /// `cloudsql_database`.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The `ListMetricDescriptors` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMetricDescriptorsRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "5")]
-    pub name: ::prost::alloc::string::String,
-    /// If this field is empty, all custom and
-    /// system-defined metric descriptors are returned.
-    /// Otherwise, the \[filter\](<https://cloud.google.com/monitoring/api/v3/filters>)
-    /// specifies which metric descriptors are to be
-    /// returned. For example, the following filter matches all
-    /// [custom metrics](<https://cloud.google.com/monitoring/custom-metrics>):
-    ///
-    ///      metric.type = starts_with("custom.googleapis.com/")
-    #[prost(string, tag = "2")]
-    pub filter: ::prost::alloc::string::String,
-    /// A positive number that is the maximum number of results to return.
-    #[prost(int32, tag = "3")]
-    pub page_size: i32,
-    /// If this field is not empty then it must contain the `nextPageToken` value
-    /// returned by a previous call to this method.  Using this field causes the
-    /// method to return additional results from the previous method call.
-    #[prost(string, tag = "4")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The `ListMetricDescriptors` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListMetricDescriptorsResponse {
-    /// The metric descriptors that are available to the project
-    /// and that match the value of `filter`, if present.
-    #[prost(message, repeated, tag = "1")]
-    pub metric_descriptors: ::prost::alloc::vec::Vec<
-        super::super::api::MetricDescriptor,
-    >,
-    /// If there are more results than have been returned, then this field is set
-    /// to a non-empty value.  To see the additional results,
-    /// use that value as `page_token` in the next call to this method.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The `GetMetricDescriptor` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetMetricDescriptorRequest {
-    /// Required. The metric descriptor on which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/metricDescriptors/[METRIC_ID\]
-    ///
-    /// An example value of `\[METRIC_ID\]` is
-    /// `"compute.googleapis.com/instance/disk/read_bytes_count"`.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The `CreateMetricDescriptor` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateMetricDescriptorRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    /// 4
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The new [custom metric](<https://cloud.google.com/monitoring/custom-metrics>)
-    /// descriptor.
-    #[prost(message, optional, tag = "2")]
-    pub metric_descriptor: ::core::option::Option<super::super::api::MetricDescriptor>,
-}
-/// The `DeleteMetricDescriptor` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteMetricDescriptorRequest {
-    /// Required. The metric descriptor on which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/metricDescriptors/[METRIC_ID\]
-    ///
-    /// An example of `\[METRIC_ID\]` is:
-    /// `"custom.googleapis.com/my_test_metric"`.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The `ListTimeSeries` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTimeSeriesRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>),
-    /// organization or folder on which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    ///      organizations/\[ORGANIZATION_ID\]
-    ///      folders/\[FOLDER_ID\]
-    #[prost(string, tag = "10")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. A [monitoring filter](<https://cloud.google.com/monitoring/api/v3/filters>)
-    /// that specifies which time series should be returned.  The filter must
-    /// specify a single metric type, and can additionally specify metric labels
-    /// and other information. For example:
-    ///
-    ///      metric.type = "compute.googleapis.com/instance/cpu/usage_time" AND
-    ///          metric.labels.instance_name = "my-instance-name"
-    #[prost(string, tag = "2")]
-    pub filter: ::prost::alloc::string::String,
-    /// Required. The time interval for which results should be returned. Only time series
-    /// that contain data points in the specified interval are included
-    /// in the response.
-    #[prost(message, optional, tag = "4")]
-    pub interval: ::core::option::Option<TimeInterval>,
-    /// Specifies the alignment of data points in individual time series as
-    /// well as how to combine the retrieved time series across specified labels.
-    ///
-    /// By default (if no `aggregation` is explicitly specified), the raw time
-    /// series data is returned.
-    #[prost(message, optional, tag = "5")]
-    pub aggregation: ::core::option::Option<Aggregation>,
-    /// Apply a second aggregation after `aggregation` is applied. May only be
-    /// specified if `aggregation` is specified.
-    #[prost(message, optional, tag = "11")]
-    pub secondary_aggregation: ::core::option::Option<Aggregation>,
-    /// Unsupported: must be left blank. The points in each time series are
-    /// currently returned in reverse time order (most recent to oldest).
-    #[prost(string, tag = "6")]
-    pub order_by: ::prost::alloc::string::String,
-    /// Required. Specifies which information is returned about the time series.
-    #[prost(enumeration = "list_time_series_request::TimeSeriesView", tag = "7")]
-    pub view: i32,
-    /// A positive number that is the maximum number of results to return. If
-    /// `page_size` is empty or more than 100,000 results, the effective
-    /// `page_size` is 100,000 results. If `view` is set to `FULL`, this is the
-    /// maximum number of `Points` returned. If `view` is set to `HEADERS`, this is
-    /// the maximum number of `TimeSeries` returned.
-    #[prost(int32, tag = "8")]
-    pub page_size: i32,
-    /// If this field is not empty then it must contain the `nextPageToken` value
-    /// returned by a previous call to this method.  Using this field causes the
-    /// method to return additional results from the previous method call.
-    #[prost(string, tag = "9")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `ListTimeSeriesRequest`.
-pub mod list_time_series_request {
-    /// Controls which fields are returned by `ListTimeSeries`.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum TimeSeriesView {
-        /// Returns the identity of the metric(s), the time series,
-        /// and the time series data.
-        Full = 0,
-        /// Returns the identity of the metric and the time series resource,
-        /// but not the time series data.
-        Headers = 1,
-    }
-    impl TimeSeriesView {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                TimeSeriesView::Full => "FULL",
-                TimeSeriesView::Headers => "HEADERS",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FULL" => Some(Self::Full),
-                "HEADERS" => Some(Self::Headers),
-                _ => None,
-            }
-        }
-    }
-}
-/// The `ListTimeSeries` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListTimeSeriesResponse {
-    /// One or more time series that match the filter included in the request.
-    #[prost(message, repeated, tag = "1")]
-    pub time_series: ::prost::alloc::vec::Vec<TimeSeries>,
-    /// If there are more results than have been returned, then this field is set
-    /// to a non-empty value.  To see the additional results,
-    /// use that value as `page_token` in the next call to this method.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Query execution errors that may have caused the time series data returned
-    /// to be incomplete.
-    #[prost(message, repeated, tag = "3")]
-    pub execution_errors: ::prost::alloc::vec::Vec<super::super::rpc::Status>,
-    /// The unit in which all `time_series` point values are reported. `unit`
-    /// follows the UCUM format for units as seen in
-    /// <https://unitsofmeasure.org/ucum.html.>
-    /// If different `time_series` have different units (for example, because they
-    /// come from different metric types, or a unit is absent), then `unit` will be
-    /// "{not_a_unit}".
-    #[prost(string, tag = "5")]
-    pub unit: ::prost::alloc::string::String,
-}
-/// The `CreateTimeSeries` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTimeSeriesRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The new data to be added to a list of time series.
-    /// Adds at most one data point to each of several time series.  The new data
-    /// point must be more recent than any other point in its time series.  Each
-    /// `TimeSeries` value must fully specify a unique time series by supplying
-    /// all label values for the metric and the monitored resource.
-    ///
-    /// The maximum number of `TimeSeries` objects per `Create` request is 200.
-    #[prost(message, repeated, tag = "2")]
-    pub time_series: ::prost::alloc::vec::Vec<TimeSeries>,
-}
-/// DEPRECATED. Used to hold per-time-series error status.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTimeSeriesError {
-    /// DEPRECATED. Time series ID that resulted in the `status` error.
-    #[deprecated]
-    #[prost(message, optional, tag = "1")]
-    pub time_series: ::core::option::Option<TimeSeries>,
-    /// DEPRECATED. The status of the requested write operation for `time_series`.
-    #[deprecated]
-    #[prost(message, optional, tag = "2")]
-    pub status: ::core::option::Option<super::super::rpc::Status>,
-}
-/// Summary of the result of a failed request to write data to a time series.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateTimeSeriesSummary {
-    /// The number of points in the request.
-    #[prost(int32, tag = "1")]
-    pub total_point_count: i32,
-    /// The number of points that were successfully written.
-    #[prost(int32, tag = "2")]
-    pub success_point_count: i32,
-    /// The number of points that failed to be written. Order is not guaranteed.
-    #[prost(message, repeated, tag = "3")]
-    pub errors: ::prost::alloc::vec::Vec<create_time_series_summary::Error>,
-}
-/// Nested message and enum types in `CreateTimeSeriesSummary`.
-pub mod create_time_series_summary {
-    /// Detailed information about an error category.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Error {
-        /// The status of the requested write operation.
-        #[prost(message, optional, tag = "1")]
-        pub status: ::core::option::Option<super::super::super::rpc::Status>,
-        /// The number of points that couldn't be written because of `status`.
-        #[prost(int32, tag = "2")]
-        pub point_count: i32,
-    }
-}
-/// The `QueryTimeSeries` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryTimeSeriesRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The query in the [Monitoring Query
-    /// Language](<https://cloud.google.com/monitoring/mql/reference>) format.
-    /// The default time zone is in UTC.
-    #[prost(string, tag = "7")]
-    pub query: ::prost::alloc::string::String,
-    /// A positive number that is the maximum number of time_series_data to return.
-    #[prost(int32, tag = "9")]
-    pub page_size: i32,
-    /// If this field is not empty then it must contain the `nextPageToken` value
-    /// returned by a previous call to this method.  Using this field causes the
-    /// method to return additional results from the previous method call.
-    #[prost(string, tag = "10")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The `QueryTimeSeries` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryTimeSeriesResponse {
-    /// The descriptor for the time series data.
-    #[prost(message, optional, tag = "8")]
-    pub time_series_descriptor: ::core::option::Option<TimeSeriesDescriptor>,
-    /// The time series data.
-    #[prost(message, repeated, tag = "9")]
-    pub time_series_data: ::prost::alloc::vec::Vec<TimeSeriesData>,
-    /// If there are more results than have been returned, then this field is set
-    /// to a non-empty value.  To see the additional results, use that value as
-    /// `page_token` in the next call to this method.
-    #[prost(string, tag = "10")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Query execution errors that may have caused the time series data returned
-    /// to be incomplete. The available data will be available in the
-    /// response.
-    #[prost(message, repeated, tag = "11")]
-    pub partial_errors: ::prost::alloc::vec::Vec<super::super::rpc::Status>,
-}
-/// This is an error detail intended to be used with INVALID_ARGUMENT errors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct QueryErrorList {
-    /// Errors in parsing the time series query language text. The number of errors
-    /// in the response may be limited.
-    #[prost(message, repeated, tag = "1")]
-    pub errors: ::prost::alloc::vec::Vec<QueryError>,
-    /// A summary of all the errors.
-    #[prost(string, tag = "2")]
-    pub error_summary: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod metric_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Manages metric descriptors, monitored resource descriptors, and
-    /// time series data.
-    #[derive(Debug, Clone)]
-    pub struct MetricServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> MetricServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> MetricServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            MetricServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists monitored resource descriptors that match a filter. This method does not require a Workspace.
-        pub async fn list_monitored_resource_descriptors(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::ListMonitoredResourceDescriptorsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::ListMonitoredResourceDescriptorsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/ListMonitoredResourceDescriptors",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a single monitored resource descriptor. This method does not require a Workspace.
-        pub async fn get_monitored_resource_descriptor(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::GetMonitoredResourceDescriptorRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::super::super::api::MonitoredResourceDescriptor>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/GetMonitoredResourceDescriptor",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists metric descriptors that match a filter. This method does not require a Workspace.
-        pub async fn list_metric_descriptors(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListMetricDescriptorsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListMetricDescriptorsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/ListMetricDescriptors",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a single metric descriptor. This method does not require a Workspace.
-        pub async fn get_metric_descriptor(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetMetricDescriptorRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::api::MetricDescriptor>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/GetMetricDescriptor",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new metric descriptor.
-        /// The creation is executed asynchronously and callers may check the returned
-        /// operation to track its progress.
-        /// User-created metric descriptors define
-        /// [custom metrics](https://cloud.google.com/monitoring/custom-metrics).
-        pub async fn create_metric_descriptor(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateMetricDescriptorRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::api::MetricDescriptor>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/CreateMetricDescriptor",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a metric descriptor. Only user-created
-        /// [custom metrics](https://cloud.google.com/monitoring/custom-metrics) can be
-        /// deleted.
-        pub async fn delete_metric_descriptor(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteMetricDescriptorRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/DeleteMetricDescriptor",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists time series that match a filter. This method does not require a Workspace.
-        pub async fn list_time_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListTimeSeriesRequest>,
-        ) -> Result<tonic::Response<super::ListTimeSeriesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/ListTimeSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates or adds data to one or more time series.
-        /// The response is empty if all time series in the request were written.
-        /// If any time series could not be written, a corresponding failure message is
-        /// included in the error response.
-        pub async fn create_time_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTimeSeriesRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/CreateTimeSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates or adds data to one or more service time series. A service time
-        /// series is a time series for a metric from a Google Cloud service. The
-        /// response is empty if all time series in the request were written. If any
-        /// time series could not be written, a corresponding failure message is
-        /// included in the error response. This endpoint rejects writes to
-        /// user-defined metrics.
-        /// This method is only for use by Google Cloud services. Use
-        /// [projects.timeSeries.create][google.monitoring.v3.MetricService.CreateTimeSeries]
-        /// instead.
-        pub async fn create_service_time_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateTimeSeriesRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.MetricService/CreateServiceTimeSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Generated client implementations.
-pub mod query_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The QueryService API is used to manage time series data in Stackdriver
-    /// Monitoring. Time series data is a collection of data points that describes
-    /// the time-varying values of a metric.
-    #[derive(Debug, Clone)]
-    pub struct QueryServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> QueryServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> QueryServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            QueryServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Queries time series using Monitoring Query Language. This method does not require a Workspace.
-        pub async fn query_time_series(
-            &mut self,
-            request: impl tonic::IntoRequest<super::QueryTimeSeriesRequest>,
-        ) -> Result<tonic::Response<super::QueryTimeSeriesResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.QueryService/QueryTimeSeries",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// A set of (label, value) pairs that were removed from a Distribution
-/// time series during aggregation and then added as an attachment to a
-/// Distribution.Exemplar.
-///
-/// The full label set for the exemplars is constructed by using the dropped
-/// pairs in combination with the label values that remain on the aggregated
-/// Distribution time series. The constructed full label set can be used to
-/// identify the specific entity, such as the instance or job, which might be
-/// contributing to a long-tail. However, with dropped labels, the storage
-/// requirements are reduced because only the aggregated distribution values for
-/// a large group of time series are stored.
-///
-/// Note that there are no guarantees on ordering of the labels from
-/// exemplar-to-exemplar and from distribution-to-distribution in the same
-/// stream, and there may be duplicates.  It is up to clients to resolve any
-/// ambiguities.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DroppedLabels {
-    /// Map from label to its value, for all labels dropped in any aggregation.
-    #[prost(btree_map = "string, string", tag = "1")]
-    pub label: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// The description of a dynamic collection of monitored resources. Each group
-/// has a filter that is matched against monitored resources and their associated
-/// metadata. If a group's filter matches an available monitored resource, then
-/// that resource is a member of that group.  Groups can contain any number of
-/// monitored resources, and each monitored resource can be a member of any
-/// number of groups.
-///
-/// Groups can be nested in parent-child hierarchies. The `parentName` field
-/// identifies an optional parent for each group.  If a group has a parent, then
-/// the only monitored resources available to be matched by the group's filter
-/// are the resources contained in the parent group.  In other words, a group
-/// contains the monitored resources that match its filter and the filters of all
-/// the group's ancestors.  A group without a parent can contain any monitored
-/// resource.
-///
-/// For example, consider an infrastructure running a set of instances with two
-/// user-defined tags: `"environment"` and `"role"`. A parent group has a filter,
-/// `environment="production"`.  A child of that parent group has a filter,
-/// `role="transcoder"`.  The parent group contains all instances in the
-/// production environment, regardless of their roles.  The child group contains
-/// instances that have the transcoder role *and* are in the production
-/// environment.
-///
-/// The monitored resources contained in a group can change at any moment,
-/// depending on what resources exist and what filters are associated with the
-/// group and its ancestors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Group {
-    /// Output only. The name of this group. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/groups/[GROUP_ID\]
-    ///
-    /// When creating a group, this field is ignored and a new name is created
-    /// consisting of the project specified in the call to `CreateGroup`
-    /// and a unique `\[GROUP_ID\]` that is generated automatically.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// A user-assigned name for this group, used only for display purposes.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The name of the group's parent, if it has one. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/groups/[GROUP_ID\]
-    ///
-    /// For groups with no parent, `parent_name` is the empty string, `""`.
-    #[prost(string, tag = "3")]
-    pub parent_name: ::prost::alloc::string::String,
-    /// The filter used to determine which monitored resources belong to this
-    /// group.
-    #[prost(string, tag = "5")]
-    pub filter: ::prost::alloc::string::String,
-    /// If true, the members of this group are considered to be a cluster.
-    /// The system can perform additional analysis on groups that are clusters.
-    #[prost(bool, tag = "6")]
-    pub is_cluster: bool,
 }
 /// The `ListGroup` request.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -4531,11 +4510,30 @@ pub mod group_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the existing groups.
         pub async fn list_groups(
             &mut self,
             request: impl tonic::IntoRequest<super::ListGroupsRequest>,
-        ) -> Result<tonic::Response<super::ListGroupsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListGroupsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4549,13 +4547,18 @@ pub mod group_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.GroupService/ListGroups",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.GroupService", "ListGroups"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a single group.
         pub async fn get_group(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGroupRequest>,
-        ) -> Result<tonic::Response<super::Group>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Group>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4569,13 +4572,18 @@ pub mod group_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.GroupService/GetGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.GroupService", "GetGroup"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new group.
         pub async fn create_group(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateGroupRequest>,
-        ) -> Result<tonic::Response<super::Group>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Group>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4589,14 +4597,19 @@ pub mod group_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.GroupService/CreateGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.GroupService", "CreateGroup"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing group.
         /// You can change any group attributes except `name`.
         pub async fn update_group(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateGroupRequest>,
-        ) -> Result<tonic::Response<super::Group>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Group>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4610,13 +4623,18 @@ pub mod group_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.GroupService/UpdateGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.GroupService", "UpdateGroup"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing group.
         pub async fn delete_group(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteGroupRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4630,13 +4648,21 @@ pub mod group_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.GroupService/DeleteGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.GroupService", "DeleteGroup"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the monitored resources that are members of a group.
         pub async fn list_group_members(
             &mut self,
             request: impl tonic::IntoRequest<super::ListGroupMembersRequest>,
-        ) -> Result<tonic::Response<super::ListGroupMembersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListGroupMembersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4650,581 +4676,43 @@ pub mod group_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.GroupService/ListGroupMembers",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.GroupService",
+                        "ListGroupMembers",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
-/// The `ListNotificationChannelDescriptors` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListNotificationChannelDescriptorsRequest {
-    /// Required. The REST resource name of the parent from which to retrieve
-    /// the notification channel descriptors. The expected syntax is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    ///
-    /// Note that this
-    /// \[names\](<https://cloud.google.com/monitoring/api/v3#project_name>) the parent
-    /// container in which to look for the descriptors; to retrieve a single
-    /// descriptor by name, use the
-    /// \[GetNotificationChannelDescriptor][google.monitoring.v3.NotificationChannelService.GetNotificationChannelDescriptor\]
-    /// operation, instead.
-    #[prost(string, tag = "4")]
-    pub name: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single response. If
-    /// not set to a positive number, a reasonable value will be chosen by the
-    /// service.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// If non-empty, `page_token` must contain a value returned as the
-    /// `next_page_token` in a previous response to request the next set
-    /// of results.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The `ListNotificationChannelDescriptors` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListNotificationChannelDescriptorsResponse {
-    /// The monitored resource descriptors supported for the specified
-    /// project, optionally filtered.
-    #[prost(message, repeated, tag = "1")]
-    pub channel_descriptors: ::prost::alloc::vec::Vec<NotificationChannelDescriptor>,
-    /// If not empty, indicates that there may be more results that match
-    /// the request. Use the value in the `page_token` field in a
-    /// subsequent request to fetch the next set of results. If empty,
-    /// all results have been returned.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// The `GetNotificationChannelDescriptor` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNotificationChannelDescriptorRequest {
-    /// Required. The channel type for which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannelDescriptors/[CHANNEL_TYPE\]
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The `CreateNotificationChannel` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateNotificationChannelRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    ///
-    /// This names the container into which the channel will be
-    /// written, this does not name the newly created channel. The resulting
-    /// channel's name will have a normalized version of this field as a prefix,
-    /// but will add `/notificationChannels/\[CHANNEL_ID\]` to identify the channel.
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The definition of the `NotificationChannel` to create.
-    #[prost(message, optional, tag = "2")]
-    pub notification_channel: ::core::option::Option<NotificationChannel>,
-}
-/// The `ListNotificationChannels` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListNotificationChannelsRequest {
-    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
-    /// which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER\]
-    ///
-    /// This names the container
-    /// in which to look for the notification channels; it does not name a
-    /// specific channel. To query a specific channel by REST resource name, use
-    /// the
-    /// \[`GetNotificationChannel`][google.monitoring.v3.NotificationChannelService.GetNotificationChannel\]
-    /// operation.
-    #[prost(string, tag = "5")]
-    pub name: ::prost::alloc::string::String,
-    /// If provided, this field specifies the criteria that must be met by
-    /// notification channels to be included in the response.
-    ///
-    /// For more details, see [sorting and
-    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
-    #[prost(string, tag = "6")]
-    pub filter: ::prost::alloc::string::String,
-    /// A comma-separated list of fields by which to sort the result. Supports
-    /// the same set of fields as in `filter`. Entries can be prefixed with
-    /// a minus sign to sort in descending rather than ascending order.
-    ///
-    /// For more details, see [sorting and
-    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
-    #[prost(string, tag = "7")]
-    pub order_by: ::prost::alloc::string::String,
-    /// The maximum number of results to return in a single response. If
-    /// not set to a positive number, a reasonable value will be chosen by the
-    /// service.
-    #[prost(int32, tag = "3")]
-    pub page_size: i32,
-    /// If non-empty, `page_token` must contain a value returned as the
-    /// `next_page_token` in a previous response to request the next set
-    /// of results.
-    #[prost(string, tag = "4")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// The `ListNotificationChannels` response.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListNotificationChannelsResponse {
-    /// The notification channels defined for the specified project.
-    #[prost(message, repeated, tag = "3")]
-    pub notification_channels: ::prost::alloc::vec::Vec<NotificationChannel>,
-    /// If not empty, indicates that there may be more results that match
-    /// the request. Use the value in the `page_token` field in a
-    /// subsequent request to fetch the next set of results. If empty,
-    /// all results have been returned.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// The total number of notification channels in all pages. This number is only
-    /// an estimate, and may change in subsequent pages. <https://aip.dev/158>
-    #[prost(int32, tag = "4")]
-    pub total_size: i32,
-}
-/// The `GetNotificationChannel` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNotificationChannelRequest {
-    /// Required. The channel for which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID\]
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The `UpdateNotificationChannel` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UpdateNotificationChannelRequest {
-    /// The fields to update.
-    #[prost(message, optional, tag = "2")]
-    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
-    /// Required. A description of the changes to be applied to the specified
-    /// notification channel. The description must provide a definition for
-    /// fields to be updated; the names of these fields should also be
-    /// included in the `update_mask`.
-    #[prost(message, optional, tag = "3")]
-    pub notification_channel: ::core::option::Option<NotificationChannel>,
-}
-/// The `DeleteNotificationChannel` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeleteNotificationChannelRequest {
-    /// Required. The channel for which to execute the request. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID\]
-    #[prost(string, tag = "3")]
-    pub name: ::prost::alloc::string::String,
-    /// If true, the notification channel will be deleted regardless of its
-    /// use in alert policies (the policies will be updated to remove the
-    /// channel). If false, channels that are still referenced by an existing
-    /// alerting policy will fail to be deleted in a delete operation.
-    #[prost(bool, tag = "5")]
-    pub force: bool,
-}
-/// The `SendNotificationChannelVerificationCode` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SendNotificationChannelVerificationCodeRequest {
-    /// Required. The notification channel to which to send a verification code.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// The `GetNotificationChannelVerificationCode` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNotificationChannelVerificationCodeRequest {
-    /// Required. The notification channel for which a verification code is to be generated
-    /// and retrieved. This must name a channel that is already verified; if
-    /// the specified channel is not verified, the request will fail.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The desired expiration time. If specified, the API will guarantee that
-    /// the returned code will not be valid after the specified timestamp;
-    /// however, the API cannot guarantee that the returned code will be
-    /// valid for at least as long as the requested time (the API puts an upper
-    /// bound on the amount of time for which a code may be valid). If omitted,
-    /// a default expiration will be used, which may be less than the max
-    /// permissible expiration (so specifying an expiration may extend the
-    /// code's lifetime over omitting an expiration, even though the API does
-    /// impose an upper limit on the maximum expiration that is permitted).
-    #[prost(message, optional, tag = "2")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The `GetNotificationChannelVerificationCode` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetNotificationChannelVerificationCodeResponse {
-    /// The verification code, which may be used to verify other channels
-    /// that have an equivalent identity (i.e. other channels of the same
-    /// type with the same fingerprint such as other email channels with
-    /// the same email address or other sms channels with the same number).
-    #[prost(string, tag = "1")]
-    pub code: ::prost::alloc::string::String,
-    /// The expiration time associated with the code that was returned. If
-    /// an expiration was provided in the request, this is the minimum of the
-    /// requested expiration in the request and the max permitted expiration.
-    #[prost(message, optional, tag = "2")]
-    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// The `VerifyNotificationChannel` request.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VerifyNotificationChannelRequest {
-    /// Required. The notification channel to verify.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The verification code that was delivered to the channel as
-    /// a result of invoking the `SendNotificationChannelVerificationCode` API
-    /// method or that was retrieved from a verified channel via
-    /// `GetNotificationChannelVerificationCode`. For example, one might have
-    /// "G-123456" or "TKNZGhhd2EyN3I1MnRnMjRv" (in general, one is only
-    /// guaranteed that the code is valid UTF-8; one should not
-    /// make any assumptions regarding the structure or format of the code).
-    #[prost(string, tag = "2")]
-    pub code: ::prost::alloc::string::String,
-}
-/// Generated client implementations.
-pub mod notification_channel_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// The Notification Channel API provides access to configuration that
-    /// controls how messages related to incidents are sent.
-    #[derive(Debug, Clone)]
-    pub struct NotificationChannelServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> NotificationChannelServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> NotificationChannelServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            NotificationChannelServiceClient::new(
-                InterceptedService::new(inner, interceptor),
-            )
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Lists the descriptors for supported channel types. The use of descriptors
-        /// makes it possible for new channel types to be dynamically added.
-        pub async fn list_notification_channel_descriptors(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::ListNotificationChannelDescriptorsRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::ListNotificationChannelDescriptorsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/ListNotificationChannelDescriptors",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a single channel descriptor. The descriptor indicates which fields
-        /// are expected / permitted for a notification channel of the given type.
-        pub async fn get_notification_channel_descriptor(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::GetNotificationChannelDescriptorRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::NotificationChannelDescriptor>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/GetNotificationChannelDescriptor",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Lists the notification channels that have been created for the project.
-        pub async fn list_notification_channels(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListNotificationChannelsRequest>,
-        ) -> Result<
-            tonic::Response<super::ListNotificationChannelsResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/ListNotificationChannels",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Gets a single notification channel. The channel includes the relevant
-        /// configuration details with which the channel was created. However, the
-        /// response may truncate or omit passwords, API keys, or other private key
-        /// matter and thus the response may not be 100% identical to the information
-        /// that was supplied in the call to the create method.
-        pub async fn get_notification_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetNotificationChannelRequest>,
-        ) -> Result<tonic::Response<super::NotificationChannel>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/GetNotificationChannel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Creates a new notification channel, representing a single notification
-        /// endpoint such as an email address, SMS number, or PagerDuty service.
-        pub async fn create_notification_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateNotificationChannelRequest>,
-        ) -> Result<tonic::Response<super::NotificationChannel>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/CreateNotificationChannel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Updates a notification channel. Fields not specified in the field mask
-        /// remain unchanged.
-        pub async fn update_notification_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateNotificationChannelRequest>,
-        ) -> Result<tonic::Response<super::NotificationChannel>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/UpdateNotificationChannel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Deletes a notification channel.
-        pub async fn delete_notification_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::DeleteNotificationChannelRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/DeleteNotificationChannel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Causes a verification code to be delivered to the channel. The code
-        /// can then be supplied in `VerifyNotificationChannel` to verify the channel.
-        pub async fn send_notification_channel_verification_code(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::SendNotificationChannelVerificationCodeRequest,
-            >,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/SendNotificationChannelVerificationCode",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Requests a verification code for an already verified channel that can then
-        /// be used in a call to VerifyNotificationChannel() on a different channel
-        /// with an equivalent identity in the same or in a different project. This
-        /// makes it possible to copy a channel between projects without requiring
-        /// manual reverification of the channel. If the channel is not in the
-        /// verified state, this method will fail (in other words, this may only be
-        /// used if the SendNotificationChannelVerificationCode and
-        /// VerifyNotificationChannel paths have already been used to put the given
-        /// channel into the verified state).
-        ///
-        /// There is no guarantee that the verification codes returned by this method
-        /// will be of a similar structure or form as the ones that are delivered
-        /// to the channel via SendNotificationChannelVerificationCode; while
-        /// VerifyNotificationChannel() will recognize both the codes delivered via
-        /// SendNotificationChannelVerificationCode() and returned from
-        /// GetNotificationChannelVerificationCode(), it is typically the case that
-        /// the verification codes delivered via
-        /// SendNotificationChannelVerificationCode() will be shorter and also
-        /// have a shorter expiration (e.g. codes such as "G-123456") whereas
-        /// GetVerificationCode() will typically return a much longer, websafe base
-        /// 64 encoded string that has a longer expiration time.
-        pub async fn get_notification_channel_verification_code(
-            &mut self,
-            request: impl tonic::IntoRequest<
-                super::GetNotificationChannelVerificationCodeRequest,
-            >,
-        ) -> Result<
-            tonic::Response<super::GetNotificationChannelVerificationCodeResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/GetNotificationChannelVerificationCode",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Verifies a `NotificationChannel` by proving receipt of the code
-        /// delivered to the channel as a result of calling
-        /// `SendNotificationChannelVerificationCode`.
-        pub async fn verify_notification_channel(
-            &mut self,
-            request: impl tonic::IntoRequest<super::VerifyNotificationChannelRequest>,
-        ) -> Result<tonic::Response<super::NotificationChannel>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.monitoring.v3.NotificationChannelService/VerifyNotificationChannel",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// The context of a span. This is attached to an
-/// \[Exemplar][google.api.Distribution.Exemplar\]
-/// in \[Distribution][google.api.Distribution\] values during aggregation.
+/// A set of (label, value) pairs that were removed from a Distribution
+/// time series during aggregation and then added as an attachment to a
+/// Distribution.Exemplar.
 ///
-/// It contains the name of a span with format:
+/// The full label set for the exemplars is constructed by using the dropped
+/// pairs in combination with the label values that remain on the aggregated
+/// Distribution time series. The constructed full label set can be used to
+/// identify the specific entity, such as the instance or job, which might be
+/// contributing to a long-tail. However, with dropped labels, the storage
+/// requirements are reduced because only the aggregated distribution values for
+/// a large group of time series are stored.
 ///
-///      projects/\[PROJECT_ID_OR_NUMBER]/traces/[TRACE_ID]/spans/[SPAN_ID\]
+/// Note that there are no guarantees on ordering of the labels from
+/// exemplar-to-exemplar and from distribution-to-distribution in the same
+/// stream, and there may be duplicates.  It is up to clients to resolve any
+/// ambiguities.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SpanContext {
-    /// The resource name of the span. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/traces/[TRACE_ID]/spans/[SPAN_ID\]
-    ///
-    /// `\[TRACE_ID\]` is a unique identifier for a trace within a project;
-    /// it is a 32-character hexadecimal encoding of a 16-byte array.
-    ///
-    /// `\[SPAN_ID\]` is a unique identifier for a span within a trace; it
-    /// is a 16-character hexadecimal encoding of an 8-byte array.
-    #[prost(string, tag = "1")]
-    pub span_name: ::prost::alloc::string::String,
+pub struct DroppedLabels {
+    /// Map from label to its value, for all labels dropped in any aggregation.
+    #[prost(btree_map = "string, string", tag = "1")]
+    pub label: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
 }
 /// A `Service` is a discrete, autonomous, and network-accessible unit, designed
 /// to solve an individual concern
@@ -5767,6 +5255,973 @@ pub mod windows_based_sli {
         MetricSumInRange(MetricRange),
     }
 }
+/// The `ListNotificationChannelDescriptors` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListNotificationChannelDescriptorsRequest {
+    /// Required. The REST resource name of the parent from which to retrieve
+    /// the notification channel descriptors. The expected syntax is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    ///
+    /// Note that this
+    /// \[names\](<https://cloud.google.com/monitoring/api/v3#project_name>) the parent
+    /// container in which to look for the descriptors; to retrieve a single
+    /// descriptor by name, use the
+    /// \[GetNotificationChannelDescriptor][google.monitoring.v3.NotificationChannelService.GetNotificationChannelDescriptor\]
+    /// operation, instead.
+    #[prost(string, tag = "4")]
+    pub name: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single response. If
+    /// not set to a positive number, a reasonable value will be chosen by the
+    /// service.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// If non-empty, `page_token` must contain a value returned as the
+    /// `next_page_token` in a previous response to request the next set
+    /// of results.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The `ListNotificationChannelDescriptors` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListNotificationChannelDescriptorsResponse {
+    /// The monitored resource descriptors supported for the specified
+    /// project, optionally filtered.
+    #[prost(message, repeated, tag = "1")]
+    pub channel_descriptors: ::prost::alloc::vec::Vec<NotificationChannelDescriptor>,
+    /// If not empty, indicates that there may be more results that match
+    /// the request. Use the value in the `page_token` field in a
+    /// subsequent request to fetch the next set of results. If empty,
+    /// all results have been returned.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The `GetNotificationChannelDescriptor` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNotificationChannelDescriptorRequest {
+    /// Required. The channel type for which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannelDescriptors/[CHANNEL_TYPE\]
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The `CreateNotificationChannel` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateNotificationChannelRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    ///
+    /// This names the container into which the channel will be
+    /// written, this does not name the newly created channel. The resulting
+    /// channel's name will have a normalized version of this field as a prefix,
+    /// but will add `/notificationChannels/\[CHANNEL_ID\]` to identify the channel.
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The definition of the `NotificationChannel` to create.
+    #[prost(message, optional, tag = "2")]
+    pub notification_channel: ::core::option::Option<NotificationChannel>,
+}
+/// The `ListNotificationChannels` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListNotificationChannelsRequest {
+    /// Required. The \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) on
+    /// which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    ///
+    /// This names the container
+    /// in which to look for the notification channels; it does not name a
+    /// specific channel. To query a specific channel by REST resource name, use
+    /// the
+    /// \[`GetNotificationChannel`][google.monitoring.v3.NotificationChannelService.GetNotificationChannel\]
+    /// operation.
+    #[prost(string, tag = "5")]
+    pub name: ::prost::alloc::string::String,
+    /// If provided, this field specifies the criteria that must be met by
+    /// notification channels to be included in the response.
+    ///
+    /// For more details, see [sorting and
+    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
+    #[prost(string, tag = "6")]
+    pub filter: ::prost::alloc::string::String,
+    /// A comma-separated list of fields by which to sort the result. Supports
+    /// the same set of fields as in `filter`. Entries can be prefixed with
+    /// a minus sign to sort in descending rather than ascending order.
+    ///
+    /// For more details, see [sorting and
+    /// filtering](<https://cloud.google.com/monitoring/api/v3/sorting-and-filtering>).
+    #[prost(string, tag = "7")]
+    pub order_by: ::prost::alloc::string::String,
+    /// The maximum number of results to return in a single response. If
+    /// not set to a positive number, a reasonable value will be chosen by the
+    /// service.
+    #[prost(int32, tag = "3")]
+    pub page_size: i32,
+    /// If non-empty, `page_token` must contain a value returned as the
+    /// `next_page_token` in a previous response to request the next set
+    /// of results.
+    #[prost(string, tag = "4")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The `ListNotificationChannels` response.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListNotificationChannelsResponse {
+    /// The notification channels defined for the specified project.
+    #[prost(message, repeated, tag = "3")]
+    pub notification_channels: ::prost::alloc::vec::Vec<NotificationChannel>,
+    /// If not empty, indicates that there may be more results that match
+    /// the request. Use the value in the `page_token` field in a
+    /// subsequent request to fetch the next set of results. If empty,
+    /// all results have been returned.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// The total number of notification channels in all pages. This number is only
+    /// an estimate, and may change in subsequent pages. <https://aip.dev/158>
+    #[prost(int32, tag = "4")]
+    pub total_size: i32,
+}
+/// The `GetNotificationChannel` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNotificationChannelRequest {
+    /// Required. The channel for which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID\]
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The `UpdateNotificationChannel` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateNotificationChannelRequest {
+    /// The fields to update.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+    /// Required. A description of the changes to be applied to the specified
+    /// notification channel. The description must provide a definition for
+    /// fields to be updated; the names of these fields should also be
+    /// included in the `update_mask`.
+    #[prost(message, optional, tag = "3")]
+    pub notification_channel: ::core::option::Option<NotificationChannel>,
+}
+/// The `DeleteNotificationChannel` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeleteNotificationChannelRequest {
+    /// Required. The channel for which to execute the request. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/notificationChannels/[CHANNEL_ID\]
+    #[prost(string, tag = "3")]
+    pub name: ::prost::alloc::string::String,
+    /// If true, the notification channel will be deleted regardless of its
+    /// use in alert policies (the policies will be updated to remove the
+    /// channel). If false, channels that are still referenced by an existing
+    /// alerting policy will fail to be deleted in a delete operation.
+    #[prost(bool, tag = "5")]
+    pub force: bool,
+}
+/// The `SendNotificationChannelVerificationCode` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SendNotificationChannelVerificationCodeRequest {
+    /// Required. The notification channel to which to send a verification code.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The `GetNotificationChannelVerificationCode` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNotificationChannelVerificationCodeRequest {
+    /// Required. The notification channel for which a verification code is to be generated
+    /// and retrieved. This must name a channel that is already verified; if
+    /// the specified channel is not verified, the request will fail.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The desired expiration time. If specified, the API will guarantee that
+    /// the returned code will not be valid after the specified timestamp;
+    /// however, the API cannot guarantee that the returned code will be
+    /// valid for at least as long as the requested time (the API puts an upper
+    /// bound on the amount of time for which a code may be valid). If omitted,
+    /// a default expiration will be used, which may be less than the max
+    /// permissible expiration (so specifying an expiration may extend the
+    /// code's lifetime over omitting an expiration, even though the API does
+    /// impose an upper limit on the maximum expiration that is permitted).
+    #[prost(message, optional, tag = "2")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// The `GetNotificationChannelVerificationCode` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetNotificationChannelVerificationCodeResponse {
+    /// The verification code, which may be used to verify other channels
+    /// that have an equivalent identity (i.e. other channels of the same
+    /// type with the same fingerprint such as other email channels with
+    /// the same email address or other sms channels with the same number).
+    #[prost(string, tag = "1")]
+    pub code: ::prost::alloc::string::String,
+    /// The expiration time associated with the code that was returned. If
+    /// an expiration was provided in the request, this is the minimum of the
+    /// requested expiration in the request and the max permitted expiration.
+    #[prost(message, optional, tag = "2")]
+    pub expire_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// The `VerifyNotificationChannel` request.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VerifyNotificationChannelRequest {
+    /// Required. The notification channel to verify.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The verification code that was delivered to the channel as
+    /// a result of invoking the `SendNotificationChannelVerificationCode` API
+    /// method or that was retrieved from a verified channel via
+    /// `GetNotificationChannelVerificationCode`. For example, one might have
+    /// "G-123456" or "TKNZGhhd2EyN3I1MnRnMjRv" (in general, one is only
+    /// guaranteed that the code is valid UTF-8; one should not
+    /// make any assumptions regarding the structure or format of the code).
+    #[prost(string, tag = "2")]
+    pub code: ::prost::alloc::string::String,
+}
+/// Generated client implementations.
+pub mod notification_channel_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The Notification Channel API provides access to configuration that
+    /// controls how messages related to incidents are sent.
+    #[derive(Debug, Clone)]
+    pub struct NotificationChannelServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> NotificationChannelServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> NotificationChannelServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            NotificationChannelServiceClient::new(
+                InterceptedService::new(inner, interceptor),
+            )
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Lists the descriptors for supported channel types. The use of descriptors
+        /// makes it possible for new channel types to be dynamically added.
+        pub async fn list_notification_channel_descriptors(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::ListNotificationChannelDescriptorsRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::ListNotificationChannelDescriptorsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/ListNotificationChannelDescriptors",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "ListNotificationChannelDescriptors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a single channel descriptor. The descriptor indicates which fields
+        /// are expected / permitted for a notification channel of the given type.
+        pub async fn get_notification_channel_descriptor(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::GetNotificationChannelDescriptorRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::NotificationChannelDescriptor>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/GetNotificationChannelDescriptor",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "GetNotificationChannelDescriptor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Lists the notification channels that have been created for the project.
+        pub async fn list_notification_channels(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListNotificationChannelsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListNotificationChannelsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/ListNotificationChannels",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "ListNotificationChannels",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Gets a single notification channel. The channel includes the relevant
+        /// configuration details with which the channel was created. However, the
+        /// response may truncate or omit passwords, API keys, or other private key
+        /// matter and thus the response may not be 100% identical to the information
+        /// that was supplied in the call to the create method.
+        pub async fn get_notification_channel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetNotificationChannelRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::NotificationChannel>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/GetNotificationChannel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "GetNotificationChannel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Creates a new notification channel, representing a single notification
+        /// endpoint such as an email address, SMS number, or PagerDuty service.
+        pub async fn create_notification_channel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateNotificationChannelRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::NotificationChannel>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/CreateNotificationChannel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "CreateNotificationChannel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Updates a notification channel. Fields not specified in the field mask
+        /// remain unchanged.
+        pub async fn update_notification_channel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateNotificationChannelRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::NotificationChannel>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/UpdateNotificationChannel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "UpdateNotificationChannel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Deletes a notification channel.
+        pub async fn delete_notification_channel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::DeleteNotificationChannelRequest>,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/DeleteNotificationChannel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "DeleteNotificationChannel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Causes a verification code to be delivered to the channel. The code
+        /// can then be supplied in `VerifyNotificationChannel` to verify the channel.
+        pub async fn send_notification_channel_verification_code(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::SendNotificationChannelVerificationCodeRequest,
+            >,
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/SendNotificationChannelVerificationCode",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "SendNotificationChannelVerificationCode",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Requests a verification code for an already verified channel that can then
+        /// be used in a call to VerifyNotificationChannel() on a different channel
+        /// with an equivalent identity in the same or in a different project. This
+        /// makes it possible to copy a channel between projects without requiring
+        /// manual reverification of the channel. If the channel is not in the
+        /// verified state, this method will fail (in other words, this may only be
+        /// used if the SendNotificationChannelVerificationCode and
+        /// VerifyNotificationChannel paths have already been used to put the given
+        /// channel into the verified state).
+        ///
+        /// There is no guarantee that the verification codes returned by this method
+        /// will be of a similar structure or form as the ones that are delivered
+        /// to the channel via SendNotificationChannelVerificationCode; while
+        /// VerifyNotificationChannel() will recognize both the codes delivered via
+        /// SendNotificationChannelVerificationCode() and returned from
+        /// GetNotificationChannelVerificationCode(), it is typically the case that
+        /// the verification codes delivered via
+        /// SendNotificationChannelVerificationCode() will be shorter and also
+        /// have a shorter expiration (e.g. codes such as "G-123456") whereas
+        /// GetVerificationCode() will typically return a much longer, websafe base
+        /// 64 encoded string that has a longer expiration time.
+        pub async fn get_notification_channel_verification_code(
+            &mut self,
+            request: impl tonic::IntoRequest<
+                super::GetNotificationChannelVerificationCodeRequest,
+            >,
+        ) -> std::result::Result<
+            tonic::Response<super::GetNotificationChannelVerificationCodeResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/GetNotificationChannelVerificationCode",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "GetNotificationChannelVerificationCode",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Verifies a `NotificationChannel` by proving receipt of the code
+        /// delivered to the channel as a result of calling
+        /// `SendNotificationChannelVerificationCode`.
+        pub async fn verify_notification_channel(
+            &mut self,
+            request: impl tonic::IntoRequest<super::VerifyNotificationChannelRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::NotificationChannel>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.NotificationChannelService/VerifyNotificationChannel",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.NotificationChannelService",
+                        "VerifyNotificationChannel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// The message definition for creating a `Snooze`. Users must provide the body
+/// of the `Snooze` to be created but must omit the `Snooze` field, `name`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateSnoozeRequest {
+    /// Required. The
+    /// \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) in which
+    /// a `Snooze` should be created. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. The `Snooze` to create. Omit the `name` field, as it will be
+    /// filled in by the API.
+    #[prost(message, optional, tag = "2")]
+    pub snooze: ::core::option::Option<Snooze>,
+}
+/// The message definition for listing `Snooze`s associated with the given
+/// `parent`, satisfying the optional `filter`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSnoozesRequest {
+    /// Required. The
+    /// \[project\](<https://cloud.google.com/monitoring/api/v3#project_name>) whose
+    /// `Snooze`s should be listed. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER\]
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Optional. Optional filter to restrict results to the given criteria. The
+    /// following fields are supported.
+    ///
+    ///    * `interval.start_time`
+    ///    * `interval.end_time`
+    ///
+    /// For example:
+    ///
+    ///      ```
+    ///      interval.start_time > "2022-03-11T00:00:00-08:00" AND
+    ///          interval.end_time < "2022-03-12T00:00:00-08:00"
+    ///      ```
+    #[prost(string, tag = "2")]
+    pub filter: ::prost::alloc::string::String,
+    /// Optional. The maximum number of results to return for a single query. The
+    /// server may further constrain the maximum number of results returned in a
+    /// single page. The value should be in the range [1, 1000]. If the value given
+    /// is outside this range, the server will decide the number of results to be
+    /// returned.
+    #[prost(int32, tag = "4")]
+    pub page_size: i32,
+    /// Optional. The `next_page_token` from a previous call to
+    /// `ListSnoozesRequest` to get the next page of results.
+    #[prost(string, tag = "5")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// The results of a successful `ListSnoozes` call, containing the matching
+/// `Snooze`s.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListSnoozesResponse {
+    /// `Snooze`s matching this list call.
+    #[prost(message, repeated, tag = "1")]
+    pub snoozes: ::prost::alloc::vec::Vec<Snooze>,
+    /// Page token for repeated calls to `ListSnoozes`, to fetch additional pages
+    /// of results. If this is empty or missing, there are no more pages.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// The message definition for retrieving a `Snooze`. Users must specify the
+/// field, `name`, which identifies the `Snooze`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetSnoozeRequest {
+    /// Required. The ID of the `Snooze` to retrieve. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/snoozes/[SNOOZE_ID\]
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// The message definition for updating a `Snooze`. The field, `snooze.name`
+/// identifies the `Snooze` to be updated. The remainder of `snooze` gives the
+/// content the `Snooze` in question will be assigned.
+///
+/// What fields can be updated depends on the start time and end time of the
+/// `Snooze`.
+///
+///    * end time is in the past: These `Snooze`s are considered
+///      read-only and cannot be updated.
+///    * start time is in the past and end time is in the future: `display_name`
+///      and `interval.end_time` can be updated.
+///    * start time is in the future: `display_name`, `interval.start_time` and
+///      `interval.end_time` can be updated.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdateSnoozeRequest {
+    /// Required. The `Snooze` to update. Must have the name field present.
+    #[prost(message, optional, tag = "1")]
+    pub snooze: ::core::option::Option<Snooze>,
+    /// Required. The fields to update.
+    ///
+    /// For each field listed in `update_mask`:
+    ///
+    ///    * If the `Snooze` object supplied in the `UpdateSnoozeRequest` has a
+    ///      value for that field, the value of the field in the existing `Snooze`
+    ///      will be set to the value of the field in the supplied `Snooze`.
+    ///    * If the field does not have a value in the supplied `Snooze`, the field
+    ///      in the existing `Snooze` is set to its default value.
+    ///
+    /// Fields not listed retain their existing value.
+    ///
+    /// The following are the field names that are accepted in `update_mask`:
+    ///
+    ///    * `display_name`
+    ///    * `interval.start_time`
+    ///    * `interval.end_time`
+    ///
+    /// That said, the start time and end time of the `Snooze` determines which
+    /// fields can legally be updated. Before attempting an update, users should
+    /// consult the documentation for `UpdateSnoozeRequest`, which talks about
+    /// which fields can be updated.
+    #[prost(message, optional, tag = "2")]
+    pub update_mask: ::core::option::Option<::prost_types::FieldMask>,
+}
+/// Generated client implementations.
+pub mod snooze_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// The SnoozeService API is used to temporarily prevent an alert policy from
+    /// generating alerts. A Snooze is a description of the criteria under which one
+    /// or more alert policies should not fire alerts for the specified duration.
+    #[derive(Debug, Clone)]
+    pub struct SnoozeServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> SnoozeServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> SnoozeServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            SnoozeServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Creates a `Snooze` that will prevent alerts, which match the provided
+        /// criteria, from being opened. The `Snooze` applies for a specific time
+        /// interval.
+        pub async fn create_snooze(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CreateSnoozeRequest>,
+        ) -> std::result::Result<tonic::Response<super::Snooze>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.SnoozeService/CreateSnooze",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.SnoozeService", "CreateSnooze"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Lists the `Snooze`s associated with a project. Can optionally pass in
+        /// `filter`, which specifies predicates to match `Snooze`s.
+        pub async fn list_snoozes(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListSnoozesRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListSnoozesResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.SnoozeService/ListSnoozes",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.SnoozeService", "ListSnoozes"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Retrieves a `Snooze` by `name`.
+        pub async fn get_snooze(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetSnoozeRequest>,
+        ) -> std::result::Result<tonic::Response<super::Snooze>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.SnoozeService/GetSnooze",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.SnoozeService", "GetSnooze"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Updates a `Snooze`, identified by its `name`, with the parameters in the
+        /// given `Snooze` object.
+        pub async fn update_snooze(
+            &mut self,
+            request: impl tonic::IntoRequest<super::UpdateSnoozeRequest>,
+        ) -> std::result::Result<tonic::Response<super::Snooze>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.monitoring.v3.SnoozeService/UpdateSnooze",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.monitoring.v3.SnoozeService", "UpdateSnooze"),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// The `CreateService` request.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -6038,11 +6493,27 @@ pub mod service_monitoring_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Create a `Service`.
         pub async fn create_service(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateServiceRequest>,
-        ) -> Result<tonic::Response<super::Service>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Service>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6056,13 +6527,21 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/CreateService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "CreateService",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get the named `Service`.
         pub async fn get_service(
             &mut self,
             request: impl tonic::IntoRequest<super::GetServiceRequest>,
-        ) -> Result<tonic::Response<super::Service>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Service>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6076,13 +6555,24 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/GetService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "GetService",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List `Service`s for this workspace.
         pub async fn list_services(
             &mut self,
             request: impl tonic::IntoRequest<super::ListServicesRequest>,
-        ) -> Result<tonic::Response<super::ListServicesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListServicesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6096,13 +6586,21 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/ListServices",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "ListServices",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Update this `Service`.
         pub async fn update_service(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateServiceRequest>,
-        ) -> Result<tonic::Response<super::Service>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Service>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6116,13 +6614,21 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/UpdateService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "UpdateService",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Soft delete this `Service`.
         pub async fn delete_service(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteServiceRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6136,13 +6642,24 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/DeleteService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "DeleteService",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Create a `ServiceLevelObjective` for the given `Service`.
         pub async fn create_service_level_objective(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateServiceLevelObjectiveRequest>,
-        ) -> Result<tonic::Response<super::ServiceLevelObjective>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ServiceLevelObjective>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6156,13 +6673,24 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/CreateServiceLevelObjective",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "CreateServiceLevelObjective",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get a `ServiceLevelObjective` by name.
         pub async fn get_service_level_objective(
             &mut self,
             request: impl tonic::IntoRequest<super::GetServiceLevelObjectiveRequest>,
-        ) -> Result<tonic::Response<super::ServiceLevelObjective>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ServiceLevelObjective>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6176,13 +6704,21 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/GetServiceLevelObjective",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "GetServiceLevelObjective",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List the `ServiceLevelObjective`s for the given `Service`.
         pub async fn list_service_level_objectives(
             &mut self,
             request: impl tonic::IntoRequest<super::ListServiceLevelObjectivesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListServiceLevelObjectivesResponse>,
             tonic::Status,
         > {
@@ -6199,13 +6735,24 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/ListServiceLevelObjectives",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "ListServiceLevelObjectives",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Update the given `ServiceLevelObjective`.
         pub async fn update_service_level_objective(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateServiceLevelObjectiveRequest>,
-        ) -> Result<tonic::Response<super::ServiceLevelObjective>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ServiceLevelObjective>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6219,13 +6766,21 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/UpdateServiceLevelObjective",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "UpdateServiceLevelObjective",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Delete the given `ServiceLevelObjective`.
         pub async fn delete_service_level_objective(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteServiceLevelObjectiveRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6239,7 +6794,15 @@ pub mod service_monitoring_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.v3.ServiceMonitoringService/DeleteServiceLevelObjective",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.v3.ServiceMonitoringService",
+                        "DeleteServiceLevelObjective",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

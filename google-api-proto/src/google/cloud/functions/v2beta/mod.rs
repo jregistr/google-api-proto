@@ -1225,11 +1225,27 @@ pub mod function_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns a function with the given name from the requested project.
         pub async fn get_function(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFunctionRequest>,
-        ) -> Result<tonic::Response<super::Function>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Function>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1243,13 +1259,24 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/GetFunction",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "GetFunction",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a list of functions that belong to the requested project.
         pub async fn list_functions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListFunctionsRequest>,
-        ) -> Result<tonic::Response<super::ListFunctionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListFunctionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1263,7 +1290,15 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/ListFunctions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "ListFunctions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new function. If a function with the given name already exists in
         /// the specified project, the long running operation will return
@@ -1271,7 +1306,7 @@ pub mod function_service_client {
         pub async fn create_function(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateFunctionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1288,13 +1323,21 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/CreateFunction",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "CreateFunction",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates existing function.
         pub async fn update_function(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateFunctionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1311,7 +1354,15 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/UpdateFunction",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "UpdateFunction",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a function with the given name from the specified project. If the
         /// given function is used by some trigger, the trigger will be updated to
@@ -1319,7 +1370,7 @@ pub mod function_service_client {
         pub async fn delete_function(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteFunctionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1336,7 +1387,15 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/DeleteFunction",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "DeleteFunction",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a signed URL for uploading a function source code.
         /// For more information about the signed URL usage see:
@@ -1364,7 +1423,10 @@ pub mod function_service_client {
         pub async fn generate_upload_url(
             &mut self,
             request: impl tonic::IntoRequest<super::GenerateUploadUrlRequest>,
-        ) -> Result<tonic::Response<super::GenerateUploadUrlResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GenerateUploadUrlResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1378,7 +1440,15 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/GenerateUploadUrl",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "GenerateUploadUrl",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a signed URL for downloading deployed function source code.
         /// The URL is only valid for a limited period and should be used within
@@ -1388,7 +1458,10 @@ pub mod function_service_client {
         pub async fn generate_download_url(
             &mut self,
             request: impl tonic::IntoRequest<super::GenerateDownloadUrlRequest>,
-        ) -> Result<tonic::Response<super::GenerateDownloadUrlResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GenerateDownloadUrlResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1402,13 +1475,24 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/GenerateDownloadUrl",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "GenerateDownloadUrl",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a list of runtimes that are supported for the requested project.
         pub async fn list_runtimes(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRuntimesRequest>,
-        ) -> Result<tonic::Response<super::ListRuntimesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListRuntimesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1422,7 +1506,15 @@ pub mod function_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.functions.v2beta.FunctionService/ListRuntimes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.functions.v2beta.FunctionService",
+                        "ListRuntimes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

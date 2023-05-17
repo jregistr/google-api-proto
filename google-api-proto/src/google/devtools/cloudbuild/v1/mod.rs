@@ -2768,6 +2768,22 @@ pub mod cloud_build_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Starts a build with the specified configuration.
         ///
         /// This method returns a long-running `Operation`, which includes the build
@@ -2776,7 +2792,7 @@ pub mod cloud_build_client {
         pub async fn create_build(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateBuildRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2793,7 +2809,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/CreateBuild",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "CreateBuild",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns information about a previously requested build.
         ///
@@ -2802,7 +2826,7 @@ pub mod cloud_build_client {
         pub async fn get_build(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBuildRequest>,
-        ) -> Result<tonic::Response<super::Build>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Build>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2816,7 +2840,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/GetBuild",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "GetBuild",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists previously requested builds.
         ///
@@ -2825,7 +2857,10 @@ pub mod cloud_build_client {
         pub async fn list_builds(
             &mut self,
             request: impl tonic::IntoRequest<super::ListBuildsRequest>,
-        ) -> Result<tonic::Response<super::ListBuildsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListBuildsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2839,13 +2874,21 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/ListBuilds",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "ListBuilds",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Cancels a build in progress.
         pub async fn cancel_build(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelBuildRequest>,
-        ) -> Result<tonic::Response<super::Build>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Build>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2859,7 +2902,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/CancelBuild",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "CancelBuild",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new build based on the specified build.
         ///
@@ -2891,7 +2942,7 @@ pub mod cloud_build_client {
         pub async fn retry_build(
             &mut self,
             request: impl tonic::IntoRequest<super::RetryBuildRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2908,7 +2959,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/RetryBuild",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "RetryBuild",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Approves or rejects a pending build.
         ///
@@ -2919,7 +2978,7 @@ pub mod cloud_build_client {
         pub async fn approve_build(
             &mut self,
             request: impl tonic::IntoRequest<super::ApproveBuildRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2936,7 +2995,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/ApproveBuild",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "ApproveBuild",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new `BuildTrigger`.
         ///
@@ -2944,7 +3011,7 @@ pub mod cloud_build_client {
         pub async fn create_build_trigger(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateBuildTriggerRequest>,
-        ) -> Result<tonic::Response<super::BuildTrigger>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::BuildTrigger>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2958,7 +3025,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/CreateBuildTrigger",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "CreateBuildTrigger",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns information about a `BuildTrigger`.
         ///
@@ -2966,7 +3041,7 @@ pub mod cloud_build_client {
         pub async fn get_build_trigger(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBuildTriggerRequest>,
-        ) -> Result<tonic::Response<super::BuildTrigger>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::BuildTrigger>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2980,7 +3055,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/GetBuildTrigger",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "GetBuildTrigger",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists existing `BuildTrigger`s.
         ///
@@ -2988,7 +3071,10 @@ pub mod cloud_build_client {
         pub async fn list_build_triggers(
             &mut self,
             request: impl tonic::IntoRequest<super::ListBuildTriggersRequest>,
-        ) -> Result<tonic::Response<super::ListBuildTriggersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListBuildTriggersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3002,7 +3088,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/ListBuildTriggers",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "ListBuildTriggers",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `BuildTrigger` by its project ID and trigger ID.
         ///
@@ -3010,7 +3104,7 @@ pub mod cloud_build_client {
         pub async fn delete_build_trigger(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteBuildTriggerRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3024,7 +3118,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/DeleteBuildTrigger",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "DeleteBuildTrigger",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a `BuildTrigger` by its project ID and trigger ID.
         ///
@@ -3032,7 +3134,7 @@ pub mod cloud_build_client {
         pub async fn update_build_trigger(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateBuildTriggerRequest>,
-        ) -> Result<tonic::Response<super::BuildTrigger>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::BuildTrigger>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3046,13 +3148,21 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/UpdateBuildTrigger",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "UpdateBuildTrigger",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Runs a `BuildTrigger` at a particular source revision.
         pub async fn run_build_trigger(
             &mut self,
             request: impl tonic::IntoRequest<super::RunBuildTriggerRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3069,14 +3179,22 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/RunBuildTrigger",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "RunBuildTrigger",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// ReceiveTriggerWebhook [Experimental] is called when the API receives a
         /// webhook request targeted at a specific trigger.
         pub async fn receive_trigger_webhook(
             &mut self,
             request: impl tonic::IntoRequest<super::ReceiveTriggerWebhookRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ReceiveTriggerWebhookResponse>,
             tonic::Status,
         > {
@@ -3093,13 +3211,21 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/ReceiveTriggerWebhook",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "ReceiveTriggerWebhook",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a `WorkerPool`.
         pub async fn create_worker_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateWorkerPoolRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3116,13 +3242,21 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/CreateWorkerPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "CreateWorkerPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns details of a `WorkerPool`.
         pub async fn get_worker_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWorkerPoolRequest>,
-        ) -> Result<tonic::Response<super::WorkerPool>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::WorkerPool>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3136,13 +3270,21 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/GetWorkerPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "GetWorkerPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `WorkerPool`.
         pub async fn delete_worker_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteWorkerPoolRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3159,13 +3301,21 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/DeleteWorkerPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "DeleteWorkerPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a `WorkerPool`.
         pub async fn update_worker_pool(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateWorkerPoolRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3182,13 +3332,24 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/UpdateWorkerPool",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "UpdateWorkerPool",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists `WorkerPool`s.
         pub async fn list_worker_pools(
             &mut self,
             request: impl tonic::IntoRequest<super::ListWorkerPoolsRequest>,
-        ) -> Result<tonic::Response<super::ListWorkerPoolsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListWorkerPoolsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3202,7 +3363,15 @@ pub mod cloud_build_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.cloudbuild.v1.CloudBuild/ListWorkerPools",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.cloudbuild.v1.CloudBuild",
+                        "ListWorkerPools",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

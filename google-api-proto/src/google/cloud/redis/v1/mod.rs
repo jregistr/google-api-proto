@@ -1196,6 +1196,22 @@ pub mod cloud_redis_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists all Redis instances owned by a project in either the specified
         /// location (region) or all locations.
         ///
@@ -1208,7 +1224,10 @@ pub mod cloud_redis_client {
         pub async fn list_instances(
             &mut self,
             request: impl tonic::IntoRequest<super::ListInstancesRequest>,
-        ) -> Result<tonic::Response<super::ListInstancesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListInstancesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1222,13 +1241,18 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/ListInstances",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "ListInstances"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the details of a specific Redis instance.
         pub async fn get_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInstanceRequest>,
-        ) -> Result<tonic::Response<super::Instance>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Instance>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1242,7 +1266,12 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/GetInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "GetInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the AUTH string for a Redis instance. If AUTH is not enabled for the
         /// instance the response will be empty. This information is not included in
@@ -1250,7 +1279,10 @@ pub mod cloud_redis_client {
         pub async fn get_instance_auth_string(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInstanceAuthStringRequest>,
-        ) -> Result<tonic::Response<super::InstanceAuthString>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::InstanceAuthString>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1264,7 +1296,15 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/GetInstanceAuthString",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.redis.v1.CloudRedis",
+                        "GetInstanceAuthString",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a Redis instance based on the specified tier and memory size.
         ///
@@ -1281,7 +1321,7 @@ pub mod cloud_redis_client {
         pub async fn create_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1298,7 +1338,12 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/CreateInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "CreateInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the metadata and configuration of a specific Redis instance.
         ///
@@ -1308,7 +1353,7 @@ pub mod cloud_redis_client {
         pub async fn update_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1325,14 +1370,19 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/UpdateInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "UpdateInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Upgrades Redis instance to the newer Redis version specified in the
         /// request.
         pub async fn upgrade_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::UpgradeInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1349,7 +1399,15 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/UpgradeInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.redis.v1.CloudRedis",
+                        "UpgradeInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Import a Redis RDB snapshot file from Cloud Storage into a Redis instance.
         ///
@@ -1362,7 +1420,7 @@ pub mod cloud_redis_client {
         pub async fn import_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1379,7 +1437,12 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/ImportInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "ImportInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Export Redis instance data into a Redis RDB format file in Cloud Storage.
         ///
@@ -1390,7 +1453,7 @@ pub mod cloud_redis_client {
         pub async fn export_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1407,14 +1470,19 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/ExportInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "ExportInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Initiates a failover of the primary node to current replica node for a
         /// specific STANDARD tier Cloud Memorystore for Redis instance.
         pub async fn failover_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::FailoverInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1431,14 +1499,22 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/FailoverInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.redis.v1.CloudRedis",
+                        "FailoverInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a specific Redis instance.  Instance stops serving and data is
         /// deleted.
         pub async fn delete_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1455,14 +1531,19 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/DeleteInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.redis.v1.CloudRedis", "DeleteInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Reschedule maintenance for a given instance in a given project and
         /// location.
         pub async fn reschedule_maintenance(
             &mut self,
             request: impl tonic::IntoRequest<super::RescheduleMaintenanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1479,7 +1560,15 @@ pub mod cloud_redis_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.redis.v1.CloudRedis/RescheduleMaintenance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.redis.v1.CloudRedis",
+                        "RescheduleMaintenance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

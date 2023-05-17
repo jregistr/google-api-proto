@@ -188,11 +188,27 @@ pub mod confidential_computing_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new Challenge in a given project and location.
         pub async fn create_challenge(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateChallengeRequest>,
-        ) -> Result<tonic::Response<super::Challenge>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Challenge>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -206,13 +222,24 @@ pub mod confidential_computing_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.confidentialcomputing.v1alpha1.ConfidentialComputing/CreateChallenge",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.confidentialcomputing.v1alpha1.ConfidentialComputing",
+                        "CreateChallenge",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Verifies the provided attestation info, returning a signed OIDC token.
         pub async fn verify_attestation(
             &mut self,
             request: impl tonic::IntoRequest<super::VerifyAttestationRequest>,
-        ) -> Result<tonic::Response<super::VerifyAttestationResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::VerifyAttestationResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -226,7 +253,15 @@ pub mod confidential_computing_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.confidentialcomputing.v1alpha1.ConfidentialComputing/VerifyAttestation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.confidentialcomputing.v1alpha1.ConfidentialComputing",
+                        "VerifyAttestation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

@@ -159,6 +159,57 @@ pub struct AggregationResult {
         Value,
     >,
 }
+/// A sequence of bits, encoded in a byte array.
+///
+/// Each byte in the `bitmap` byte array stores 8 bits of the sequence. The only
+/// exception is the last byte, which may store 8 _or fewer_ bits. The `padding`
+/// defines the number of bits of the last byte to be ignored as "padding". The
+/// values of these "padding" bits are unspecified and must be ignored.
+///
+/// To retrieve the first bit, bit 0, calculate: `(bitmap\[0\] & 0x01) != 0`.
+/// To retrieve the second bit, bit 1, calculate: `(bitmap\[0\] & 0x02) != 0`.
+/// To retrieve the third bit, bit 2, calculate: `(bitmap\[0\] & 0x04) != 0`.
+/// To retrieve the fourth bit, bit 3, calculate: `(bitmap\[0\] & 0x08) != 0`.
+/// To retrieve bit n, calculate: `(bitmap[n / 8] & (0x01 << (n % 8))) != 0`.
+///
+/// The "size" of a `BitSequence` (the number of bits it contains) is calculated
+/// by this formula: `(bitmap.length * 8) - padding`.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BitSequence {
+    /// The bytes that encode the bit sequence.
+    /// May have a length of zero.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub bitmap: ::prost::bytes::Bytes,
+    /// The number of bits of the last byte in `bitmap` to ignore as "padding".
+    /// If the length of `bitmap` is zero, then this value must be `0`.
+    /// Otherwise, this value must be between 0 and 7, inclusive.
+    #[prost(int32, tag = "2")]
+    pub padding: i32,
+}
+/// A bloom filter (<https://en.wikipedia.org/wiki/Bloom_filter>).
+///
+/// The bloom filter hashes the entries with MD5 and treats the resulting 128-bit
+/// hash as 2 distinct 64-bit hash values, interpreted as unsigned integers
+/// using 2's complement encoding.
+///
+/// These two hash values, named `h1` and `h2`, are then used to compute the
+/// `hash_count` hash values using the formula, starting at `i=0`:
+///
+///      h(i) = h1 + (i * h2)
+///
+/// These resulting values are then taken modulo the number of bits in the bloom
+/// filter to get the bits of the bloom filter to test for the given entry.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BloomFilter {
+    /// The bloom filter data.
+    #[prost(message, optional, tag = "1")]
+    pub bits: ::core::option::Option<BitSequence>,
+    /// The number of hashes used by the algorithm.
+    #[prost(int32, tag = "2")]
+    pub hash_count: i32,
+}
 /// A set of field paths on a document.
 /// Used to restrict a get or update operation on a document to a subset of its
 /// fields.
@@ -249,6 +300,323 @@ pub mod transaction_options {
         #[prost(message, tag = "3")]
         ReadWrite(ReadWrite),
     }
+}
+/// A write on a document.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Write {
+    /// The fields to update in this write.
+    ///
+    /// This field can be set only when the operation is `update`.
+    /// If the mask is not set for an `update` and the document exists, any
+    /// existing data will be overwritten.
+    /// If the mask is set and the document on the server has fields not covered by
+    /// the mask, they are left unchanged.
+    /// Fields referenced in the mask, but not present in the input document, are
+    /// deleted from the document on the server.
+    /// The field paths in this mask must not contain a reserved field name.
+    #[prost(message, optional, tag = "3")]
+    pub update_mask: ::core::option::Option<DocumentMask>,
+    /// The transforms to perform after update.
+    ///
+    /// This field can be set only when the operation is `update`. If present, this
+    /// write is equivalent to performing `update` and `transform` to the same
+    /// document atomically and in order.
+    #[prost(message, repeated, tag = "7")]
+    pub update_transforms: ::prost::alloc::vec::Vec<document_transform::FieldTransform>,
+    /// An optional precondition on the document.
+    ///
+    /// The write will fail if this is set and not met by the target document.
+    #[prost(message, optional, tag = "4")]
+    pub current_document: ::core::option::Option<Precondition>,
+    /// The operation to execute.
+    #[prost(oneof = "write::Operation", tags = "1, 2, 6")]
+    pub operation: ::core::option::Option<write::Operation>,
+}
+/// Nested message and enum types in `Write`.
+pub mod write {
+    /// The operation to execute.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Operation {
+        /// A document to write.
+        #[prost(message, tag = "1")]
+        Update(super::Document),
+        /// A document name to delete. In the format:
+        /// `projects/{project_id}/databases/{database_id}/documents/{document_path}`.
+        #[prost(string, tag = "2")]
+        Delete(::prost::alloc::string::String),
+        /// Applies a transformation to a document.
+        #[prost(message, tag = "6")]
+        Transform(super::DocumentTransform),
+    }
+}
+/// A transformation of a document.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentTransform {
+    /// The name of the document to transform.
+    #[prost(string, tag = "1")]
+    pub document: ::prost::alloc::string::String,
+    /// The list of transformations to apply to the fields of the document, in
+    /// order.
+    /// This must not be empty.
+    #[prost(message, repeated, tag = "2")]
+    pub field_transforms: ::prost::alloc::vec::Vec<document_transform::FieldTransform>,
+}
+/// Nested message and enum types in `DocumentTransform`.
+pub mod document_transform {
+    /// A transformation of a field of the document.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct FieldTransform {
+        /// The path of the field. See
+        /// \[Document.fields][google.firestore.v1.Document.fields\] for the field path
+        /// syntax reference.
+        #[prost(string, tag = "1")]
+        pub field_path: ::prost::alloc::string::String,
+        /// The transformation to apply on the field.
+        #[prost(oneof = "field_transform::TransformType", tags = "2, 3, 4, 5, 6, 7")]
+        pub transform_type: ::core::option::Option<field_transform::TransformType>,
+    }
+    /// Nested message and enum types in `FieldTransform`.
+    pub mod field_transform {
+        /// A value that is calculated by the server.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum ServerValue {
+            /// Unspecified. This value must not be used.
+            Unspecified = 0,
+            /// The time at which the server processed the request, with millisecond
+            /// precision. If used on multiple fields (same or different documents) in
+            /// a transaction, all the fields will get the same server timestamp.
+            RequestTime = 1,
+        }
+        impl ServerValue {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ServerValue::Unspecified => "SERVER_VALUE_UNSPECIFIED",
+                    ServerValue::RequestTime => "REQUEST_TIME",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "SERVER_VALUE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "REQUEST_TIME" => Some(Self::RequestTime),
+                    _ => None,
+                }
+            }
+        }
+        /// The transformation to apply on the field.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum TransformType {
+            /// Sets the field to the given server value.
+            #[prost(enumeration = "ServerValue", tag = "2")]
+            SetToServerValue(i32),
+            /// Adds the given value to the field's current value.
+            ///
+            /// This must be an integer or a double value.
+            /// If the field is not an integer or double, or if the field does not yet
+            /// exist, the transformation will set the field to the given value.
+            /// If either of the given value or the current field value are doubles,
+            /// both values will be interpreted as doubles. Double arithmetic and
+            /// representation of double values follow IEEE 754 semantics.
+            /// If there is positive/negative integer overflow, the field is resolved
+            /// to the largest magnitude positive/negative integer.
+            #[prost(message, tag = "3")]
+            Increment(super::super::Value),
+            /// Sets the field to the maximum of its current value and the given value.
+            ///
+            /// This must be an integer or a double value.
+            /// If the field is not an integer or double, or if the field does not yet
+            /// exist, the transformation will set the field to the given value.
+            /// If a maximum operation is applied where the field and the input value
+            /// are of mixed types (that is - one is an integer and one is a double)
+            /// the field takes on the type of the larger operand. If the operands are
+            /// equivalent (e.g. 3 and 3.0), the field does not change.
+            /// 0, 0.0, and -0.0 are all zero. The maximum of a zero stored value and
+            /// zero input value is always the stored value.
+            /// The maximum of any numeric value x and NaN is NaN.
+            #[prost(message, tag = "4")]
+            Maximum(super::super::Value),
+            /// Sets the field to the minimum of its current value and the given value.
+            ///
+            /// This must be an integer or a double value.
+            /// If the field is not an integer or double, or if the field does not yet
+            /// exist, the transformation will set the field to the input value.
+            /// If a minimum operation is applied where the field and the input value
+            /// are of mixed types (that is - one is an integer and one is a double)
+            /// the field takes on the type of the smaller operand. If the operands are
+            /// equivalent (e.g. 3 and 3.0), the field does not change.
+            /// 0, 0.0, and -0.0 are all zero. The minimum of a zero stored value and
+            /// zero input value is always the stored value.
+            /// The minimum of any numeric value x and NaN is NaN.
+            #[prost(message, tag = "5")]
+            Minimum(super::super::Value),
+            /// Append the given elements in order if they are not already present in
+            /// the current field value.
+            /// If the field is not an array, or if the field does not yet exist, it is
+            /// first set to the empty array.
+            ///
+            /// Equivalent numbers of different types (e.g. 3L and 3.0) are
+            /// considered equal when checking if a value is missing.
+            /// NaN is equal to NaN, and Null is equal to Null.
+            /// If the input contains multiple equivalent values, only the first will
+            /// be considered.
+            ///
+            /// The corresponding transform_result will be the null value.
+            #[prost(message, tag = "6")]
+            AppendMissingElements(super::super::ArrayValue),
+            /// Remove all of the given elements from the array in the field.
+            /// If the field is not an array, or if the field does not yet exist, it is
+            /// set to the empty array.
+            ///
+            /// Equivalent numbers of the different types (e.g. 3L and 3.0) are
+            /// considered equal when deciding whether an element should be removed.
+            /// NaN is equal to NaN, and Null is equal to Null.
+            /// This will remove all equivalent values if there are duplicates.
+            ///
+            /// The corresponding transform_result will be the null value.
+            #[prost(message, tag = "7")]
+            RemoveAllFromArray(super::super::ArrayValue),
+        }
+    }
+}
+/// The result of applying a write.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteResult {
+    /// The last update time of the document after applying the write. Not set
+    /// after a `delete`.
+    ///
+    /// If the write did not actually change the document, this will be the
+    /// previous update_time.
+    #[prost(message, optional, tag = "1")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The results of applying each
+    /// \[DocumentTransform.FieldTransform][google.firestore.v1.DocumentTransform.FieldTransform\],
+    /// in the same order.
+    #[prost(message, repeated, tag = "2")]
+    pub transform_results: ::prost::alloc::vec::Vec<Value>,
+}
+/// A \[Document][google.firestore.v1.Document\] has changed.
+///
+/// May be the result of multiple \[writes][google.firestore.v1.Write\], including
+/// deletes, that ultimately resulted in a new value for the
+/// \[Document][google.firestore.v1.Document\].
+///
+/// Multiple \[DocumentChange][google.firestore.v1.DocumentChange\] messages may be
+/// returned for the same logical change, if multiple targets are affected.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentChange {
+    /// The new state of the \[Document][google.firestore.v1.Document\].
+    ///
+    /// If `mask` is set, contains only fields that were updated or added.
+    #[prost(message, optional, tag = "1")]
+    pub document: ::core::option::Option<Document>,
+    /// A set of target IDs of targets that match this document.
+    #[prost(int32, repeated, tag = "5")]
+    pub target_ids: ::prost::alloc::vec::Vec<i32>,
+    /// A set of target IDs for targets that no longer match this document.
+    #[prost(int32, repeated, tag = "6")]
+    pub removed_target_ids: ::prost::alloc::vec::Vec<i32>,
+}
+/// A \[Document][google.firestore.v1.Document\] has been deleted.
+///
+/// May be the result of multiple \[writes][google.firestore.v1.Write\], including
+/// updates, the last of which deleted the
+/// \[Document][google.firestore.v1.Document\].
+///
+/// Multiple \[DocumentDelete][google.firestore.v1.DocumentDelete\] messages may be
+/// returned for the same logical delete, if multiple targets are affected.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentDelete {
+    /// The resource name of the \[Document][google.firestore.v1.Document\] that was
+    /// deleted.
+    #[prost(string, tag = "1")]
+    pub document: ::prost::alloc::string::String,
+    /// A set of target IDs for targets that previously matched this entity.
+    #[prost(int32, repeated, tag = "6")]
+    pub removed_target_ids: ::prost::alloc::vec::Vec<i32>,
+    /// The read timestamp at which the delete was observed.
+    ///
+    /// Greater or equal to the `commit_time` of the delete.
+    #[prost(message, optional, tag = "4")]
+    pub read_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// A \[Document][google.firestore.v1.Document\] has been removed from the view of
+/// the targets.
+///
+/// Sent if the document is no longer relevant to a target and is out of view.
+/// Can be sent instead of a DocumentDelete or a DocumentChange if the server
+/// can not send the new value of the document.
+///
+/// Multiple \[DocumentRemove][google.firestore.v1.DocumentRemove\] messages may be
+/// returned for the same logical write or delete, if multiple targets are
+/// affected.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentRemove {
+    /// The resource name of the \[Document][google.firestore.v1.Document\] that has
+    /// gone out of view.
+    #[prost(string, tag = "1")]
+    pub document: ::prost::alloc::string::String,
+    /// A set of target IDs for targets that previously matched this document.
+    #[prost(int32, repeated, tag = "2")]
+    pub removed_target_ids: ::prost::alloc::vec::Vec<i32>,
+    /// The read timestamp at which the remove was observed.
+    ///
+    /// Greater or equal to the `commit_time` of the change/delete/remove.
+    #[prost(message, optional, tag = "4")]
+    pub read_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// A digest of all the documents that match a given target.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExistenceFilter {
+    /// The target ID to which this filter applies.
+    #[prost(int32, tag = "1")]
+    pub target_id: i32,
+    /// The total count of documents that match
+    /// \[target_id][google.firestore.v1.ExistenceFilter.target_id\].
+    ///
+    /// If different from the count of documents in the client that match, the
+    /// client must manually determine which documents no longer match the target.
+    #[prost(int32, tag = "2")]
+    pub count: i32,
+    /// A bloom filter that contains the UTF-8 byte encodings of the resource names
+    /// of the documents that match
+    /// \[target_id][google.firestore.v1.ExistenceFilter.target_id\], in the form
+    /// `projects/{project_id}/databases/{database_id}/documents/{document_path}`
+    /// that have NOT changed since the query results indicated by the resume token
+    /// or timestamp given in `Target.resume_type`.
+    ///
+    /// This bloom filter may be omitted at the server's discretion, such as if it
+    /// is deemed that the client will not make use of it or if it is too
+    /// computationally expensive to calculate or transmit. Clients must gracefully
+    /// handle this field being absent by falling back to the logic used before
+    /// this field existed; that is, re-add the target without a resume token to
+    /// figure out which documents in the client's cache are out of sync.
+    #[prost(message, optional, tag = "3")]
+    pub unchanged_names: ::core::option::Option<BloomFilter>,
 }
 /// A Firestore query.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -878,374 +1246,6 @@ pub struct Cursor {
     /// to the sort order defined by the query.
     #[prost(bool, tag = "2")]
     pub before: bool,
-}
-/// A sequence of bits, encoded in a byte array.
-///
-/// Each byte in the `bitmap` byte array stores 8 bits of the sequence. The only
-/// exception is the last byte, which may store 8 _or fewer_ bits. The `padding`
-/// defines the number of bits of the last byte to be ignored as "padding". The
-/// values of these "padding" bits are unspecified and must be ignored.
-///
-/// To retrieve the first bit, bit 0, calculate: `(bitmap\[0\] & 0x01) != 0`.
-/// To retrieve the second bit, bit 1, calculate: `(bitmap\[0\] & 0x02) != 0`.
-/// To retrieve the third bit, bit 2, calculate: `(bitmap\[0\] & 0x04) != 0`.
-/// To retrieve the fourth bit, bit 3, calculate: `(bitmap\[0\] & 0x08) != 0`.
-/// To retrieve bit n, calculate: `(bitmap[n / 8] & (0x01 << (n % 8))) != 0`.
-///
-/// The "size" of a `BitSequence` (the number of bits it contains) is calculated
-/// by this formula: `(bitmap.length * 8) - padding`.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BitSequence {
-    /// The bytes that encode the bit sequence.
-    /// May have a length of zero.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub bitmap: ::prost::bytes::Bytes,
-    /// The number of bits of the last byte in `bitmap` to ignore as "padding".
-    /// If the length of `bitmap` is zero, then this value must be `0`.
-    /// Otherwise, this value must be between 0 and 7, inclusive.
-    #[prost(int32, tag = "2")]
-    pub padding: i32,
-}
-/// A bloom filter (<https://en.wikipedia.org/wiki/Bloom_filter>).
-///
-/// The bloom filter hashes the entries with MD5 and treats the resulting 128-bit
-/// hash as 2 distinct 64-bit hash values, interpreted as unsigned integers
-/// using 2's complement encoding.
-///
-/// These two hash values, named `h1` and `h2`, are then used to compute the
-/// `hash_count` hash values using the formula, starting at `i=0`:
-///
-///      h(i) = h1 + (i * h2)
-///
-/// These resulting values are then taken modulo the number of bits in the bloom
-/// filter to get the bits of the bloom filter to test for the given entry.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BloomFilter {
-    /// The bloom filter data.
-    #[prost(message, optional, tag = "1")]
-    pub bits: ::core::option::Option<BitSequence>,
-    /// The number of hashes used by the algorithm.
-    #[prost(int32, tag = "2")]
-    pub hash_count: i32,
-}
-/// A write on a document.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Write {
-    /// The fields to update in this write.
-    ///
-    /// This field can be set only when the operation is `update`.
-    /// If the mask is not set for an `update` and the document exists, any
-    /// existing data will be overwritten.
-    /// If the mask is set and the document on the server has fields not covered by
-    /// the mask, they are left unchanged.
-    /// Fields referenced in the mask, but not present in the input document, are
-    /// deleted from the document on the server.
-    /// The field paths in this mask must not contain a reserved field name.
-    #[prost(message, optional, tag = "3")]
-    pub update_mask: ::core::option::Option<DocumentMask>,
-    /// The transforms to perform after update.
-    ///
-    /// This field can be set only when the operation is `update`. If present, this
-    /// write is equivalent to performing `update` and `transform` to the same
-    /// document atomically and in order.
-    #[prost(message, repeated, tag = "7")]
-    pub update_transforms: ::prost::alloc::vec::Vec<document_transform::FieldTransform>,
-    /// An optional precondition on the document.
-    ///
-    /// The write will fail if this is set and not met by the target document.
-    #[prost(message, optional, tag = "4")]
-    pub current_document: ::core::option::Option<Precondition>,
-    /// The operation to execute.
-    #[prost(oneof = "write::Operation", tags = "1, 2, 6")]
-    pub operation: ::core::option::Option<write::Operation>,
-}
-/// Nested message and enum types in `Write`.
-pub mod write {
-    /// The operation to execute.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Operation {
-        /// A document to write.
-        #[prost(message, tag = "1")]
-        Update(super::Document),
-        /// A document name to delete. In the format:
-        /// `projects/{project_id}/databases/{database_id}/documents/{document_path}`.
-        #[prost(string, tag = "2")]
-        Delete(::prost::alloc::string::String),
-        /// Applies a transformation to a document.
-        #[prost(message, tag = "6")]
-        Transform(super::DocumentTransform),
-    }
-}
-/// A transformation of a document.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentTransform {
-    /// The name of the document to transform.
-    #[prost(string, tag = "1")]
-    pub document: ::prost::alloc::string::String,
-    /// The list of transformations to apply to the fields of the document, in
-    /// order.
-    /// This must not be empty.
-    #[prost(message, repeated, tag = "2")]
-    pub field_transforms: ::prost::alloc::vec::Vec<document_transform::FieldTransform>,
-}
-/// Nested message and enum types in `DocumentTransform`.
-pub mod document_transform {
-    /// A transformation of a field of the document.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct FieldTransform {
-        /// The path of the field. See
-        /// \[Document.fields][google.firestore.v1.Document.fields\] for the field path
-        /// syntax reference.
-        #[prost(string, tag = "1")]
-        pub field_path: ::prost::alloc::string::String,
-        /// The transformation to apply on the field.
-        #[prost(oneof = "field_transform::TransformType", tags = "2, 3, 4, 5, 6, 7")]
-        pub transform_type: ::core::option::Option<field_transform::TransformType>,
-    }
-    /// Nested message and enum types in `FieldTransform`.
-    pub mod field_transform {
-        /// A value that is calculated by the server.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum ServerValue {
-            /// Unspecified. This value must not be used.
-            Unspecified = 0,
-            /// The time at which the server processed the request, with millisecond
-            /// precision. If used on multiple fields (same or different documents) in
-            /// a transaction, all the fields will get the same server timestamp.
-            RequestTime = 1,
-        }
-        impl ServerValue {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    ServerValue::Unspecified => "SERVER_VALUE_UNSPECIFIED",
-                    ServerValue::RequestTime => "REQUEST_TIME",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "SERVER_VALUE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "REQUEST_TIME" => Some(Self::RequestTime),
-                    _ => None,
-                }
-            }
-        }
-        /// The transformation to apply on the field.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum TransformType {
-            /// Sets the field to the given server value.
-            #[prost(enumeration = "ServerValue", tag = "2")]
-            SetToServerValue(i32),
-            /// Adds the given value to the field's current value.
-            ///
-            /// This must be an integer or a double value.
-            /// If the field is not an integer or double, or if the field does not yet
-            /// exist, the transformation will set the field to the given value.
-            /// If either of the given value or the current field value are doubles,
-            /// both values will be interpreted as doubles. Double arithmetic and
-            /// representation of double values follow IEEE 754 semantics.
-            /// If there is positive/negative integer overflow, the field is resolved
-            /// to the largest magnitude positive/negative integer.
-            #[prost(message, tag = "3")]
-            Increment(super::super::Value),
-            /// Sets the field to the maximum of its current value and the given value.
-            ///
-            /// This must be an integer or a double value.
-            /// If the field is not an integer or double, or if the field does not yet
-            /// exist, the transformation will set the field to the given value.
-            /// If a maximum operation is applied where the field and the input value
-            /// are of mixed types (that is - one is an integer and one is a double)
-            /// the field takes on the type of the larger operand. If the operands are
-            /// equivalent (e.g. 3 and 3.0), the field does not change.
-            /// 0, 0.0, and -0.0 are all zero. The maximum of a zero stored value and
-            /// zero input value is always the stored value.
-            /// The maximum of any numeric value x and NaN is NaN.
-            #[prost(message, tag = "4")]
-            Maximum(super::super::Value),
-            /// Sets the field to the minimum of its current value and the given value.
-            ///
-            /// This must be an integer or a double value.
-            /// If the field is not an integer or double, or if the field does not yet
-            /// exist, the transformation will set the field to the input value.
-            /// If a minimum operation is applied where the field and the input value
-            /// are of mixed types (that is - one is an integer and one is a double)
-            /// the field takes on the type of the smaller operand. If the operands are
-            /// equivalent (e.g. 3 and 3.0), the field does not change.
-            /// 0, 0.0, and -0.0 are all zero. The minimum of a zero stored value and
-            /// zero input value is always the stored value.
-            /// The minimum of any numeric value x and NaN is NaN.
-            #[prost(message, tag = "5")]
-            Minimum(super::super::Value),
-            /// Append the given elements in order if they are not already present in
-            /// the current field value.
-            /// If the field is not an array, or if the field does not yet exist, it is
-            /// first set to the empty array.
-            ///
-            /// Equivalent numbers of different types (e.g. 3L and 3.0) are
-            /// considered equal when checking if a value is missing.
-            /// NaN is equal to NaN, and Null is equal to Null.
-            /// If the input contains multiple equivalent values, only the first will
-            /// be considered.
-            ///
-            /// The corresponding transform_result will be the null value.
-            #[prost(message, tag = "6")]
-            AppendMissingElements(super::super::ArrayValue),
-            /// Remove all of the given elements from the array in the field.
-            /// If the field is not an array, or if the field does not yet exist, it is
-            /// set to the empty array.
-            ///
-            /// Equivalent numbers of the different types (e.g. 3L and 3.0) are
-            /// considered equal when deciding whether an element should be removed.
-            /// NaN is equal to NaN, and Null is equal to Null.
-            /// This will remove all equivalent values if there are duplicates.
-            ///
-            /// The corresponding transform_result will be the null value.
-            #[prost(message, tag = "7")]
-            RemoveAllFromArray(super::super::ArrayValue),
-        }
-    }
-}
-/// The result of applying a write.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteResult {
-    /// The last update time of the document after applying the write. Not set
-    /// after a `delete`.
-    ///
-    /// If the write did not actually change the document, this will be the
-    /// previous update_time.
-    #[prost(message, optional, tag = "1")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The results of applying each
-    /// \[DocumentTransform.FieldTransform][google.firestore.v1.DocumentTransform.FieldTransform\],
-    /// in the same order.
-    #[prost(message, repeated, tag = "2")]
-    pub transform_results: ::prost::alloc::vec::Vec<Value>,
-}
-/// A \[Document][google.firestore.v1.Document\] has changed.
-///
-/// May be the result of multiple \[writes][google.firestore.v1.Write\], including
-/// deletes, that ultimately resulted in a new value for the
-/// \[Document][google.firestore.v1.Document\].
-///
-/// Multiple \[DocumentChange][google.firestore.v1.DocumentChange\] messages may be
-/// returned for the same logical change, if multiple targets are affected.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentChange {
-    /// The new state of the \[Document][google.firestore.v1.Document\].
-    ///
-    /// If `mask` is set, contains only fields that were updated or added.
-    #[prost(message, optional, tag = "1")]
-    pub document: ::core::option::Option<Document>,
-    /// A set of target IDs of targets that match this document.
-    #[prost(int32, repeated, tag = "5")]
-    pub target_ids: ::prost::alloc::vec::Vec<i32>,
-    /// A set of target IDs for targets that no longer match this document.
-    #[prost(int32, repeated, tag = "6")]
-    pub removed_target_ids: ::prost::alloc::vec::Vec<i32>,
-}
-/// A \[Document][google.firestore.v1.Document\] has been deleted.
-///
-/// May be the result of multiple \[writes][google.firestore.v1.Write\], including
-/// updates, the last of which deleted the
-/// \[Document][google.firestore.v1.Document\].
-///
-/// Multiple \[DocumentDelete][google.firestore.v1.DocumentDelete\] messages may be
-/// returned for the same logical delete, if multiple targets are affected.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentDelete {
-    /// The resource name of the \[Document][google.firestore.v1.Document\] that was
-    /// deleted.
-    #[prost(string, tag = "1")]
-    pub document: ::prost::alloc::string::String,
-    /// A set of target IDs for targets that previously matched this entity.
-    #[prost(int32, repeated, tag = "6")]
-    pub removed_target_ids: ::prost::alloc::vec::Vec<i32>,
-    /// The read timestamp at which the delete was observed.
-    ///
-    /// Greater or equal to the `commit_time` of the delete.
-    #[prost(message, optional, tag = "4")]
-    pub read_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// A \[Document][google.firestore.v1.Document\] has been removed from the view of
-/// the targets.
-///
-/// Sent if the document is no longer relevant to a target and is out of view.
-/// Can be sent instead of a DocumentDelete or a DocumentChange if the server
-/// can not send the new value of the document.
-///
-/// Multiple \[DocumentRemove][google.firestore.v1.DocumentRemove\] messages may be
-/// returned for the same logical write or delete, if multiple targets are
-/// affected.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentRemove {
-    /// The resource name of the \[Document][google.firestore.v1.Document\] that has
-    /// gone out of view.
-    #[prost(string, tag = "1")]
-    pub document: ::prost::alloc::string::String,
-    /// A set of target IDs for targets that previously matched this document.
-    #[prost(int32, repeated, tag = "2")]
-    pub removed_target_ids: ::prost::alloc::vec::Vec<i32>,
-    /// The read timestamp at which the remove was observed.
-    ///
-    /// Greater or equal to the `commit_time` of the change/delete/remove.
-    #[prost(message, optional, tag = "4")]
-    pub read_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// A digest of all the documents that match a given target.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExistenceFilter {
-    /// The target ID to which this filter applies.
-    #[prost(int32, tag = "1")]
-    pub target_id: i32,
-    /// The total count of documents that match
-    /// \[target_id][google.firestore.v1.ExistenceFilter.target_id\].
-    ///
-    /// If different from the count of documents in the client that match, the
-    /// client must manually determine which documents no longer match the target.
-    #[prost(int32, tag = "2")]
-    pub count: i32,
-    /// A bloom filter that contains the UTF-8 byte encodings of the resource names
-    /// of the documents that match
-    /// \[target_id][google.firestore.v1.ExistenceFilter.target_id\], in the form
-    /// `projects/{project_id}/databases/{database_id}/documents/{document_path}`
-    /// that have NOT changed since the query results indicated by the resume token
-    /// or timestamp given in `Target.resume_type`.
-    ///
-    /// This bloom filter may be omitted at the server's discretion, such as if it
-    /// is deemed that the client will not make use of it or if it is too
-    /// computationally expensive to calculate or transmit. Clients must gracefully
-    /// handle this field being absent by falling back to the logic used before
-    /// this field existed; that is, re-add the target without a resume token to
-    /// figure out which documents in the client's cache are out of sync.
-    #[prost(message, optional, tag = "3")]
-    pub unchanged_names: ::core::option::Option<BloomFilter>,
 }
 /// The request for
 /// \[Firestore.GetDocument][google.firestore.v1.Firestore.GetDocument\].
@@ -2417,11 +2417,27 @@ pub mod firestore_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets a single document.
         pub async fn get_document(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDocumentRequest>,
-        ) -> Result<tonic::Response<super::Document>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Document>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2435,13 +2451,19 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/GetDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "GetDocument"));
+            self.inner.unary(req, path, codec).await
         }
         /// Lists documents.
         pub async fn list_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDocumentsRequest>,
-        ) -> Result<tonic::Response<super::ListDocumentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDocumentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2455,13 +2477,18 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/ListDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "ListDocuments"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates or inserts a document.
         pub async fn update_document(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDocumentRequest>,
-        ) -> Result<tonic::Response<super::Document>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Document>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2475,13 +2502,18 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/UpdateDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "UpdateDocument"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a document.
         pub async fn delete_document(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDocumentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2495,7 +2527,12 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/DeleteDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "DeleteDocument"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets multiple documents.
         ///
@@ -2504,7 +2541,7 @@ pub mod firestore_client {
         pub async fn batch_get_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchGetDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::BatchGetDocumentsResponse>>,
             tonic::Status,
         > {
@@ -2521,13 +2558,21 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/BatchGetDocuments",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "BatchGetDocuments"),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
         /// Starts a new transaction.
         pub async fn begin_transaction(
             &mut self,
             request: impl tonic::IntoRequest<super::BeginTransactionRequest>,
-        ) -> Result<tonic::Response<super::BeginTransactionResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::BeginTransactionResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2541,13 +2586,18 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/BeginTransaction",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "BeginTransaction"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Commits a transaction, while optionally updating documents.
         pub async fn commit(
             &mut self,
             request: impl tonic::IntoRequest<super::CommitRequest>,
-        ) -> Result<tonic::Response<super::CommitResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CommitResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2561,13 +2611,16 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/Commit",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "Commit"));
+            self.inner.unary(req, path, codec).await
         }
         /// Rolls back a transaction.
         pub async fn rollback(
             &mut self,
             request: impl tonic::IntoRequest<super::RollbackRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2581,13 +2634,16 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/Rollback",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "Rollback"));
+            self.inner.unary(req, path, codec).await
         }
         /// Runs a query.
         pub async fn run_query(
             &mut self,
             request: impl tonic::IntoRequest<super::RunQueryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::RunQueryResponse>>,
             tonic::Status,
         > {
@@ -2604,7 +2660,10 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/RunQuery",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "RunQuery"));
+            self.inner.server_streaming(req, path, codec).await
         }
         /// Runs an aggregation query.
         ///
@@ -2622,7 +2681,7 @@ pub mod firestore_client {
         pub async fn run_aggregation_query(
             &mut self,
             request: impl tonic::IntoRequest<super::RunAggregationQueryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::RunAggregationQueryResponse>>,
             tonic::Status,
         > {
@@ -2639,7 +2698,15 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/RunAggregationQuery",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.v1.Firestore",
+                        "RunAggregationQuery",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
         /// Partitions a query by returning partition cursors that can be used to run
         /// the query in parallel. The returned partition cursors are split points that
@@ -2647,7 +2714,10 @@ pub mod firestore_client {
         pub async fn partition_query(
             &mut self,
             request: impl tonic::IntoRequest<super::PartitionQueryRequest>,
-        ) -> Result<tonic::Response<super::PartitionQueryResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::PartitionQueryResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2661,14 +2731,19 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/PartitionQuery",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "PartitionQuery"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Streams batches of document updates and deletes, in order. This method is
         /// only available via gRPC or WebChannel (not REST).
         pub async fn write(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::WriteRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::WriteResponse>>,
             tonic::Status,
         > {
@@ -2685,14 +2760,17 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/Write",
             );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "Write"));
+            self.inner.streaming(req, path, codec).await
         }
         /// Listens to changes. This method is only available via gRPC or WebChannel
         /// (not REST).
         pub async fn listen(
             &mut self,
             request: impl tonic::IntoStreamingRequest<Message = super::ListenRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<tonic::codec::Streaming<super::ListenResponse>>,
             tonic::Status,
         > {
@@ -2709,13 +2787,19 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/Listen",
             );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "Listen"));
+            self.inner.streaming(req, path, codec).await
         }
         /// Lists all the collection IDs underneath a document.
         pub async fn list_collection_ids(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCollectionIdsRequest>,
-        ) -> Result<tonic::Response<super::ListCollectionIdsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCollectionIdsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2729,7 +2813,12 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/ListCollectionIds",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "ListCollectionIds"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Applies a batch of write operations.
         ///
@@ -2744,7 +2833,10 @@ pub mod firestore_client {
         pub async fn batch_write(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchWriteRequest>,
-        ) -> Result<tonic::Response<super::BatchWriteResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::BatchWriteResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2758,13 +2850,16 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/BatchWrite",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.firestore.v1.Firestore", "BatchWrite"));
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new document.
         pub async fn create_document(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDocumentRequest>,
-        ) -> Result<tonic::Response<super::Document>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Document>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2778,7 +2873,12 @@ pub mod firestore_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.v1.Firestore/CreateDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.firestore.v1.Firestore", "CreateDocument"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

@@ -1,3 +1,18 @@
+/// Circle with a LatLng as center and radius.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Circle {
+    /// Required. Center latitude and longitude.
+    ///
+    /// The range of latitude must be within `[-90.0, 90.0]`. The range of the
+    /// longitude must be within `[-180.0, 180.0]`.
+    #[prost(message, optional, tag = "1")]
+    pub center: ::core::option::Option<super::super::super::r#type::LatLng>,
+    /// Required. Radius measured in meters. The radius must be within `[0.0,
+    /// 50000.0]`.
+    #[prost(double, tag = "2")]
+    pub radius: f64,
+}
 /// All the information representing a Place.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -527,21 +542,6 @@ impl PriceLevel {
         }
     }
 }
-/// Circle with a LatLng as center and radius.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Circle {
-    /// Required. Center latitude and longitude.
-    ///
-    /// The range of latitude must be within `[-90.0, 90.0]`. The range of the
-    /// longitude must be within `[-180.0, 180.0]`.
-    #[prost(message, optional, tag = "1")]
-    pub center: ::core::option::Option<super::super::super::r#type::LatLng>,
-    /// Required. Radius measured in meters. The radius must be within `[0.0,
-    /// 50000.0]`.
-    #[prost(double, tag = "2")]
-    pub radius: f64,
-}
 /// int 32 range. Both min and max are optional. If only min is set, then the
 /// range only has a lower bound. If only max is set, then range only has an
 /// upper bound. At least one of min and max must be set. Values are inclusive.
@@ -825,11 +825,30 @@ pub mod places_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Text query based place search.
         pub async fn search_text(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchTextRequest>,
-        ) -> Result<tonic::Response<super::SearchTextResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchTextResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -843,7 +862,10 @@ pub mod places_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.places.v1.Places/SearchText",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("google.maps.places.v1.Places", "SearchText"));
+            self.inner.unary(req, path, codec).await
         }
     }
 }

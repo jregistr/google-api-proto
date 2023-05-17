@@ -305,11 +305,27 @@ pub mod g_suite_add_ons_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets the authorization information for deployments in a given project.
         pub async fn get_authorization(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAuthorizationRequest>,
-        ) -> Result<tonic::Response<super::Authorization>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Authorization>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -323,13 +339,21 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/GetAuthorization",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "GetAuthorization",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a deployment with the specified name and configuration.
         pub async fn create_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDeploymentRequest>,
-        ) -> Result<tonic::Response<super::Deployment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Deployment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -343,13 +367,21 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/CreateDeployment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "CreateDeployment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates or replaces a deployment with the specified name.
         pub async fn replace_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::ReplaceDeploymentRequest>,
-        ) -> Result<tonic::Response<super::Deployment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Deployment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -363,13 +395,21 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/ReplaceDeployment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "ReplaceDeployment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the deployment with the specified name.
         pub async fn get_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDeploymentRequest>,
-        ) -> Result<tonic::Response<super::Deployment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Deployment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -383,13 +423,24 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/GetDeployment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "GetDeployment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all deployments in a particular project.
         pub async fn list_deployments(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDeploymentsRequest>,
-        ) -> Result<tonic::Response<super::ListDeploymentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDeploymentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -403,13 +454,21 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/ListDeployments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "ListDeployments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the deployment with the given name.
         pub async fn delete_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDeploymentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -423,7 +482,15 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/DeleteDeployment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "DeleteDeployment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Installs a deployment in developer mode.
         /// See:
@@ -431,7 +498,7 @@ pub mod g_suite_add_ons_client {
         pub async fn install_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::InstallDeploymentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -445,7 +512,15 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/InstallDeployment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "InstallDeployment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Uninstalls a developer mode deployment.
         /// See:
@@ -453,7 +528,7 @@ pub mod g_suite_add_ons_client {
         pub async fn uninstall_deployment(
             &mut self,
             request: impl tonic::IntoRequest<super::UninstallDeploymentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -467,13 +542,21 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/UninstallDeployment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "UninstallDeployment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches the install status of a developer mode deployment.
         pub async fn get_install_status(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInstallStatusRequest>,
-        ) -> Result<tonic::Response<super::InstallStatus>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::InstallStatus>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -487,7 +570,15 @@ pub mod g_suite_add_ons_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.gsuiteaddons.v1.GSuiteAddOns/GetInstallStatus",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.gsuiteaddons.v1.GSuiteAddOns",
+                        "GetInstallStatus",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

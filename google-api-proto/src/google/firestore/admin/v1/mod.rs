@@ -1,3 +1,200 @@
+/// A Cloud Firestore Database.
+/// Currently only one database is allowed per cloud project; this database
+/// must have a `database_id` of '(default)'.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Database {
+    /// The resource name of the Database.
+    /// Format: `projects/{project}/databases/{database}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The location of the database. Available databases are listed at
+    /// <https://cloud.google.com/firestore/docs/locations.>
+    #[prost(string, tag = "9")]
+    pub location_id: ::prost::alloc::string::String,
+    /// The type of the database.
+    /// See <https://cloud.google.com/datastore/docs/firestore-or-datastore> for
+    /// information about how to choose.
+    #[prost(enumeration = "database::DatabaseType", tag = "10")]
+    pub r#type: i32,
+    /// The concurrency control mode to use for this database.
+    #[prost(enumeration = "database::ConcurrencyMode", tag = "15")]
+    pub concurrency_mode: i32,
+    /// The App Engine integration mode to use for this database.
+    #[prost(enumeration = "database::AppEngineIntegrationMode", tag = "19")]
+    pub app_engine_integration_mode: i32,
+    /// Output only. The key_prefix for this database. This key_prefix is used, in combination
+    /// with the project id ("<key prefix>~<project id>") to construct the
+    /// application id that is returned from the Cloud Datastore APIs in Google App
+    /// Engine first generation runtimes.
+    ///
+    /// This value may be empty in which case the appid to use for URL-encoded keys
+    /// is the project_id (eg: foo instead of v~foo).
+    #[prost(string, tag = "20")]
+    pub key_prefix: ::prost::alloc::string::String,
+    /// This checksum is computed by the server based on the value of other
+    /// fields, and may be sent on update and delete requests to ensure the
+    /// client has an up-to-date value before proceeding.
+    #[prost(string, tag = "99")]
+    pub etag: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Database`.
+pub mod database {
+    /// The type of the database.
+    /// See <https://cloud.google.com/datastore/docs/firestore-or-datastore> for
+    /// information about how to choose.
+    ///
+    /// Mode changes are only allowed if the database is empty.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum DatabaseType {
+        /// The default value. This value is used if the database type is omitted.
+        Unspecified = 0,
+        /// Firestore Native Mode
+        FirestoreNative = 1,
+        /// Firestore in Datastore Mode.
+        DatastoreMode = 2,
+    }
+    impl DatabaseType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
+                DatabaseType::FirestoreNative => "FIRESTORE_NATIVE",
+                DatabaseType::DatastoreMode => "DATASTORE_MODE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DATABASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "FIRESTORE_NATIVE" => Some(Self::FirestoreNative),
+                "DATASTORE_MODE" => Some(Self::DatastoreMode),
+                _ => None,
+            }
+        }
+    }
+    /// The type of concurrency control mode for transactions.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum ConcurrencyMode {
+        /// Not used.
+        Unspecified = 0,
+        /// Use optimistic concurrency control by default. This mode is available
+        /// for Cloud Firestore databases.
+        Optimistic = 1,
+        /// Use pessimistic concurrency control by default. This mode is available
+        /// for Cloud Firestore databases.
+        ///
+        /// This is the default setting for Cloud Firestore.
+        Pessimistic = 2,
+        /// Use optimistic concurrency control with entity groups by default.
+        ///
+        /// This is the only available mode for Cloud Datastore.
+        ///
+        /// This mode is also available for Cloud Firestore with Datastore Mode but
+        /// is not recommended.
+        OptimisticWithEntityGroups = 3,
+    }
+    impl ConcurrencyMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                ConcurrencyMode::Unspecified => "CONCURRENCY_MODE_UNSPECIFIED",
+                ConcurrencyMode::Optimistic => "OPTIMISTIC",
+                ConcurrencyMode::Pessimistic => "PESSIMISTIC",
+                ConcurrencyMode::OptimisticWithEntityGroups => {
+                    "OPTIMISTIC_WITH_ENTITY_GROUPS"
+                }
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "CONCURRENCY_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "OPTIMISTIC" => Some(Self::Optimistic),
+                "PESSIMISTIC" => Some(Self::Pessimistic),
+                "OPTIMISTIC_WITH_ENTITY_GROUPS" => Some(Self::OptimisticWithEntityGroups),
+                _ => None,
+            }
+        }
+    }
+    /// The type of App Engine integration mode.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum AppEngineIntegrationMode {
+        /// Not used.
+        Unspecified = 0,
+        /// If an App Engine application exists in the same region as this database,
+        /// App Engine configuration will impact this database. This includes
+        /// disabling of the application & database, as well as disabling writes to
+        /// the database.
+        Enabled = 1,
+        /// Appengine has no affect on the ability of this database to serve
+        /// requests.
+        Disabled = 2,
+    }
+    impl AppEngineIntegrationMode {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                AppEngineIntegrationMode::Unspecified => {
+                    "APP_ENGINE_INTEGRATION_MODE_UNSPECIFIED"
+                }
+                AppEngineIntegrationMode::Enabled => "ENABLED",
+                AppEngineIntegrationMode::Disabled => "DISABLED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "APP_ENGINE_INTEGRATION_MODE_UNSPECIFIED" => Some(Self::Unspecified),
+                "ENABLED" => Some(Self::Enabled),
+                "DISABLED" => Some(Self::Disabled),
+                _ => None,
+            }
+        }
+    }
+}
 /// Cloud Firestore indexes enable simple and complex queries against
 /// documents in a database.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -255,514 +452,6 @@ pub mod index {
                 "CREATING" => Some(Self::Creating),
                 "READY" => Some(Self::Ready),
                 "NEEDS_REPAIR" => Some(Self::NeedsRepair),
-                _ => None,
-            }
-        }
-    }
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.CreateIndex][google.firestore.admin.v1.FirestoreAdmin.CreateIndex\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IndexOperationMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The index resource that this operation is acting on. For example:
-    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/indexes/{index_id}`
-    #[prost(string, tag = "3")]
-    pub index: ::prost::alloc::string::String,
-    /// The state of the operation.
-    #[prost(enumeration = "OperationState", tag = "4")]
-    pub state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "5")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "6")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.UpdateField][google.firestore.admin.v1.FirestoreAdmin.UpdateField\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FieldOperationMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The field resource that this operation is acting on. For example:
-    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/fields/{field_path}`
-    #[prost(string, tag = "3")]
-    pub field: ::prost::alloc::string::String,
-    /// A list of \[IndexConfigDelta][google.firestore.admin.v1.FieldOperationMetadata.IndexConfigDelta\], which describe the intent of this
-    /// operation.
-    #[prost(message, repeated, tag = "4")]
-    pub index_config_deltas: ::prost::alloc::vec::Vec<
-        field_operation_metadata::IndexConfigDelta,
-    >,
-    /// The state of the operation.
-    #[prost(enumeration = "OperationState", tag = "5")]
-    pub state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "6")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "7")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-    /// Describes the deltas of TTL configuration.
-    #[prost(message, optional, tag = "8")]
-    pub ttl_config_delta: ::core::option::Option<
-        field_operation_metadata::TtlConfigDelta,
-    >,
-}
-/// Nested message and enum types in `FieldOperationMetadata`.
-pub mod field_operation_metadata {
-    /// Information about an index configuration change.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct IndexConfigDelta {
-        /// Specifies how the index is changing.
-        #[prost(enumeration = "index_config_delta::ChangeType", tag = "1")]
-        pub change_type: i32,
-        /// The index being changed.
-        #[prost(message, optional, tag = "2")]
-        pub index: ::core::option::Option<super::Index>,
-    }
-    /// Nested message and enum types in `IndexConfigDelta`.
-    pub mod index_config_delta {
-        /// Specifies how the index is changing.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum ChangeType {
-            /// The type of change is not specified or known.
-            Unspecified = 0,
-            /// The single field index is being added.
-            Add = 1,
-            /// The single field index is being removed.
-            Remove = 2,
-        }
-        impl ChangeType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
-                    ChangeType::Add => "ADD",
-                    ChangeType::Remove => "REMOVE",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "ADD" => Some(Self::Add),
-                    "REMOVE" => Some(Self::Remove),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// Information about an TTL configuration change.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TtlConfigDelta {
-        /// Specifies how the TTL configuration is changing.
-        #[prost(enumeration = "ttl_config_delta::ChangeType", tag = "1")]
-        pub change_type: i32,
-    }
-    /// Nested message and enum types in `TtlConfigDelta`.
-    pub mod ttl_config_delta {
-        /// Specifies how the TTL config is changing.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum ChangeType {
-            /// The type of change is not specified or known.
-            Unspecified = 0,
-            /// The TTL config is being added.
-            Add = 1,
-            /// The TTL config is being removed.
-            Remove = 2,
-        }
-        impl ChangeType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
-                    ChangeType::Add => "ADD",
-                    ChangeType::Remove => "REMOVE",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "ADD" => Some(Self::Add),
-                    "REMOVE" => Some(Self::Remove),
-                    _ => None,
-                }
-            }
-        }
-    }
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.ExportDocuments][google.firestore.admin.v1.FirestoreAdmin.ExportDocuments\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportDocumentsMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The state of the export operation.
-    #[prost(enumeration = "OperationState", tag = "3")]
-    pub operation_state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "4")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "5")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-    /// Which collection ids are being exported.
-    #[prost(string, repeated, tag = "6")]
-    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Where the entities are being exported to.
-    #[prost(string, tag = "7")]
-    pub output_uri_prefix: ::prost::alloc::string::String,
-}
-/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
-/// \[FirestoreAdmin.ImportDocuments][google.firestore.admin.v1.FirestoreAdmin.ImportDocuments\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImportDocumentsMetadata {
-    /// The time this operation started.
-    #[prost(message, optional, tag = "1")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time this operation completed. Will be unset if operation still in
-    /// progress.
-    #[prost(message, optional, tag = "2")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The state of the import operation.
-    #[prost(enumeration = "OperationState", tag = "3")]
-    pub operation_state: i32,
-    /// The progress, in documents, of this operation.
-    #[prost(message, optional, tag = "4")]
-    pub progress_documents: ::core::option::Option<Progress>,
-    /// The progress, in bytes, of this operation.
-    #[prost(message, optional, tag = "5")]
-    pub progress_bytes: ::core::option::Option<Progress>,
-    /// Which collection ids are being imported.
-    #[prost(string, repeated, tag = "6")]
-    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// The location of the documents being imported.
-    #[prost(string, tag = "7")]
-    pub input_uri_prefix: ::prost::alloc::string::String,
-}
-/// Returned in the \[google.longrunning.Operation][google.longrunning.Operation\] response field.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExportDocumentsResponse {
-    /// Location of the output files. This can be used to begin an import
-    /// into Cloud Firestore (this project or another project) after the operation
-    /// completes successfully.
-    #[prost(string, tag = "1")]
-    pub output_uri_prefix: ::prost::alloc::string::String,
-}
-/// Describes the progress of the operation.
-/// Unit of work is generic and must be interpreted based on where \[Progress][google.firestore.admin.v1.Progress\]
-/// is used.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Progress {
-    /// The amount of work estimated.
-    #[prost(int64, tag = "1")]
-    pub estimated_work: i64,
-    /// The amount of work completed.
-    #[prost(int64, tag = "2")]
-    pub completed_work: i64,
-}
-/// Describes the state of the operation.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum OperationState {
-    /// Unspecified.
-    Unspecified = 0,
-    /// Request is being prepared for processing.
-    Initializing = 1,
-    /// Request is actively being processed.
-    Processing = 2,
-    /// Request is in the process of being cancelled after user called
-    /// google.longrunning.Operations.CancelOperation on the operation.
-    Cancelling = 3,
-    /// Request has been processed and is in its finalization stage.
-    Finalizing = 4,
-    /// Request has completed successfully.
-    Successful = 5,
-    /// Request has finished being processed, but encountered an error.
-    Failed = 6,
-    /// Request has finished being cancelled after user called
-    /// google.longrunning.Operations.CancelOperation.
-    Cancelled = 7,
-}
-impl OperationState {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            OperationState::Unspecified => "OPERATION_STATE_UNSPECIFIED",
-            OperationState::Initializing => "INITIALIZING",
-            OperationState::Processing => "PROCESSING",
-            OperationState::Cancelling => "CANCELLING",
-            OperationState::Finalizing => "FINALIZING",
-            OperationState::Successful => "SUCCESSFUL",
-            OperationState::Failed => "FAILED",
-            OperationState::Cancelled => "CANCELLED",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "OPERATION_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-            "INITIALIZING" => Some(Self::Initializing),
-            "PROCESSING" => Some(Self::Processing),
-            "CANCELLING" => Some(Self::Cancelling),
-            "FINALIZING" => Some(Self::Finalizing),
-            "SUCCESSFUL" => Some(Self::Successful),
-            "FAILED" => Some(Self::Failed),
-            "CANCELLED" => Some(Self::Cancelled),
-            _ => None,
-        }
-    }
-}
-/// A Cloud Firestore Database.
-/// Currently only one database is allowed per cloud project; this database
-/// must have a `database_id` of '(default)'.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Database {
-    /// The resource name of the Database.
-    /// Format: `projects/{project}/databases/{database}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The location of the database. Available databases are listed at
-    /// <https://cloud.google.com/firestore/docs/locations.>
-    #[prost(string, tag = "9")]
-    pub location_id: ::prost::alloc::string::String,
-    /// The type of the database.
-    /// See <https://cloud.google.com/datastore/docs/firestore-or-datastore> for
-    /// information about how to choose.
-    #[prost(enumeration = "database::DatabaseType", tag = "10")]
-    pub r#type: i32,
-    /// The concurrency control mode to use for this database.
-    #[prost(enumeration = "database::ConcurrencyMode", tag = "15")]
-    pub concurrency_mode: i32,
-    /// The App Engine integration mode to use for this database.
-    #[prost(enumeration = "database::AppEngineIntegrationMode", tag = "19")]
-    pub app_engine_integration_mode: i32,
-    /// Output only. The key_prefix for this database. This key_prefix is used, in combination
-    /// with the project id ("<key prefix>~<project id>") to construct the
-    /// application id that is returned from the Cloud Datastore APIs in Google App
-    /// Engine first generation runtimes.
-    ///
-    /// This value may be empty in which case the appid to use for URL-encoded keys
-    /// is the project_id (eg: foo instead of v~foo).
-    #[prost(string, tag = "20")]
-    pub key_prefix: ::prost::alloc::string::String,
-    /// This checksum is computed by the server based on the value of other
-    /// fields, and may be sent on update and delete requests to ensure the
-    /// client has an up-to-date value before proceeding.
-    #[prost(string, tag = "99")]
-    pub etag: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `Database`.
-pub mod database {
-    /// The type of the database.
-    /// See <https://cloud.google.com/datastore/docs/firestore-or-datastore> for
-    /// information about how to choose.
-    ///
-    /// Mode changes are only allowed if the database is empty.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum DatabaseType {
-        /// The default value. This value is used if the database type is omitted.
-        Unspecified = 0,
-        /// Firestore Native Mode
-        FirestoreNative = 1,
-        /// Firestore in Datastore Mode.
-        DatastoreMode = 2,
-    }
-    impl DatabaseType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DatabaseType::Unspecified => "DATABASE_TYPE_UNSPECIFIED",
-                DatabaseType::FirestoreNative => "FIRESTORE_NATIVE",
-                DatabaseType::DatastoreMode => "DATASTORE_MODE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "DATABASE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "FIRESTORE_NATIVE" => Some(Self::FirestoreNative),
-                "DATASTORE_MODE" => Some(Self::DatastoreMode),
-                _ => None,
-            }
-        }
-    }
-    /// The type of concurrency control mode for transactions.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum ConcurrencyMode {
-        /// Not used.
-        Unspecified = 0,
-        /// Use optimistic concurrency control by default. This mode is available
-        /// for Cloud Firestore databases.
-        Optimistic = 1,
-        /// Use pessimistic concurrency control by default. This mode is available
-        /// for Cloud Firestore databases.
-        ///
-        /// This is the default setting for Cloud Firestore.
-        Pessimistic = 2,
-        /// Use optimistic concurrency control with entity groups by default.
-        ///
-        /// This is the only available mode for Cloud Datastore.
-        ///
-        /// This mode is also available for Cloud Firestore with Datastore Mode but
-        /// is not recommended.
-        OptimisticWithEntityGroups = 3,
-    }
-    impl ConcurrencyMode {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                ConcurrencyMode::Unspecified => "CONCURRENCY_MODE_UNSPECIFIED",
-                ConcurrencyMode::Optimistic => "OPTIMISTIC",
-                ConcurrencyMode::Pessimistic => "PESSIMISTIC",
-                ConcurrencyMode::OptimisticWithEntityGroups => {
-                    "OPTIMISTIC_WITH_ENTITY_GROUPS"
-                }
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "CONCURRENCY_MODE_UNSPECIFIED" => Some(Self::Unspecified),
-                "OPTIMISTIC" => Some(Self::Optimistic),
-                "PESSIMISTIC" => Some(Self::Pessimistic),
-                "OPTIMISTIC_WITH_ENTITY_GROUPS" => Some(Self::OptimisticWithEntityGroups),
-                _ => None,
-            }
-        }
-    }
-    /// The type of App Engine integration mode.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum AppEngineIntegrationMode {
-        /// Not used.
-        Unspecified = 0,
-        /// If an App Engine application exists in the same region as this database,
-        /// App Engine configuration will impact this database. This includes
-        /// disabling of the application & database, as well as disabling writes to
-        /// the database.
-        Enabled = 1,
-        /// Appengine has no affect on the ability of this database to serve
-        /// requests.
-        Disabled = 2,
-    }
-    impl AppEngineIntegrationMode {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                AppEngineIntegrationMode::Unspecified => {
-                    "APP_ENGINE_INTEGRATION_MODE_UNSPECIFIED"
-                }
-                AppEngineIntegrationMode::Enabled => "ENABLED",
-                AppEngineIntegrationMode::Disabled => "DISABLED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "APP_ENGINE_INTEGRATION_MODE_UNSPECIFIED" => Some(Self::Unspecified),
-                "ENABLED" => Some(Self::Enabled),
-                "DISABLED" => Some(Self::Disabled),
                 _ => None,
             }
         }
@@ -1201,13 +890,29 @@ pub mod firestore_admin_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a composite index. This returns a [google.longrunning.Operation][google.longrunning.Operation]
         /// which may be used to track the status of the creation. The metadata for
         /// the operation will be the type [IndexOperationMetadata][google.firestore.admin.v1.IndexOperationMetadata].
         pub async fn create_index(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateIndexRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1224,13 +929,24 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/CreateIndex",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "CreateIndex",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists composite indexes.
         pub async fn list_indexes(
             &mut self,
             request: impl tonic::IntoRequest<super::ListIndexesRequest>,
-        ) -> Result<tonic::Response<super::ListIndexesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListIndexesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1244,13 +960,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/ListIndexes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "ListIndexes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a composite index.
         pub async fn get_index(
             &mut self,
             request: impl tonic::IntoRequest<super::GetIndexRequest>,
-        ) -> Result<tonic::Response<super::Index>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Index>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1264,13 +988,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/GetIndex",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "GetIndex",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a composite index.
         pub async fn delete_index(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteIndexRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1284,13 +1016,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/DeleteIndex",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "DeleteIndex",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the metadata and configuration for a Field.
         pub async fn get_field(
             &mut self,
             request: impl tonic::IntoRequest<super::GetFieldRequest>,
-        ) -> Result<tonic::Response<super::Field>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Field>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1304,7 +1044,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/GetField",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "GetField",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a field configuration. Currently, field updates apply only to
         /// single field index configuration. However, calls to
@@ -1322,7 +1070,7 @@ pub mod firestore_admin_client {
         pub async fn update_field(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateFieldRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1339,7 +1087,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/UpdateField",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "UpdateField",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the field configuration and metadata for this database.
         ///
@@ -1350,7 +1106,10 @@ pub mod firestore_admin_client {
         pub async fn list_fields(
             &mut self,
             request: impl tonic::IntoRequest<super::ListFieldsRequest>,
-        ) -> Result<tonic::Response<super::ListFieldsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListFieldsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1364,7 +1123,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/ListFields",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "ListFields",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports a copy of all or a subset of documents from Google Cloud Firestore
         /// to another storage system, such as Google Cloud Storage. Recent updates to
@@ -1380,7 +1147,7 @@ pub mod firestore_admin_client {
         pub async fn export_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1397,7 +1164,15 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/ExportDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "ExportDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Imports documents into Google Cloud Firestore. Existing documents with the
         /// same name are overwritten. The import occurs in the background and its
@@ -1407,7 +1182,7 @@ pub mod firestore_admin_client {
         pub async fn import_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1424,13 +1199,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/ImportDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "ImportDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a database.
         pub async fn get_database(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDatabaseRequest>,
-        ) -> Result<tonic::Response<super::Database>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Database>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1444,13 +1227,24 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/GetDatabase",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "GetDatabase",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List all the databases in the project.
         pub async fn list_databases(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDatabasesRequest>,
-        ) -> Result<tonic::Response<super::ListDatabasesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDatabasesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1464,13 +1258,21 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/ListDatabases",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "ListDatabases",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a database.
         pub async fn update_database(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDatabaseRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1487,7 +1289,326 @@ pub mod firestore_admin_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.firestore.admin.v1.FirestoreAdmin/UpdateDatabase",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.firestore.admin.v1.FirestoreAdmin",
+                        "UpdateDatabase",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.CreateIndex][google.firestore.admin.v1.FirestoreAdmin.CreateIndex\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IndexOperationMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The index resource that this operation is acting on. For example:
+    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/indexes/{index_id}`
+    #[prost(string, tag = "3")]
+    pub index: ::prost::alloc::string::String,
+    /// The state of the operation.
+    #[prost(enumeration = "OperationState", tag = "4")]
+    pub state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "5")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "6")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.UpdateField][google.firestore.admin.v1.FirestoreAdmin.UpdateField\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FieldOperationMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The field resource that this operation is acting on. For example:
+    /// `projects/{project_id}/databases/{database_id}/collectionGroups/{collection_id}/fields/{field_path}`
+    #[prost(string, tag = "3")]
+    pub field: ::prost::alloc::string::String,
+    /// A list of \[IndexConfigDelta][google.firestore.admin.v1.FieldOperationMetadata.IndexConfigDelta\], which describe the intent of this
+    /// operation.
+    #[prost(message, repeated, tag = "4")]
+    pub index_config_deltas: ::prost::alloc::vec::Vec<
+        field_operation_metadata::IndexConfigDelta,
+    >,
+    /// The state of the operation.
+    #[prost(enumeration = "OperationState", tag = "5")]
+    pub state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "6")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "7")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+    /// Describes the deltas of TTL configuration.
+    #[prost(message, optional, tag = "8")]
+    pub ttl_config_delta: ::core::option::Option<
+        field_operation_metadata::TtlConfigDelta,
+    >,
+}
+/// Nested message and enum types in `FieldOperationMetadata`.
+pub mod field_operation_metadata {
+    /// Information about an index configuration change.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct IndexConfigDelta {
+        /// Specifies how the index is changing.
+        #[prost(enumeration = "index_config_delta::ChangeType", tag = "1")]
+        pub change_type: i32,
+        /// The index being changed.
+        #[prost(message, optional, tag = "2")]
+        pub index: ::core::option::Option<super::Index>,
+    }
+    /// Nested message and enum types in `IndexConfigDelta`.
+    pub mod index_config_delta {
+        /// Specifies how the index is changing.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum ChangeType {
+            /// The type of change is not specified or known.
+            Unspecified = 0,
+            /// The single field index is being added.
+            Add = 1,
+            /// The single field index is being removed.
+            Remove = 2,
+        }
+        impl ChangeType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                    ChangeType::Add => "ADD",
+                    ChangeType::Remove => "REMOVE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "ADD" => Some(Self::Add),
+                    "REMOVE" => Some(Self::Remove),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// Information about an TTL configuration change.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TtlConfigDelta {
+        /// Specifies how the TTL configuration is changing.
+        #[prost(enumeration = "ttl_config_delta::ChangeType", tag = "1")]
+        pub change_type: i32,
+    }
+    /// Nested message and enum types in `TtlConfigDelta`.
+    pub mod ttl_config_delta {
+        /// Specifies how the TTL config is changing.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum ChangeType {
+            /// The type of change is not specified or known.
+            Unspecified = 0,
+            /// The TTL config is being added.
+            Add = 1,
+            /// The TTL config is being removed.
+            Remove = 2,
+        }
+        impl ChangeType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    ChangeType::Unspecified => "CHANGE_TYPE_UNSPECIFIED",
+                    ChangeType::Add => "ADD",
+                    ChangeType::Remove => "REMOVE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "CHANGE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "ADD" => Some(Self::Add),
+                    "REMOVE" => Some(Self::Remove),
+                    _ => None,
+                }
+            }
+        }
+    }
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.ExportDocuments][google.firestore.admin.v1.FirestoreAdmin.ExportDocuments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportDocumentsMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The state of the export operation.
+    #[prost(enumeration = "OperationState", tag = "3")]
+    pub operation_state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "4")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "5")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+    /// Which collection ids are being exported.
+    #[prost(string, repeated, tag = "6")]
+    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Where the entities are being exported to.
+    #[prost(string, tag = "7")]
+    pub output_uri_prefix: ::prost::alloc::string::String,
+}
+/// Metadata for \[google.longrunning.Operation][google.longrunning.Operation\] results from
+/// \[FirestoreAdmin.ImportDocuments][google.firestore.admin.v1.FirestoreAdmin.ImportDocuments\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImportDocumentsMetadata {
+    /// The time this operation started.
+    #[prost(message, optional, tag = "1")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time this operation completed. Will be unset if operation still in
+    /// progress.
+    #[prost(message, optional, tag = "2")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The state of the import operation.
+    #[prost(enumeration = "OperationState", tag = "3")]
+    pub operation_state: i32,
+    /// The progress, in documents, of this operation.
+    #[prost(message, optional, tag = "4")]
+    pub progress_documents: ::core::option::Option<Progress>,
+    /// The progress, in bytes, of this operation.
+    #[prost(message, optional, tag = "5")]
+    pub progress_bytes: ::core::option::Option<Progress>,
+    /// Which collection ids are being imported.
+    #[prost(string, repeated, tag = "6")]
+    pub collection_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// The location of the documents being imported.
+    #[prost(string, tag = "7")]
+    pub input_uri_prefix: ::prost::alloc::string::String,
+}
+/// Returned in the \[google.longrunning.Operation][google.longrunning.Operation\] response field.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExportDocumentsResponse {
+    /// Location of the output files. This can be used to begin an import
+    /// into Cloud Firestore (this project or another project) after the operation
+    /// completes successfully.
+    #[prost(string, tag = "1")]
+    pub output_uri_prefix: ::prost::alloc::string::String,
+}
+/// Describes the progress of the operation.
+/// Unit of work is generic and must be interpreted based on where \[Progress][google.firestore.admin.v1.Progress\]
+/// is used.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Progress {
+    /// The amount of work estimated.
+    #[prost(int64, tag = "1")]
+    pub estimated_work: i64,
+    /// The amount of work completed.
+    #[prost(int64, tag = "2")]
+    pub completed_work: i64,
+}
+/// Describes the state of the operation.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum OperationState {
+    /// Unspecified.
+    Unspecified = 0,
+    /// Request is being prepared for processing.
+    Initializing = 1,
+    /// Request is actively being processed.
+    Processing = 2,
+    /// Request is in the process of being cancelled after user called
+    /// google.longrunning.Operations.CancelOperation on the operation.
+    Cancelling = 3,
+    /// Request has been processed and is in its finalization stage.
+    Finalizing = 4,
+    /// Request has completed successfully.
+    Successful = 5,
+    /// Request has finished being processed, but encountered an error.
+    Failed = 6,
+    /// Request has finished being cancelled after user called
+    /// google.longrunning.Operations.CancelOperation.
+    Cancelled = 7,
+}
+impl OperationState {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            OperationState::Unspecified => "OPERATION_STATE_UNSPECIFIED",
+            OperationState::Initializing => "INITIALIZING",
+            OperationState::Processing => "PROCESSING",
+            OperationState::Cancelling => "CANCELLING",
+            OperationState::Finalizing => "FINALIZING",
+            OperationState::Successful => "SUCCESSFUL",
+            OperationState::Failed => "FAILED",
+            OperationState::Cancelled => "CANCELLED",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "OPERATION_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+            "INITIALIZING" => Some(Self::Initializing),
+            "PROCESSING" => Some(Self::Processing),
+            "CANCELLING" => Some(Self::Cancelling),
+            "FINALIZING" => Some(Self::Finalizing),
+            "SUCCESSFUL" => Some(Self::Successful),
+            "FAILED" => Some(Self::Failed),
+            "CANCELLED" => Some(Self::Cancelled),
+            _ => None,
         }
     }
 }

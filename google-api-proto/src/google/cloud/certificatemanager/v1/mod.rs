@@ -1310,11 +1310,30 @@ pub mod certificate_manager_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists Certificates in a given project and location.
         pub async fn list_certificates(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCertificatesRequest>,
-        ) -> Result<tonic::Response<super::ListCertificatesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCertificatesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1328,13 +1347,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/ListCertificates",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "ListCertificates",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Certificate.
         pub async fn get_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCertificateRequest>,
-        ) -> Result<tonic::Response<super::Certificate>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Certificate>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1348,13 +1375,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/GetCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "GetCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Certificate in a given project and location.
         pub async fn create_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCertificateRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1371,13 +1406,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/CreateCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "CreateCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a Certificate.
         pub async fn update_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCertificateRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1394,13 +1437,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/UpdateCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "UpdateCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Certificate.
         pub async fn delete_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCertificateRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1417,13 +1468,24 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/DeleteCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "DeleteCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists CertificateMaps in a given project and location.
         pub async fn list_certificate_maps(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCertificateMapsRequest>,
-        ) -> Result<tonic::Response<super::ListCertificateMapsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCertificateMapsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1437,13 +1499,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/ListCertificateMaps",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "ListCertificateMaps",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single CertificateMap.
         pub async fn get_certificate_map(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCertificateMapRequest>,
-        ) -> Result<tonic::Response<super::CertificateMap>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CertificateMap>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1457,13 +1527,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/GetCertificateMap",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "GetCertificateMap",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new CertificateMap in a given project and location.
         pub async fn create_certificate_map(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCertificateMapRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1480,13 +1558,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/CreateCertificateMap",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "CreateCertificateMap",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a CertificateMap.
         pub async fn update_certificate_map(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCertificateMapRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1503,7 +1589,15 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/UpdateCertificateMap",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "UpdateCertificateMap",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single CertificateMap. A Certificate Map can't be deleted
         /// if it contains Certificate Map Entries. Remove all the entries from
@@ -1511,7 +1605,7 @@ pub mod certificate_manager_client {
         pub async fn delete_certificate_map(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCertificateMapRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1528,13 +1622,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/DeleteCertificateMap",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "DeleteCertificateMap",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists CertificateMapEntries in a given project and location.
         pub async fn list_certificate_map_entries(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCertificateMapEntriesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListCertificateMapEntriesResponse>,
             tonic::Status,
         > {
@@ -1551,13 +1653,24 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/ListCertificateMapEntries",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "ListCertificateMapEntries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single CertificateMapEntry.
         pub async fn get_certificate_map_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCertificateMapEntryRequest>,
-        ) -> Result<tonic::Response<super::CertificateMapEntry>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CertificateMapEntry>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1571,13 +1684,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/GetCertificateMapEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "GetCertificateMapEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new CertificateMapEntry in a given project and location.
         pub async fn create_certificate_map_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCertificateMapEntryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1594,13 +1715,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/CreateCertificateMapEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "CreateCertificateMapEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a CertificateMapEntry.
         pub async fn update_certificate_map_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCertificateMapEntryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1617,13 +1746,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/UpdateCertificateMapEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "UpdateCertificateMapEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single CertificateMapEntry.
         pub async fn delete_certificate_map_entry(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCertificateMapEntryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1640,13 +1777,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/DeleteCertificateMapEntry",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "DeleteCertificateMapEntry",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists DnsAuthorizations in a given project and location.
         pub async fn list_dns_authorizations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDnsAuthorizationsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListDnsAuthorizationsResponse>,
             tonic::Status,
         > {
@@ -1663,13 +1808,24 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/ListDnsAuthorizations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "ListDnsAuthorizations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single DnsAuthorization.
         pub async fn get_dns_authorization(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDnsAuthorizationRequest>,
-        ) -> Result<tonic::Response<super::DnsAuthorization>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DnsAuthorization>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1683,13 +1839,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/GetDnsAuthorization",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "GetDnsAuthorization",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new DnsAuthorization in a given project and location.
         pub async fn create_dns_authorization(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDnsAuthorizationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1706,13 +1870,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/CreateDnsAuthorization",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "CreateDnsAuthorization",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a DnsAuthorization.
         pub async fn update_dns_authorization(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDnsAuthorizationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1729,13 +1901,21 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/UpdateDnsAuthorization",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "UpdateDnsAuthorization",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single DnsAuthorization.
         pub async fn delete_dns_authorization(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDnsAuthorizationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1752,7 +1932,15 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/DeleteDnsAuthorization",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "DeleteDnsAuthorization",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists CertificateIssuanceConfigs in a given project and location.
         pub async fn list_certificate_issuance_configs(
@@ -1760,7 +1948,7 @@ pub mod certificate_manager_client {
             request: impl tonic::IntoRequest<
                 super::ListCertificateIssuanceConfigsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListCertificateIssuanceConfigsResponse>,
             tonic::Status,
         > {
@@ -1777,13 +1965,24 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/ListCertificateIssuanceConfigs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "ListCertificateIssuanceConfigs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single CertificateIssuanceConfig.
         pub async fn get_certificate_issuance_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCertificateIssuanceConfigRequest>,
-        ) -> Result<tonic::Response<super::CertificateIssuanceConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CertificateIssuanceConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1797,7 +1996,15 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/GetCertificateIssuanceConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "GetCertificateIssuanceConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new CertificateIssuanceConfig in a given project and location.
         pub async fn create_certificate_issuance_config(
@@ -1805,7 +2012,7 @@ pub mod certificate_manager_client {
             request: impl tonic::IntoRequest<
                 super::CreateCertificateIssuanceConfigRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1822,7 +2029,15 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/CreateCertificateIssuanceConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "CreateCertificateIssuanceConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single CertificateIssuanceConfig.
         pub async fn delete_certificate_issuance_config(
@@ -1830,7 +2045,7 @@ pub mod certificate_manager_client {
             request: impl tonic::IntoRequest<
                 super::DeleteCertificateIssuanceConfigRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1847,7 +2062,15 @@ pub mod certificate_manager_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.certificatemanager.v1.CertificateManager/DeleteCertificateIssuanceConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.certificatemanager.v1.CertificateManager",
+                        "DeleteCertificateIssuanceConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

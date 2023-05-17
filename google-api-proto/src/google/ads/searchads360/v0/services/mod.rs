@@ -84,11 +84,27 @@ pub mod custom_column_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns the requested custom column in full detail.
         pub async fn get_custom_column(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCustomColumnRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::resources::CustomColumn>,
             tonic::Status,
         > {
@@ -105,13 +121,24 @@ pub mod custom_column_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.CustomColumnService/GetCustomColumn",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.ads.searchads360.v0.services.CustomColumnService",
+                        "GetCustomColumn",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all the custom columns associated with the customer in full detail.
         pub async fn list_custom_columns(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCustomColumnsRequest>,
-        ) -> Result<tonic::Response<super::ListCustomColumnsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCustomColumnsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -125,7 +152,15 @@ pub mod custom_column_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.CustomColumnService/ListCustomColumns",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.ads.searchads360.v0.services.CustomColumnService",
+                        "ListCustomColumns",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -426,6 +461,22 @@ pub mod search_ads360_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns all rows that match the search query.
         ///
         /// List of thrown errors:
@@ -439,7 +490,10 @@ pub mod search_ads360_service_client {
         pub async fn search(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchSearchAds360Request>,
-        ) -> Result<tonic::Response<super::SearchSearchAds360Response>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchSearchAds360Response>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -453,7 +507,15 @@ pub mod search_ads360_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.SearchAds360Service/Search",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.ads.searchads360.v0.services.SearchAds360Service",
+                        "Search",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all rows that match the search stream query.
         ///
@@ -468,7 +530,7 @@ pub mod search_ads360_service_client {
         pub async fn search_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchSearchAds360StreamRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 tonic::codec::Streaming<super::SearchSearchAds360StreamResponse>,
             >,
@@ -487,7 +549,15 @@ pub mod search_ads360_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.SearchAds360Service/SearchStream",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.ads.searchads360.v0.services.SearchAds360Service",
+                        "SearchStream",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
     }
 }
@@ -597,6 +667,22 @@ pub mod search_ads360_field_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns just the requested field.
         ///
         /// List of thrown errors:
@@ -609,7 +695,7 @@ pub mod search_ads360_field_service_client {
         pub async fn get_search_ads360_field(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSearchAds360FieldRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::resources::SearchAds360Field>,
             tonic::Status,
         > {
@@ -626,7 +712,15 @@ pub mod search_ads360_field_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.SearchAds360FieldService/GetSearchAds360Field",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.ads.searchads360.v0.services.SearchAds360FieldService",
+                        "GetSearchAds360Field",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all fields that match the search query.
         ///
@@ -641,7 +735,7 @@ pub mod search_ads360_field_service_client {
         pub async fn search_search_ads360_fields(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchSearchAds360FieldsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SearchSearchAds360FieldsResponse>,
             tonic::Status,
         > {
@@ -658,7 +752,15 @@ pub mod search_ads360_field_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.ads.searchads360.v0.services.SearchAds360FieldService/SearchSearchAds360Fields",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.ads.searchads360.v0.services.SearchAds360FieldService",
+                        "SearchSearchAds360Fields",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

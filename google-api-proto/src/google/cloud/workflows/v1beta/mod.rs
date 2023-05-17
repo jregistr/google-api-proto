@@ -306,12 +306,31 @@ pub mod workflows_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists Workflows in a given project and location.
         /// The default order is not specified.
         pub async fn list_workflows(
             &mut self,
             request: impl tonic::IntoRequest<super::ListWorkflowsRequest>,
-        ) -> Result<tonic::Response<super::ListWorkflowsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListWorkflowsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -325,13 +344,21 @@ pub mod workflows_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workflows.v1beta.Workflows/ListWorkflows",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workflows.v1beta.Workflows",
+                        "ListWorkflows",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Workflow.
         pub async fn get_workflow(
             &mut self,
             request: impl tonic::IntoRequest<super::GetWorkflowRequest>,
-        ) -> Result<tonic::Response<super::Workflow>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Workflow>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -345,7 +372,15 @@ pub mod workflows_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workflows.v1beta.Workflows/GetWorkflow",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workflows.v1beta.Workflows",
+                        "GetWorkflow",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new workflow. If a workflow with the specified name already
         /// exists in the specified project and location, the long running operation
@@ -353,7 +388,7 @@ pub mod workflows_client {
         pub async fn create_workflow(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateWorkflowRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -370,7 +405,15 @@ pub mod workflows_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workflows.v1beta.Workflows/CreateWorkflow",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workflows.v1beta.Workflows",
+                        "CreateWorkflow",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a workflow with the specified name.
         /// This method also cancels and deletes all running executions of the
@@ -378,7 +421,7 @@ pub mod workflows_client {
         pub async fn delete_workflow(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteWorkflowRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -395,7 +438,15 @@ pub mod workflows_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workflows.v1beta.Workflows/DeleteWorkflow",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workflows.v1beta.Workflows",
+                        "DeleteWorkflow",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing workflow.
         /// Running this method has no impact on already running executions of the
@@ -405,7 +456,7 @@ pub mod workflows_client {
         pub async fn update_workflow(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateWorkflowRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -422,7 +473,15 @@ pub mod workflows_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.workflows.v1beta.Workflows/UpdateWorkflow",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.workflows.v1beta.Workflows",
+                        "UpdateWorkflow",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

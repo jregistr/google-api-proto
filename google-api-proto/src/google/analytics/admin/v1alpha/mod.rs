@@ -1,187 +1,3 @@
-/// A specific filter for a single dimension
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExpandedDataSetFilter {
-    /// Required. The dimension name to filter.
-    #[prost(string, tag = "1")]
-    pub field_name: ::prost::alloc::string::String,
-    /// One of the above filters.
-    #[prost(oneof = "expanded_data_set_filter::OneFilter", tags = "2, 3")]
-    pub one_filter: ::core::option::Option<expanded_data_set_filter::OneFilter>,
-}
-/// Nested message and enum types in `ExpandedDataSetFilter`.
-pub mod expanded_data_set_filter {
-    /// A filter for a string-type dimension that matches a particular pattern.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct StringFilter {
-        /// Required. The match type for the string filter.
-        #[prost(enumeration = "string_filter::MatchType", tag = "1")]
-        pub match_type: i32,
-        /// Required. The string value to be matched against.
-        #[prost(string, tag = "2")]
-        pub value: ::prost::alloc::string::String,
-        /// Optional. If true, the match is case-sensitive. If false, the match is
-        /// case-insensitive.
-        /// Must be true when match_type is EXACT.
-        /// Must be false when match_type is CONTAINS.
-        #[prost(bool, tag = "3")]
-        pub case_sensitive: bool,
-    }
-    /// Nested message and enum types in `StringFilter`.
-    pub mod string_filter {
-        /// The match type for the string filter.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum MatchType {
-            /// Unspecified
-            Unspecified = 0,
-            /// Exact match of the string value.
-            Exact = 1,
-            /// Contains the string value.
-            Contains = 2,
-        }
-        impl MatchType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
-                    MatchType::Exact => "EXACT",
-                    MatchType::Contains => "CONTAINS",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "MATCH_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "EXACT" => Some(Self::Exact),
-                    "CONTAINS" => Some(Self::Contains),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// A filter for a string dimension that matches a particular list of options.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct InListFilter {
-        /// Required. The list of possible string values to match against. Must be
-        /// non-empty.
-        #[prost(string, repeated, tag = "1")]
-        pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Optional. If true, the match is case-sensitive. If false, the match is
-        /// case-insensitive.
-        /// Must be true.
-        #[prost(bool, tag = "2")]
-        pub case_sensitive: bool,
-    }
-    /// One of the above filters.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum OneFilter {
-        /// A filter for a string-type dimension that matches a particular pattern.
-        #[prost(message, tag = "2")]
-        StringFilter(StringFilter),
-        /// A filter for a string dimension that matches a particular list of
-        /// options.
-        #[prost(message, tag = "3")]
-        InListFilter(InListFilter),
-    }
-}
-/// A logical expression of EnhancedDataSet dimension filters.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExpandedDataSetFilterExpression {
-    /// The expression applied to a filter.
-    #[prost(oneof = "expanded_data_set_filter_expression::Expr", tags = "1, 2, 3")]
-    pub expr: ::core::option::Option<expanded_data_set_filter_expression::Expr>,
-}
-/// Nested message and enum types in `ExpandedDataSetFilterExpression`.
-pub mod expanded_data_set_filter_expression {
-    /// The expression applied to a filter.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Expr {
-        /// A list of expressions to be AND’ed together. It must contain a
-        /// ExpandedDataSetFilterExpression with either not_expression or
-        /// dimension_filter. This must be set for the top level
-        /// ExpandedDataSetFilterExpression.
-        #[prost(message, tag = "1")]
-        AndGroup(super::ExpandedDataSetFilterExpressionList),
-        /// A filter expression to be NOT'ed (that is, inverted, complemented). It
-        /// must include a dimension_filter. This cannot be set on the
-        /// top level ExpandedDataSetFilterExpression.
-        #[prost(message, tag = "2")]
-        NotExpression(
-            ::prost::alloc::boxed::Box<super::ExpandedDataSetFilterExpression>,
-        ),
-        /// A filter on a single dimension. This cannot be set on the top
-        /// level ExpandedDataSetFilterExpression.
-        #[prost(message, tag = "3")]
-        Filter(super::ExpandedDataSetFilter),
-    }
-}
-/// A list of ExpandedDataSet filter expressions.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExpandedDataSetFilterExpressionList {
-    /// A list of ExpandedDataSet filter expressions.
-    #[prost(message, repeated, tag = "1")]
-    pub filter_expressions: ::prost::alloc::vec::Vec<ExpandedDataSetFilterExpression>,
-}
-/// A resource message representing a GA4 ExpandedDataSet.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExpandedDataSet {
-    /// Output only. The resource name for this ExpandedDataSet resource.
-    /// Format: properties/{property_id}/expandedDataSets/{expanded_data_set}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The display name of the ExpandedDataSet.
-    /// Max 200 chars.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Optional. The description of the ExpandedDataSet.
-    /// Max 50 chars.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Immutable. The list of dimensions included in the ExpandedDataSet.
-    /// See the [API
-    /// Dimensions](<https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#dimensions>)
-    /// for the list of dimension names.
-    #[prost(string, repeated, tag = "4")]
-    pub dimension_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Immutable. The list of metrics included in the ExpandedDataSet.
-    /// See the [API
-    /// Metrics](<https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#metrics>)
-    /// for the list of dimension names.
-    #[prost(string, repeated, tag = "5")]
-    pub metric_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Immutable. A logical expression of ExpandedDataSet filters applied to
-    /// dimension included in the ExpandedDataSet. This filter is used to reduce
-    /// the number of rows and thus the chance of encountering `other` row.
-    #[prost(message, optional, tag = "6")]
-    pub dimension_filter_expression: ::core::option::Option<
-        ExpandedDataSetFilterExpression,
-    >,
-    /// Output only. Time when expanded data set began (or will begin) collecing
-    /// data.
-    #[prost(message, optional, tag = "7")]
-    pub data_collection_start_time: ::core::option::Option<::prost_types::Timestamp>,
-}
 /// Dimensions are attributes of your data. For example, the dimension
 /// `userEmail` indicates the email of the user that accessed reporting data.
 /// Dimension values in report responses are strings.
@@ -1692,6 +1508,190 @@ pub mod matching_condition {
             }
         }
     }
+}
+/// A specific filter for a single dimension
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExpandedDataSetFilter {
+    /// Required. The dimension name to filter.
+    #[prost(string, tag = "1")]
+    pub field_name: ::prost::alloc::string::String,
+    /// One of the above filters.
+    #[prost(oneof = "expanded_data_set_filter::OneFilter", tags = "2, 3")]
+    pub one_filter: ::core::option::Option<expanded_data_set_filter::OneFilter>,
+}
+/// Nested message and enum types in `ExpandedDataSetFilter`.
+pub mod expanded_data_set_filter {
+    /// A filter for a string-type dimension that matches a particular pattern.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct StringFilter {
+        /// Required. The match type for the string filter.
+        #[prost(enumeration = "string_filter::MatchType", tag = "1")]
+        pub match_type: i32,
+        /// Required. The string value to be matched against.
+        #[prost(string, tag = "2")]
+        pub value: ::prost::alloc::string::String,
+        /// Optional. If true, the match is case-sensitive. If false, the match is
+        /// case-insensitive.
+        /// Must be true when match_type is EXACT.
+        /// Must be false when match_type is CONTAINS.
+        #[prost(bool, tag = "3")]
+        pub case_sensitive: bool,
+    }
+    /// Nested message and enum types in `StringFilter`.
+    pub mod string_filter {
+        /// The match type for the string filter.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum MatchType {
+            /// Unspecified
+            Unspecified = 0,
+            /// Exact match of the string value.
+            Exact = 1,
+            /// Contains the string value.
+            Contains = 2,
+        }
+        impl MatchType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MatchType::Unspecified => "MATCH_TYPE_UNSPECIFIED",
+                    MatchType::Exact => "EXACT",
+                    MatchType::Contains => "CONTAINS",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "MATCH_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "EXACT" => Some(Self::Exact),
+                    "CONTAINS" => Some(Self::Contains),
+                    _ => None,
+                }
+            }
+        }
+    }
+    /// A filter for a string dimension that matches a particular list of options.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct InListFilter {
+        /// Required. The list of possible string values to match against. Must be
+        /// non-empty.
+        #[prost(string, repeated, tag = "1")]
+        pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Optional. If true, the match is case-sensitive. If false, the match is
+        /// case-insensitive.
+        /// Must be true.
+        #[prost(bool, tag = "2")]
+        pub case_sensitive: bool,
+    }
+    /// One of the above filters.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum OneFilter {
+        /// A filter for a string-type dimension that matches a particular pattern.
+        #[prost(message, tag = "2")]
+        StringFilter(StringFilter),
+        /// A filter for a string dimension that matches a particular list of
+        /// options.
+        #[prost(message, tag = "3")]
+        InListFilter(InListFilter),
+    }
+}
+/// A logical expression of EnhancedDataSet dimension filters.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExpandedDataSetFilterExpression {
+    /// The expression applied to a filter.
+    #[prost(oneof = "expanded_data_set_filter_expression::Expr", tags = "1, 2, 3")]
+    pub expr: ::core::option::Option<expanded_data_set_filter_expression::Expr>,
+}
+/// Nested message and enum types in `ExpandedDataSetFilterExpression`.
+pub mod expanded_data_set_filter_expression {
+    /// The expression applied to a filter.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Expr {
+        /// A list of expressions to be AND’ed together. It must contain a
+        /// ExpandedDataSetFilterExpression with either not_expression or
+        /// dimension_filter. This must be set for the top level
+        /// ExpandedDataSetFilterExpression.
+        #[prost(message, tag = "1")]
+        AndGroup(super::ExpandedDataSetFilterExpressionList),
+        /// A filter expression to be NOT'ed (that is, inverted, complemented). It
+        /// must include a dimension_filter. This cannot be set on the
+        /// top level ExpandedDataSetFilterExpression.
+        #[prost(message, tag = "2")]
+        NotExpression(
+            ::prost::alloc::boxed::Box<super::ExpandedDataSetFilterExpression>,
+        ),
+        /// A filter on a single dimension. This cannot be set on the top
+        /// level ExpandedDataSetFilterExpression.
+        #[prost(message, tag = "3")]
+        Filter(super::ExpandedDataSetFilter),
+    }
+}
+/// A list of ExpandedDataSet filter expressions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExpandedDataSetFilterExpressionList {
+    /// A list of ExpandedDataSet filter expressions.
+    #[prost(message, repeated, tag = "1")]
+    pub filter_expressions: ::prost::alloc::vec::Vec<ExpandedDataSetFilterExpression>,
+}
+/// A resource message representing a GA4 ExpandedDataSet.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExpandedDataSet {
+    /// Output only. The resource name for this ExpandedDataSet resource.
+    /// Format: properties/{property_id}/expandedDataSets/{expanded_data_set}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The display name of the ExpandedDataSet.
+    /// Max 200 chars.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Optional. The description of the ExpandedDataSet.
+    /// Max 50 chars.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Immutable. The list of dimensions included in the ExpandedDataSet.
+    /// See the [API
+    /// Dimensions](<https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#dimensions>)
+    /// for the list of dimension names.
+    #[prost(string, repeated, tag = "4")]
+    pub dimension_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Immutable. The list of metrics included in the ExpandedDataSet.
+    /// See the [API
+    /// Metrics](<https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#metrics>)
+    /// for the list of dimension names.
+    #[prost(string, repeated, tag = "5")]
+    pub metric_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Immutable. A logical expression of ExpandedDataSet filters applied to
+    /// dimension included in the ExpandedDataSet. This filter is used to reduce
+    /// the number of rows and thus the chance of encountering `other` row.
+    #[prost(message, optional, tag = "6")]
+    pub dimension_filter_expression: ::core::option::Option<
+        ExpandedDataSetFilterExpression,
+    >,
+    /// Output only. Time when expanded data set began (or will begin) collecing
+    /// data.
+    #[prost(message, optional, tag = "7")]
+    pub data_collection_start_time: ::core::option::Option<::prost_types::Timestamp>,
 }
 /// A resource message representing a Google Analytics account.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -6074,11 +6074,27 @@ pub mod analytics_admin_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lookup for a single Account.
         pub async fn get_account(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccountRequest>,
-        ) -> Result<tonic::Response<super::Account>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Account>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6092,7 +6108,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetAccount",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns all accounts accessible by the caller.
         ///
@@ -6102,7 +6126,10 @@ pub mod analytics_admin_service_client {
         pub async fn list_accounts(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAccountsRequest>,
-        ) -> Result<tonic::Response<super::ListAccountsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAccountsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6116,7 +6143,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListAccounts",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListAccounts",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks target Account as soft-deleted (ie: "trashed") and returns it.
         ///
@@ -6132,7 +6167,7 @@ pub mod analytics_admin_service_client {
         pub async fn delete_account(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAccountRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6146,13 +6181,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteAccount",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an account.
         pub async fn update_account(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAccountRequest>,
-        ) -> Result<tonic::Response<super::Account>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Account>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6166,13 +6209,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateAccount",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateAccount",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Requests a ticket for creating an account.
         pub async fn provision_account_ticket(
             &mut self,
             request: impl tonic::IntoRequest<super::ProvisionAccountTicketRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ProvisionAccountTicketResponse>,
             tonic::Status,
         > {
@@ -6189,13 +6240,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ProvisionAccountTicket",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ProvisionAccountTicket",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns summaries of all accounts accessible by the caller.
         pub async fn list_account_summaries(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAccountSummariesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListAccountSummariesResponse>,
             tonic::Status,
         > {
@@ -6212,13 +6271,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListAccountSummaries",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListAccountSummaries",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single "GA4" Property.
         pub async fn get_property(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPropertyRequest>,
-        ) -> Result<tonic::Response<super::Property>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Property>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6232,7 +6299,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetProperty",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetProperty",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns child Properties under the specified parent Account.
         ///
@@ -6243,7 +6318,10 @@ pub mod analytics_admin_service_client {
         pub async fn list_properties(
             &mut self,
             request: impl tonic::IntoRequest<super::ListPropertiesRequest>,
-        ) -> Result<tonic::Response<super::ListPropertiesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListPropertiesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6257,13 +6335,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListProperties",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListProperties",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an "GA4" property with the specified location and attributes.
         pub async fn create_property(
             &mut self,
             request: impl tonic::IntoRequest<super::CreatePropertyRequest>,
-        ) -> Result<tonic::Response<super::Property>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Property>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6277,7 +6363,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateProperty",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateProperty",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks target Property as soft-deleted (ie: "trashed") and returns it.
         ///
@@ -6293,7 +6387,7 @@ pub mod analytics_admin_service_client {
         pub async fn delete_property(
             &mut self,
             request: impl tonic::IntoRequest<super::DeletePropertyRequest>,
-        ) -> Result<tonic::Response<super::Property>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Property>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6307,13 +6401,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteProperty",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteProperty",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a property.
         pub async fn update_property(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdatePropertyRequest>,
-        ) -> Result<tonic::Response<super::Property>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Property>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6327,13 +6429,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateProperty",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateProperty",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a user's link to an account or property.
         pub async fn get_user_link(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserLinkRequest>,
-        ) -> Result<tonic::Response<super::UserLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::UserLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6347,13 +6457,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetUserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetUserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about multiple users' links to an account or property.
         pub async fn batch_get_user_links(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchGetUserLinksRequest>,
-        ) -> Result<tonic::Response<super::BatchGetUserLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::BatchGetUserLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6367,13 +6488,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchGetUserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchGetUserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all user links on an account or property.
         pub async fn list_user_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListUserLinksRequest>,
-        ) -> Result<tonic::Response<super::ListUserLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListUserLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6387,7 +6519,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListUserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListUserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all user links on an account or property, including implicit ones
         /// that come from effective permissions granted by groups or organization
@@ -6401,7 +6541,10 @@ pub mod analytics_admin_service_client {
         pub async fn audit_user_links(
             &mut self,
             request: impl tonic::IntoRequest<super::AuditUserLinksRequest>,
-        ) -> Result<tonic::Response<super::AuditUserLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AuditUserLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6415,7 +6558,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/AuditUserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "AuditUserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a user link on an account or property.
         ///
@@ -6425,7 +6576,7 @@ pub mod analytics_admin_service_client {
         pub async fn create_user_link(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateUserLinkRequest>,
-        ) -> Result<tonic::Response<super::UserLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::UserLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6439,7 +6590,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateUserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateUserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates information about multiple users' links to an account or property.
         ///
@@ -6448,7 +6607,7 @@ pub mod analytics_admin_service_client {
         pub async fn batch_create_user_links(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchCreateUserLinksRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchCreateUserLinksResponse>,
             tonic::Status,
         > {
@@ -6465,13 +6624,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchCreateUserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchCreateUserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a user link on an account or property.
         pub async fn update_user_link(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateUserLinkRequest>,
-        ) -> Result<tonic::Response<super::UserLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::UserLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6485,13 +6652,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateUserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateUserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates information about multiple users' links to an account or property.
         pub async fn batch_update_user_links(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchUpdateUserLinksRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchUpdateUserLinksResponse>,
             tonic::Status,
         > {
@@ -6508,13 +6683,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchUpdateUserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchUpdateUserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a user link on an account or property.
         pub async fn delete_user_link(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteUserLinkRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6528,13 +6711,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteUserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteUserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes information about multiple users' links to an account or property.
         pub async fn batch_delete_user_links(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchDeleteUserLinksRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6548,7 +6739,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchDeleteUserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchDeleteUserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a FirebaseLink.
         ///
@@ -6556,7 +6755,7 @@ pub mod analytics_admin_service_client {
         pub async fn create_firebase_link(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateFirebaseLinkRequest>,
-        ) -> Result<tonic::Response<super::FirebaseLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::FirebaseLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6570,13 +6769,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateFirebaseLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateFirebaseLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a FirebaseLink on a property
         pub async fn delete_firebase_link(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteFirebaseLinkRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6590,14 +6797,25 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteFirebaseLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteFirebaseLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists FirebaseLinks on a property.
         /// Properties can have at most one FirebaseLink.
         pub async fn list_firebase_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListFirebaseLinksRequest>,
-        ) -> Result<tonic::Response<super::ListFirebaseLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListFirebaseLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6611,14 +6829,22 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListFirebaseLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListFirebaseLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the Site Tag for the specified web stream.
         /// Site Tags are immutable singletons.
         pub async fn get_global_site_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGlobalSiteTagRequest>,
-        ) -> Result<tonic::Response<super::GlobalSiteTag>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::GlobalSiteTag>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6632,13 +6858,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetGlobalSiteTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetGlobalSiteTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a GoogleAdsLink.
         pub async fn create_google_ads_link(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateGoogleAdsLinkRequest>,
-        ) -> Result<tonic::Response<super::GoogleAdsLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::GoogleAdsLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6652,13 +6886,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateGoogleAdsLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateGoogleAdsLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a GoogleAdsLink on a property
         pub async fn update_google_ads_link(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateGoogleAdsLinkRequest>,
-        ) -> Result<tonic::Response<super::GoogleAdsLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::GoogleAdsLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6672,13 +6914,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateGoogleAdsLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateGoogleAdsLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a GoogleAdsLink on a property
         pub async fn delete_google_ads_link(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteGoogleAdsLinkRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6692,13 +6942,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteGoogleAdsLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteGoogleAdsLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists GoogleAdsLinks on a property.
         pub async fn list_google_ads_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListGoogleAdsLinksRequest>,
-        ) -> Result<tonic::Response<super::ListGoogleAdsLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListGoogleAdsLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6712,14 +6973,25 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListGoogleAdsLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListGoogleAdsLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get data sharing settings on an account.
         /// Data sharing settings are singletons.
         pub async fn get_data_sharing_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDataSharingSettingsRequest>,
-        ) -> Result<tonic::Response<super::DataSharingSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DataSharingSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6733,13 +7005,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetDataSharingSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetDataSharingSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single "GA4" MeasurementProtocolSecret.
         pub async fn get_measurement_protocol_secret(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMeasurementProtocolSecretRequest>,
-        ) -> Result<tonic::Response<super::MeasurementProtocolSecret>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::MeasurementProtocolSecret>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6753,7 +7036,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetMeasurementProtocolSecret",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetMeasurementProtocolSecret",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns child MeasurementProtocolSecrets under the specified parent
         /// Property.
@@ -6762,7 +7053,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::ListMeasurementProtocolSecretsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListMeasurementProtocolSecretsResponse>,
             tonic::Status,
         > {
@@ -6779,7 +7070,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListMeasurementProtocolSecrets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListMeasurementProtocolSecrets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a measurement protocol secret.
         pub async fn create_measurement_protocol_secret(
@@ -6787,7 +7086,10 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::CreateMeasurementProtocolSecretRequest,
             >,
-        ) -> Result<tonic::Response<super::MeasurementProtocolSecret>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::MeasurementProtocolSecret>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6801,7 +7103,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateMeasurementProtocolSecret",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateMeasurementProtocolSecret",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes target MeasurementProtocolSecret.
         pub async fn delete_measurement_protocol_secret(
@@ -6809,7 +7119,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::DeleteMeasurementProtocolSecretRequest,
             >,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6823,7 +7133,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteMeasurementProtocolSecret",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteMeasurementProtocolSecret",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a measurement protocol secret.
         pub async fn update_measurement_protocol_secret(
@@ -6831,7 +7149,10 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::UpdateMeasurementProtocolSecretRequest,
             >,
-        ) -> Result<tonic::Response<super::MeasurementProtocolSecret>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::MeasurementProtocolSecret>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6845,7 +7166,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateMeasurementProtocolSecret",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateMeasurementProtocolSecret",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Acknowledges the terms of user data collection for the specified property.
         ///
@@ -6855,7 +7184,7 @@ pub mod analytics_admin_service_client {
         pub async fn acknowledge_user_data_collection(
             &mut self,
             request: impl tonic::IntoRequest<super::AcknowledgeUserDataCollectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::AcknowledgeUserDataCollectionResponse>,
             tonic::Status,
         > {
@@ -6872,14 +7201,22 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/AcknowledgeUserDataCollection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "AcknowledgeUserDataCollection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Searches through all changes to an account or its children given the
         /// specified set of filters.
         pub async fn search_change_history_events(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchChangeHistoryEventsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SearchChangeHistoryEventsResponse>,
             tonic::Status,
         > {
@@ -6896,13 +7233,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/SearchChangeHistoryEvents",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "SearchChangeHistoryEvents",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for Google Signals settings for a property.
         pub async fn get_google_signals_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGoogleSignalsSettingsRequest>,
-        ) -> Result<tonic::Response<super::GoogleSignalsSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GoogleSignalsSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6916,13 +7264,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetGoogleSignalsSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetGoogleSignalsSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates Google Signals settings for a property.
         pub async fn update_google_signals_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateGoogleSignalsSettingsRequest>,
-        ) -> Result<tonic::Response<super::GoogleSignalsSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GoogleSignalsSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6936,13 +7295,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateGoogleSignalsSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateGoogleSignalsSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a conversion event with the specified attributes.
         pub async fn create_conversion_event(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConversionEventRequest>,
-        ) -> Result<tonic::Response<super::ConversionEvent>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ConversionEvent>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6956,13 +7326,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateConversionEvent",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateConversionEvent",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieve a single conversion event.
         pub async fn get_conversion_event(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConversionEventRequest>,
-        ) -> Result<tonic::Response<super::ConversionEvent>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ConversionEvent>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -6976,13 +7357,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetConversionEvent",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetConversionEvent",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a conversion event in a property.
         pub async fn delete_conversion_event(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConversionEventRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -6996,7 +7385,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteConversionEvent",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteConversionEvent",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a list of conversion events in the specified parent property.
         ///
@@ -7004,7 +7401,7 @@ pub mod analytics_admin_service_client {
         pub async fn list_conversion_events(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConversionEventsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListConversionEventsResponse>,
             tonic::Status,
         > {
@@ -7021,7 +7418,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListConversionEvents",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListConversionEvents",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Look up a single DisplayVideo360AdvertiserLink
         pub async fn get_display_video360_advertiser_link(
@@ -7029,7 +7434,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::GetDisplayVideo360AdvertiserLinkRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::DisplayVideo360AdvertiserLink>,
             tonic::Status,
         > {
@@ -7046,7 +7451,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetDisplayVideo360AdvertiserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetDisplayVideo360AdvertiserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all DisplayVideo360AdvertiserLinks on a property.
         pub async fn list_display_video360_advertiser_links(
@@ -7054,7 +7467,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::ListDisplayVideo360AdvertiserLinksRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListDisplayVideo360AdvertiserLinksResponse>,
             tonic::Status,
         > {
@@ -7071,7 +7484,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListDisplayVideo360AdvertiserLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListDisplayVideo360AdvertiserLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a DisplayVideo360AdvertiserLink.
         /// This can only be utilized by users who have proper authorization both on
@@ -7083,7 +7504,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::CreateDisplayVideo360AdvertiserLinkRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::DisplayVideo360AdvertiserLink>,
             tonic::Status,
         > {
@@ -7100,7 +7521,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateDisplayVideo360AdvertiserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateDisplayVideo360AdvertiserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a DisplayVideo360AdvertiserLink on a property.
         pub async fn delete_display_video360_advertiser_link(
@@ -7108,7 +7537,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::DeleteDisplayVideo360AdvertiserLinkRequest,
             >,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7122,7 +7551,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteDisplayVideo360AdvertiserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteDisplayVideo360AdvertiserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a DisplayVideo360AdvertiserLink on a property.
         pub async fn update_display_video360_advertiser_link(
@@ -7130,7 +7567,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::UpdateDisplayVideo360AdvertiserLinkRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::DisplayVideo360AdvertiserLink>,
             tonic::Status,
         > {
@@ -7147,7 +7584,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateDisplayVideo360AdvertiserLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateDisplayVideo360AdvertiserLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single DisplayVideo360AdvertiserLinkProposal.
         pub async fn get_display_video360_advertiser_link_proposal(
@@ -7155,7 +7600,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::GetDisplayVideo360AdvertiserLinkProposalRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::DisplayVideo360AdvertiserLinkProposal>,
             tonic::Status,
         > {
@@ -7172,7 +7617,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetDisplayVideo360AdvertiserLinkProposal",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetDisplayVideo360AdvertiserLinkProposal",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists DisplayVideo360AdvertiserLinkProposals on a property.
         pub async fn list_display_video360_advertiser_link_proposals(
@@ -7180,7 +7633,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::ListDisplayVideo360AdvertiserLinkProposalsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListDisplayVideo360AdvertiserLinkProposalsResponse>,
             tonic::Status,
         > {
@@ -7197,7 +7650,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListDisplayVideo360AdvertiserLinkProposals",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListDisplayVideo360AdvertiserLinkProposals",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a DisplayVideo360AdvertiserLinkProposal.
         pub async fn create_display_video360_advertiser_link_proposal(
@@ -7205,7 +7666,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::CreateDisplayVideo360AdvertiserLinkProposalRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::DisplayVideo360AdvertiserLinkProposal>,
             tonic::Status,
         > {
@@ -7222,7 +7683,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateDisplayVideo360AdvertiserLinkProposal",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateDisplayVideo360AdvertiserLinkProposal",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a DisplayVideo360AdvertiserLinkProposal on a property.
         /// This can only be used on cancelled proposals.
@@ -7231,7 +7700,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::DeleteDisplayVideo360AdvertiserLinkProposalRequest,
             >,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7245,7 +7714,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteDisplayVideo360AdvertiserLinkProposal",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteDisplayVideo360AdvertiserLinkProposal",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Approves a DisplayVideo360AdvertiserLinkProposal.
         /// The DisplayVideo360AdvertiserLinkProposal will be deleted and a new
@@ -7255,7 +7732,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::ApproveDisplayVideo360AdvertiserLinkProposalRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ApproveDisplayVideo360AdvertiserLinkProposalResponse>,
             tonic::Status,
         > {
@@ -7272,7 +7749,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ApproveDisplayVideo360AdvertiserLinkProposal",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ApproveDisplayVideo360AdvertiserLinkProposal",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Cancels a DisplayVideo360AdvertiserLinkProposal.
         /// Cancelling can mean either:
@@ -7284,7 +7769,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::CancelDisplayVideo360AdvertiserLinkProposalRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::DisplayVideo360AdvertiserLinkProposal>,
             tonic::Status,
         > {
@@ -7301,13 +7786,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CancelDisplayVideo360AdvertiserLinkProposal",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CancelDisplayVideo360AdvertiserLinkProposal",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a CustomDimension.
         pub async fn create_custom_dimension(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCustomDimensionRequest>,
-        ) -> Result<tonic::Response<super::CustomDimension>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CustomDimension>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7321,13 +7817,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateCustomDimension",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateCustomDimension",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a CustomDimension on a property.
         pub async fn update_custom_dimension(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCustomDimensionRequest>,
-        ) -> Result<tonic::Response<super::CustomDimension>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CustomDimension>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7341,13 +7848,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateCustomDimension",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateCustomDimension",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists CustomDimensions on a property.
         pub async fn list_custom_dimensions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCustomDimensionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListCustomDimensionsResponse>,
             tonic::Status,
         > {
@@ -7364,13 +7879,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListCustomDimensions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListCustomDimensions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Archives a CustomDimension on a property.
         pub async fn archive_custom_dimension(
             &mut self,
             request: impl tonic::IntoRequest<super::ArchiveCustomDimensionRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7384,13 +7907,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ArchiveCustomDimension",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ArchiveCustomDimension",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single CustomDimension.
         pub async fn get_custom_dimension(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCustomDimensionRequest>,
-        ) -> Result<tonic::Response<super::CustomDimension>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CustomDimension>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7404,13 +7938,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetCustomDimension",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetCustomDimension",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a CustomMetric.
         pub async fn create_custom_metric(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCustomMetricRequest>,
-        ) -> Result<tonic::Response<super::CustomMetric>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CustomMetric>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7424,13 +7966,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateCustomMetric",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateCustomMetric",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a CustomMetric on a property.
         pub async fn update_custom_metric(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCustomMetricRequest>,
-        ) -> Result<tonic::Response<super::CustomMetric>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CustomMetric>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7444,13 +7994,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateCustomMetric",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateCustomMetric",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists CustomMetrics on a property.
         pub async fn list_custom_metrics(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCustomMetricsRequest>,
-        ) -> Result<tonic::Response<super::ListCustomMetricsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCustomMetricsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7464,13 +8025,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListCustomMetrics",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListCustomMetrics",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Archives a CustomMetric on a property.
         pub async fn archive_custom_metric(
             &mut self,
             request: impl tonic::IntoRequest<super::ArchiveCustomMetricRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7484,13 +8053,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ArchiveCustomMetric",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ArchiveCustomMetric",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single CustomMetric.
         pub async fn get_custom_metric(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCustomMetricRequest>,
-        ) -> Result<tonic::Response<super::CustomMetric>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::CustomMetric>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7504,13 +8081,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetCustomMetric",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetCustomMetric",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the singleton data retention settings for this property.
         pub async fn get_data_retention_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDataRetentionSettingsRequest>,
-        ) -> Result<tonic::Response<super::DataRetentionSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DataRetentionSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7524,13 +8112,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetDataRetentionSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetDataRetentionSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the singleton data retention settings for this property.
         pub async fn update_data_retention_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDataRetentionSettingsRequest>,
-        ) -> Result<tonic::Response<super::DataRetentionSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DataRetentionSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7544,13 +8143,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateDataRetentionSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateDataRetentionSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a DataStream.
         pub async fn create_data_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDataStreamRequest>,
-        ) -> Result<tonic::Response<super::DataStream>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::DataStream>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7564,13 +8171,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateDataStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateDataStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a DataStream on a property.
         pub async fn delete_data_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDataStreamRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7584,13 +8199,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteDataStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteDataStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a DataStream on a property.
         pub async fn update_data_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDataStreamRequest>,
-        ) -> Result<tonic::Response<super::DataStream>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::DataStream>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7604,13 +8227,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateDataStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateDataStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists DataStreams on a property.
         pub async fn list_data_streams(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDataStreamsRequest>,
-        ) -> Result<tonic::Response<super::ListDataStreamsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDataStreamsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7624,13 +8258,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListDataStreams",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListDataStreams",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single DataStream.
         pub async fn get_data_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDataStreamRequest>,
-        ) -> Result<tonic::Response<super::DataStream>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::DataStream>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7644,7 +8286,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetDataStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetDataStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single Audience.
         /// Audiences created before 2020 may not be supported.
@@ -7652,7 +8302,7 @@ pub mod analytics_admin_service_client {
         pub async fn get_audience(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAudienceRequest>,
-        ) -> Result<tonic::Response<super::Audience>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Audience>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7666,7 +8316,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetAudience",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetAudience",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Audiences on a property.
         /// Audiences created before 2020 may not be supported.
@@ -7674,7 +8332,10 @@ pub mod analytics_admin_service_client {
         pub async fn list_audiences(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAudiencesRequest>,
-        ) -> Result<tonic::Response<super::ListAudiencesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAudiencesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7688,13 +8349,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListAudiences",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListAudiences",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an Audience.
         pub async fn create_audience(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAudienceRequest>,
-        ) -> Result<tonic::Response<super::Audience>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Audience>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7708,13 +8377,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateAudience",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateAudience",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an Audience on a property.
         pub async fn update_audience(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAudienceRequest>,
-        ) -> Result<tonic::Response<super::Audience>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Audience>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7728,13 +8405,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateAudience",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateAudience",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Archives an Audience on a property.
         pub async fn archive_audience(
             &mut self,
             request: impl tonic::IntoRequest<super::ArchiveAudienceRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7748,13 +8433,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ArchiveAudience",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ArchiveAudience",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Look up a single SearchAds360Link
         pub async fn get_search_ads360_link(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSearchAds360LinkRequest>,
-        ) -> Result<tonic::Response<super::SearchAds360Link>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAds360Link>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7768,13 +8464,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetSearchAds360Link",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetSearchAds360Link",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all SearchAds360Links on a property.
         pub async fn list_search_ads360_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListSearchAds360LinksRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListSearchAds360LinksResponse>,
             tonic::Status,
         > {
@@ -7791,13 +8495,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListSearchAds360Links",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListSearchAds360Links",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a SearchAds360Link.
         pub async fn create_search_ads360_link(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateSearchAds360LinkRequest>,
-        ) -> Result<tonic::Response<super::SearchAds360Link>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAds360Link>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7811,13 +8526,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateSearchAds360Link",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateSearchAds360Link",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a SearchAds360Link on a property.
         pub async fn delete_search_ads360_link(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteSearchAds360LinkRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7831,13 +8554,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteSearchAds360Link",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteSearchAds360Link",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a SearchAds360Link on a property.
         pub async fn update_search_ads360_link(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateSearchAds360LinkRequest>,
-        ) -> Result<tonic::Response<super::SearchAds360Link>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAds360Link>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7851,13 +8585,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateSearchAds360Link",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateSearchAds360Link",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a AttributionSettings singleton.
         pub async fn get_attribution_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAttributionSettingsRequest>,
-        ) -> Result<tonic::Response<super::AttributionSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AttributionSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7871,13 +8616,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetAttributionSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetAttributionSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates attribution settings on a property.
         pub async fn update_attribution_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAttributionSettingsRequest>,
-        ) -> Result<tonic::Response<super::AttributionSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AttributionSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7891,7 +8647,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateAttributionSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateAttributionSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a customized report of data access records. The report provides
         /// records of each time a user reads Google Analytics reporting data. Access
@@ -7909,7 +8673,10 @@ pub mod analytics_admin_service_client {
         pub async fn run_access_report(
             &mut self,
             request: impl tonic::IntoRequest<super::RunAccessReportRequest>,
-        ) -> Result<tonic::Response<super::RunAccessReportResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::RunAccessReportResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -7923,13 +8690,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/RunAccessReport",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "RunAccessReport",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an access binding on an account or property.
         pub async fn create_access_binding(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAccessBindingRequest>,
-        ) -> Result<tonic::Response<super::AccessBinding>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AccessBinding>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7943,13 +8718,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateAccessBinding",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateAccessBinding",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about an access binding.
         pub async fn get_access_binding(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAccessBindingRequest>,
-        ) -> Result<tonic::Response<super::AccessBinding>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AccessBinding>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7963,13 +8746,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetAccessBinding",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetAccessBinding",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an access binding on an account or property.
         pub async fn update_access_binding(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAccessBindingRequest>,
-        ) -> Result<tonic::Response<super::AccessBinding>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AccessBinding>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -7983,13 +8774,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateAccessBinding",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateAccessBinding",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an access binding on an account or property.
         pub async fn delete_access_binding(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAccessBindingRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8003,13 +8802,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteAccessBinding",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteAccessBinding",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all access bindings on an account or property.
         pub async fn list_access_bindings(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAccessBindingsRequest>,
-        ) -> Result<tonic::Response<super::ListAccessBindingsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAccessBindingsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8023,7 +8833,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListAccessBindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListAccessBindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates information about multiple access bindings to an account or
         /// property.
@@ -8033,7 +8851,7 @@ pub mod analytics_admin_service_client {
         pub async fn batch_create_access_bindings(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchCreateAccessBindingsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchCreateAccessBindingsResponse>,
             tonic::Status,
         > {
@@ -8050,13 +8868,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchCreateAccessBindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchCreateAccessBindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about multiple access bindings to an account or property.
         pub async fn batch_get_access_bindings(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchGetAccessBindingsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchGetAccessBindingsResponse>,
             tonic::Status,
         > {
@@ -8073,14 +8899,22 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchGetAccessBindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchGetAccessBindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates information about multiple access bindings to an account or
         /// property.
         pub async fn batch_update_access_bindings(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchUpdateAccessBindingsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchUpdateAccessBindingsResponse>,
             tonic::Status,
         > {
@@ -8097,13 +8931,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchUpdateAccessBindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchUpdateAccessBindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes information about multiple users' links to an account or property.
         pub async fn batch_delete_access_bindings(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchDeleteAccessBindingsRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8117,13 +8959,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/BatchDeleteAccessBindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "BatchDeleteAccessBindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single ExpandedDataSet.
         pub async fn get_expanded_data_set(
             &mut self,
             request: impl tonic::IntoRequest<super::GetExpandedDataSetRequest>,
-        ) -> Result<tonic::Response<super::ExpandedDataSet>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ExpandedDataSet>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8137,13 +8990,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetExpandedDataSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetExpandedDataSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists ExpandedDataSets on a property.
         pub async fn list_expanded_data_sets(
             &mut self,
             request: impl tonic::IntoRequest<super::ListExpandedDataSetsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListExpandedDataSetsResponse>,
             tonic::Status,
         > {
@@ -8160,13 +9021,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListExpandedDataSets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListExpandedDataSets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a ExpandedDataSet.
         pub async fn create_expanded_data_set(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateExpandedDataSetRequest>,
-        ) -> Result<tonic::Response<super::ExpandedDataSet>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ExpandedDataSet>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8180,13 +9052,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateExpandedDataSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateExpandedDataSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a ExpandedDataSet on a property.
         pub async fn update_expanded_data_set(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateExpandedDataSetRequest>,
-        ) -> Result<tonic::Response<super::ExpandedDataSet>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ExpandedDataSet>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8200,13 +9083,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateExpandedDataSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateExpandedDataSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a ExpandedDataSet on a property.
         pub async fn delete_expanded_data_set(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteExpandedDataSetRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8220,13 +9111,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteExpandedDataSet",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteExpandedDataSet",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single ChannelGroup.
         pub async fn get_channel_group(
             &mut self,
             request: impl tonic::IntoRequest<super::GetChannelGroupRequest>,
-        ) -> Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8240,13 +9139,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetChannelGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetChannelGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists ChannelGroups on a property.
         pub async fn list_channel_groups(
             &mut self,
             request: impl tonic::IntoRequest<super::ListChannelGroupsRequest>,
-        ) -> Result<tonic::Response<super::ListChannelGroupsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListChannelGroupsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8260,13 +9170,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListChannelGroups",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListChannelGroups",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a ChannelGroup.
         pub async fn create_channel_group(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateChannelGroupRequest>,
-        ) -> Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8280,13 +9198,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateChannelGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateChannelGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a ChannelGroup.
         pub async fn update_channel_group(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateChannelGroupRequest>,
-        ) -> Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ChannelGroup>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8300,13 +9226,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateChannelGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateChannelGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a ChannelGroup on a property.
         pub async fn delete_channel_group(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteChannelGroupRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8320,7 +9254,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteChannelGroup",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteChannelGroup",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Sets the opt out status for the automated GA4 setup process for a UA
         /// property.
@@ -8330,7 +9272,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::SetAutomatedGa4ConfigurationOptOutRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SetAutomatedGa4ConfigurationOptOutResponse>,
             tonic::Status,
         > {
@@ -8347,7 +9289,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/SetAutomatedGa4ConfigurationOptOut",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "SetAutomatedGa4ConfigurationOptOut",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches the opt out status for the automated GA4 setup process for a UA
         /// property.
@@ -8357,7 +9307,7 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::FetchAutomatedGa4ConfigurationOptOutRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::FetchAutomatedGa4ConfigurationOptOutResponse>,
             tonic::Status,
         > {
@@ -8374,13 +9324,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/FetchAutomatedGa4ConfigurationOptOut",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "FetchAutomatedGa4ConfigurationOptOut",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single BigQuery Link.
         pub async fn get_big_query_link(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBigQueryLinkRequest>,
-        ) -> Result<tonic::Response<super::BigQueryLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::BigQueryLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8394,13 +9352,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetBigQueryLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetBigQueryLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists BigQuery Links on a property.
         pub async fn list_big_query_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListBigQueryLinksRequest>,
-        ) -> Result<tonic::Response<super::ListBigQueryLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListBigQueryLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8414,7 +9383,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListBigQueryLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListBigQueryLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the enhanced measurement settings for this data stream.
         /// Note that the stream must enable enhanced measurement for these settings to
@@ -8424,7 +9401,10 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::GetEnhancedMeasurementSettingsRequest,
             >,
-        ) -> Result<tonic::Response<super::EnhancedMeasurementSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EnhancedMeasurementSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8438,7 +9418,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetEnhancedMeasurementSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetEnhancedMeasurementSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the enhanced measurement settings for this data stream.
         /// Note that the stream must enable enhanced measurement for these settings to
@@ -8448,7 +9436,10 @@ pub mod analytics_admin_service_client {
             request: impl tonic::IntoRequest<
                 super::UpdateEnhancedMeasurementSettingsRequest,
             >,
-        ) -> Result<tonic::Response<super::EnhancedMeasurementSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EnhancedMeasurementSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8462,7 +9453,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateEnhancedMeasurementSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateEnhancedMeasurementSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a connected site tag for a Universal Analytics property. You can
         /// create a maximum of 20 connected site tags per property.
@@ -8470,7 +9469,7 @@ pub mod analytics_admin_service_client {
         pub async fn create_connected_site_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConnectedSiteTagRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::CreateConnectedSiteTagResponse>,
             tonic::Status,
         > {
@@ -8487,14 +9486,22 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateConnectedSiteTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateConnectedSiteTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a connected site tag for a Universal Analytics property.
         /// Note: this has no effect on GA4 properties.
         pub async fn delete_connected_site_tag(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConnectedSiteTagRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8508,7 +9515,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteConnectedSiteTag",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteConnectedSiteTag",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the connected site tags for a Universal Analytics property. A maximum
         /// of 20 connected site tags will be returned. Note: this has no effect on GA4
@@ -8516,7 +9531,7 @@ pub mod analytics_admin_service_client {
         pub async fn list_connected_site_tags(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectedSiteTagsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListConnectedSiteTagsResponse>,
             tonic::Status,
         > {
@@ -8533,14 +9548,22 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListConnectedSiteTags",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListConnectedSiteTags",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Given a specified UA property, looks up the GA4 property connected to it.
         /// Note: this cannot be used with GA4 properties.
         pub async fn fetch_connected_ga4_property(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchConnectedGa4PropertyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::FetchConnectedGa4PropertyResponse>,
             tonic::Status,
         > {
@@ -8557,13 +9580,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/FetchConnectedGa4Property",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "FetchConnectedGa4Property",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Looks up a single AdSenseLink.
         pub async fn get_ad_sense_link(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAdSenseLinkRequest>,
-        ) -> Result<tonic::Response<super::AdSenseLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AdSenseLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8577,13 +9608,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetAdSenseLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetAdSenseLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an AdSenseLink.
         pub async fn create_ad_sense_link(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAdSenseLinkRequest>,
-        ) -> Result<tonic::Response<super::AdSenseLink>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AdSenseLink>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8597,13 +9636,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateAdSenseLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateAdSenseLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an AdSenseLink.
         pub async fn delete_ad_sense_link(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAdSenseLinkRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8617,13 +9664,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteAdSenseLink",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteAdSenseLink",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists AdSenseLinks on a property.
         pub async fn list_ad_sense_links(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAdSenseLinksRequest>,
-        ) -> Result<tonic::Response<super::ListAdSenseLinksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAdSenseLinksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8637,13 +9695,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListAdSenseLinks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListAdSenseLinks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lookup for a single EventCreateRule.
         pub async fn get_event_create_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEventCreateRuleRequest>,
-        ) -> Result<tonic::Response<super::EventCreateRule>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EventCreateRule>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8657,13 +9726,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/GetEventCreateRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "GetEventCreateRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists EventCreateRules on a web data stream.
         pub async fn list_event_create_rules(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEventCreateRulesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListEventCreateRulesResponse>,
             tonic::Status,
         > {
@@ -8680,13 +9757,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/ListEventCreateRules",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "ListEventCreateRules",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an EventCreateRule.
         pub async fn create_event_create_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateEventCreateRuleRequest>,
-        ) -> Result<tonic::Response<super::EventCreateRule>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EventCreateRule>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8700,13 +9788,24 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/CreateEventCreateRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "CreateEventCreateRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an EventCreateRule.
         pub async fn update_event_create_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateEventCreateRuleRequest>,
-        ) -> Result<tonic::Response<super::EventCreateRule>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::EventCreateRule>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -8720,13 +9819,21 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/UpdateEventCreateRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "UpdateEventCreateRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an EventCreateRule.
         pub async fn delete_event_create_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteEventCreateRuleRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -8740,7 +9847,15 @@ pub mod analytics_admin_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.analytics.admin.v1alpha.AnalyticsAdminService/DeleteEventCreateRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.analytics.admin.v1alpha.AnalyticsAdminService",
+                        "DeleteEventCreateRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

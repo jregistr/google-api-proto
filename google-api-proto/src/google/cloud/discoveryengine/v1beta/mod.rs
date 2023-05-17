@@ -1,108 +1,3 @@
-/// Document captures all raw metadata information of items to be recommended or
-/// searched.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Document {
-    /// Immutable. The full resource name of the document.
-    /// Format:
-    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/branches/{branch}/documents/{document_id}`.
-    ///
-    /// This field must be a UTF-8 encoded string with a length limit of 1024
-    /// characters.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Immutable. The identifier of the document.
-    ///
-    /// Id should conform to \[RFC-1034\](<https://tools.ietf.org/html/rfc1034>)
-    /// standard with a length limit of 63 characters.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-    /// The identifier of the schema located in the same data store.
-    #[prost(string, tag = "3")]
-    pub schema_id: ::prost::alloc::string::String,
-    /// The unstructured data linked to this document. Content must be set if this
-    /// document is under a
-    /// `CONTENT_REQUIRED` data store.
-    #[prost(message, optional, tag = "10")]
-    pub content: ::core::option::Option<document::Content>,
-    /// The identifier of the parent document. Currently supports at most two level
-    /// document hierarchy.
-    ///
-    /// Id should conform to \[RFC-1034\](<https://tools.ietf.org/html/rfc1034>)
-    /// standard with a length limit of 63 characters.
-    #[prost(string, tag = "7")]
-    pub parent_document_id: ::prost::alloc::string::String,
-    /// Output only. This field is OUTPUT_ONLY.
-    /// It contains derived data that are not in the original input document.
-    #[prost(message, optional, tag = "6")]
-    pub derived_struct_data: ::core::option::Option<::prost_types::Struct>,
-    /// Data representation. One of
-    /// \[struct_data][google.cloud.discoveryengine.v1beta.Document.struct_data\] or
-    /// \[json_data][google.cloud.discoveryengine.v1beta.Document.json_data\] should
-    /// be provided otherwise an `INVALID_ARGUMENT` error is thrown.
-    #[prost(oneof = "document::Data", tags = "4, 5")]
-    pub data: ::core::option::Option<document::Data>,
-}
-/// Nested message and enum types in `Document`.
-pub mod document {
-    /// Unstructured data linked to this document.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Content {
-        /// The MIME type of the content. Supported types:
-        ///
-        /// * `application/pdf` (PDF)
-        /// * `text/html` (HTML)
-        ///
-        /// See <https://www.iana.org/assignments/media-types/media-types.xhtml.>
-        #[prost(string, tag = "1")]
-        pub mime_type: ::prost::alloc::string::String,
-        #[prost(oneof = "content::Content", tags = "2, 3")]
-        pub content: ::core::option::Option<content::Content>,
-    }
-    /// Nested message and enum types in `Content`.
-    pub mod content {
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum Content {
-            /// The content represented as a stream of bytes. The maximum length is
-            /// 1,000,000 bytes (1 MB / ~0.95 MiB).
-            ///
-            /// Note: As with all `bytes` fields, this field is represented as pure
-            /// binary in Protocol Buffers and base64-encoded string in JSON. For
-            /// example, `abc123!?$*&()'-=@~` should be represented as
-            /// `YWJjMTIzIT8kKiYoKSctPUB+` in JSON. See
-            /// <https://developers.google.com/protocol-buffers/docs/proto3#json.>
-            #[prost(bytes, tag = "2")]
-            RawBytes(::prost::bytes::Bytes),
-            /// The URI of the content. Only Cloud Storage URIs (e.g.
-            /// `gs://bucket-name/path/to/file`) are supported. The maximum file size
-            /// is 100 MB.
-            #[prost(string, tag = "3")]
-            Uri(::prost::alloc::string::String),
-        }
-    }
-    /// Data representation. One of
-    /// \[struct_data][google.cloud.discoveryengine.v1beta.Document.struct_data\] or
-    /// \[json_data][google.cloud.discoveryengine.v1beta.Document.json_data\] should
-    /// be provided otherwise an `INVALID_ARGUMENT` error is thrown.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Data {
-        /// The structured JSON data for the document. It should conform to the
-        /// registered
-        /// \[Schema.schema][google.cloud.discoveryengine.v1beta.Schema.schema\] or an
-        /// `INVALID_ARGUMENT` error is thrown.
-        #[prost(message, tag = "4")]
-        StructData(::prost_types::Struct),
-        /// The JSON string representation of the document. It should conform to the
-        /// registered
-        /// \[Schema.schema][google.cloud.discoveryengine.v1beta.Schema.schema\] or an
-        /// `INVALID_ARGUMENT` error is thrown.
-        #[prost(string, tag = "5")]
-        JsonData(::prost::alloc::string::String),
-    }
-}
 /// A floating point interval.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -682,251 +577,109 @@ pub struct MediaInfo {
     #[prost(float, optional, tag = "2")]
     pub media_progress_percentage: ::core::option::Option<f32>,
 }
-/// Request message for Recommend method.
+/// Document captures all raw metadata information of items to be recommended or
+/// searched.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RecommendRequest {
-    /// Required. Full resource name of the format:
-    /// `projects/*/locations/global/collections/*/dataStores/*/servingConfigs/*`
+pub struct Document {
+    /// Immutable. The full resource name of the document.
+    /// Format:
+    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/branches/{branch}/documents/{document_id}`.
     ///
-    /// Before you can request recommendations from your model, you must create at
-    /// least one serving config  for it.
+    /// This field must be a UTF-8 encoded string with a length limit of 1024
+    /// characters.
     #[prost(string, tag = "1")]
-    pub serving_config: ::prost::alloc::string::String,
-    /// Required. Context about the user, what they are looking at and what action
-    /// they took to trigger the Recommend request. Note that this user event
-    /// detail won't be ingested to userEvent logs. Thus, a separate userEvent
-    /// write request is required for event logging.
+    pub name: ::prost::alloc::string::String,
+    /// Immutable. The identifier of the document.
     ///
-    /// Don't set
-    /// \[UserEvent.user_pseudo_id][google.cloud.discoveryengine.v1beta.UserEvent.user_pseudo_id\]
-    /// or
-    /// \[UserEvent.user_info.user_id][google.cloud.discoveryengine.v1beta.UserInfo.user_id\]
-    /// to the same fixed ID for different users. If you are trying to receive
-    /// non-personalized recommendations (not recommended; this can negatively
-    /// impact model performance), instead set
-    /// \[UserEvent.user_pseudo_id][google.cloud.discoveryengine.v1beta.UserEvent.user_pseudo_id\]
-    /// to a random unique ID and leave
-    /// \[UserEvent.user_info.user_id][google.cloud.discoveryengine.v1beta.UserInfo.user_id\]
-    /// unset.
-    #[prost(message, optional, tag = "2")]
-    pub user_event: ::core::option::Option<UserEvent>,
-    /// Maximum number of results to return. Set this property
-    /// to the number of recommendation results needed. If zero, the service will
-    /// choose a reasonable default. The maximum allowed value is 100. Values
-    /// above 100 will be coerced to 100.
-    #[prost(int32, tag = "3")]
-    pub page_size: i32,
-    /// Filter for restricting recommendation results with a length limit of 5,000
-    /// characters. Currently, only filter expressions on the `filter_tags`
-    /// attribute is supported.
-    ///
-    ///
-    /// Examples:
-    ///
-    ///   * `(filter_tags: ANY("Red", "Blue") OR filter_tags: ANY("Hot", "Cold"))`
-    ///   * `(filter_tags: ANY("Red", "Blue")) AND NOT (filter_tags: ANY("Green"))`
-    ///
-    /// If your filter blocks all results, the API will return generic
-    /// (unfiltered) popular Documents. If you only want results strictly matching
-    /// the filters, set `strictFiltering` to True in
-    /// \[RecommendRequest.params][google.cloud.discoveryengine.v1beta.RecommendRequest.params\]
-    /// to receive empty results instead.
-    ///
-    /// Note that the API will never return
-    /// \[Document][google.cloud.discoveryengine.v1beta.Document\]s with
-    /// `storageStatus` of `EXPIRED` or `DELETED` regardless of filter choices.
-    #[prost(string, tag = "4")]
-    pub filter: ::prost::alloc::string::String,
-    /// Use validate only mode for this recommendation query. If set to true, a
-    /// fake model will be used that returns arbitrary Document IDs.
-    /// Note that the validate only mode should only be used for testing the API,
-    /// or if the model is not ready.
-    #[prost(bool, tag = "5")]
-    pub validate_only: bool,
-    /// Additional domain specific parameters for the recommendations.
-    ///
-    /// Allowed values:
-    ///
-    /// * `returnDocument`: Boolean. If set to true, the associated Document
-    ///     object will be returned in
-    ///     \[RecommendResponse.RecommendationResult.document][google.cloud.discoveryengine.v1beta.RecommendResponse.RecommendationResult.document\].
-    /// * `returnScore`: Boolean. If set to true, the recommendation 'score'
-    ///     corresponding to each returned Document will be set in
-    ///     \[RecommendResponse.RecommendationResult.metadata][google.cloud.discoveryengine.v1beta.RecommendResponse.RecommendationResult.metadata\].
-    ///     The given 'score' indicates the probability of a Document conversion
-    ///     given the user's context and history.
-    /// * `strictFiltering`: Boolean. True by default. If set to false, the service
-    ///     will return generic (unfiltered) popular Documents instead of empty if
-    ///     your filter blocks all recommendation results.
-    /// * `diversityLevel`: String. Default empty. If set to be non-empty, then
-    ///     it needs to be one of:
-    ///      *  `no-diversity`
-    ///      *  `low-diversity`
-    ///      *  `medium-diversity`
-    ///      *  `high-diversity`
-    ///      *  `auto-diversity`
-    ///     This gives request-level control and adjusts recommendation results
-    ///     based on Document category.
-    #[prost(btree_map = "string, message", tag = "6")]
-    pub params: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::Value,
-    >,
-    /// The user labels applied to a resource must meet the following requirements:
-    ///
-    /// * Each resource can have multiple labels, up to a maximum of 64.
-    /// * Each label must be a key-value pair.
-    /// * Keys have a minimum length of 1 character and a maximum length of 63
-    ///    characters and cannot be empty. Values can be empty and have a maximum
-    ///    length of 63 characters.
-    /// * Keys and values can contain only lowercase letters, numeric characters,
-    ///    underscores, and dashes. All characters must use UTF-8 encoding, and
-    ///    international characters are allowed.
-    /// * The key portion of a label must be unique. However, you can use the same
-    ///    key with multiple resources.
-    /// * Keys must start with a lowercase letter or international character.
-    ///
-    /// See [Requirements for
-    /// labels](<https://cloud.google.com/resource-manager/docs/creating-managing-labels#requirements>)
-    /// for more details.
-    #[prost(btree_map = "string, string", tag = "8")]
-    pub user_labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-}
-/// Response message for Recommend method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RecommendResponse {
-    /// A list of recommended Documents. The order represents the ranking (from the
-    /// most relevant Document to the least).
-    #[prost(message, repeated, tag = "1")]
-    pub results: ::prost::alloc::vec::Vec<recommend_response::RecommendationResult>,
-    /// A unique attribution token. This should be included in the
-    /// \[UserEvent][google.cloud.discoveryengine.v1beta.UserEvent\] logs resulting
-    /// from this recommendation, which enables accurate attribution of
-    /// recommendation model performance.
+    /// Id should conform to \[RFC-1034\](<https://tools.ietf.org/html/rfc1034>)
+    /// standard with a length limit of 63 characters.
     #[prost(string, tag = "2")]
-    pub attribution_token: ::prost::alloc::string::String,
-    /// IDs of documents in the request that were missing from the default Branch
-    /// associated with the requested ServingConfig.
-    #[prost(string, repeated, tag = "3")]
-    pub missing_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// True if
-    /// \[RecommendRequest.validate_only][google.cloud.discoveryengine.v1beta.RecommendRequest.validate_only\]
-    /// was set.
-    #[prost(bool, tag = "4")]
-    pub validate_only: bool,
+    pub id: ::prost::alloc::string::String,
+    /// The identifier of the schema located in the same data store.
+    #[prost(string, tag = "3")]
+    pub schema_id: ::prost::alloc::string::String,
+    /// The unstructured data linked to this document. Content must be set if this
+    /// document is under a
+    /// `CONTENT_REQUIRED` data store.
+    #[prost(message, optional, tag = "10")]
+    pub content: ::core::option::Option<document::Content>,
+    /// The identifier of the parent document. Currently supports at most two level
+    /// document hierarchy.
+    ///
+    /// Id should conform to \[RFC-1034\](<https://tools.ietf.org/html/rfc1034>)
+    /// standard with a length limit of 63 characters.
+    #[prost(string, tag = "7")]
+    pub parent_document_id: ::prost::alloc::string::String,
+    /// Output only. This field is OUTPUT_ONLY.
+    /// It contains derived data that are not in the original input document.
+    #[prost(message, optional, tag = "6")]
+    pub derived_struct_data: ::core::option::Option<::prost_types::Struct>,
+    /// Data representation. One of
+    /// \[struct_data][google.cloud.discoveryengine.v1beta.Document.struct_data\] or
+    /// \[json_data][google.cloud.discoveryengine.v1beta.Document.json_data\] should
+    /// be provided otherwise an `INVALID_ARGUMENT` error is thrown.
+    #[prost(oneof = "document::Data", tags = "4, 5")]
+    pub data: ::core::option::Option<document::Data>,
 }
-/// Nested message and enum types in `RecommendResponse`.
-pub mod recommend_response {
-    /// RecommendationResult represents a generic recommendation result with
-    /// associated metadata.
+/// Nested message and enum types in `Document`.
+pub mod document {
+    /// Unstructured data linked to this document.
     #[allow(clippy::derive_partial_eq_without_eq)]
     #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct RecommendationResult {
-        /// Resource ID of the recommended Document.
+    pub struct Content {
+        /// The MIME type of the content. Supported types:
+        ///
+        /// * `application/pdf` (PDF)
+        /// * `text/html` (HTML)
+        ///
+        /// See <https://www.iana.org/assignments/media-types/media-types.xhtml.>
         #[prost(string, tag = "1")]
-        pub id: ::prost::alloc::string::String,
-        /// Set if `returnDocument` is set to true in
-        /// \[RecommendRequest.params][google.cloud.discoveryengine.v1beta.RecommendRequest.params\].
-        #[prost(message, optional, tag = "2")]
-        pub document: ::core::option::Option<super::Document>,
-        /// Additional Document metadata / annotations.
-        ///
-        /// Possible values:
-        ///
-        /// * `score`: Recommendation score in double value. Is set if
-        ///    `returnScore` is set to true in
-        ///    \[RecommendRequest.params][google.cloud.discoveryengine.v1beta.RecommendRequest.params\].
-        #[prost(btree_map = "string, message", tag = "3")]
-        pub metadata: ::prost::alloc::collections::BTreeMap<
-            ::prost::alloc::string::String,
-            ::prost_types::Value,
-        >,
+        pub mime_type: ::prost::alloc::string::String,
+        #[prost(oneof = "content::Content", tags = "2, 3")]
+        pub content: ::core::option::Option<content::Content>,
     }
-}
-/// Generated client implementations.
-pub mod recommendation_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for making recommendations.
-    #[derive(Debug, Clone)]
-    pub struct RecommendationServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
+    /// Nested message and enum types in `Content`.
+    pub mod content {
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum Content {
+            /// The content represented as a stream of bytes. The maximum length is
+            /// 1,000,000 bytes (1 MB / ~0.95 MiB).
+            ///
+            /// Note: As with all `bytes` fields, this field is represented as pure
+            /// binary in Protocol Buffers and base64-encoded string in JSON. For
+            /// example, `abc123!?$*&()'-=@~` should be represented as
+            /// `YWJjMTIzIT8kKiYoKSctPUB+` in JSON. See
+            /// <https://developers.google.com/protocol-buffers/docs/proto3#json.>
+            #[prost(bytes, tag = "2")]
+            RawBytes(::prost::bytes::Bytes),
+            /// The URI of the content. Only Cloud Storage URIs (e.g.
+            /// `gs://bucket-name/path/to/file`) are supported. The maximum file size
+            /// is 100 MB.
+            #[prost(string, tag = "3")]
+            Uri(::prost::alloc::string::String),
+        }
     }
-    impl<T> RecommendationServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> RecommendationServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            RecommendationServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Makes a recommendation, which requires a contextual user event.
-        pub async fn recommend(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RecommendRequest>,
-        ) -> Result<tonic::Response<super::RecommendResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.discoveryengine.v1beta.RecommendationService/Recommend",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
+    /// Data representation. One of
+    /// \[struct_data][google.cloud.discoveryengine.v1beta.Document.struct_data\] or
+    /// \[json_data][google.cloud.discoveryengine.v1beta.Document.json_data\] should
+    /// be provided otherwise an `INVALID_ARGUMENT` error is thrown.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Data {
+        /// The structured JSON data for the document. It should conform to the
+        /// registered
+        /// \[Schema.schema][google.cloud.discoveryengine.v1beta.Schema.schema\] or an
+        /// `INVALID_ARGUMENT` error is thrown.
+        #[prost(message, tag = "4")]
+        StructData(::prost_types::Struct),
+        /// The JSON string representation of the document. It should conform to the
+        /// registered
+        /// \[Schema.schema][google.cloud.discoveryengine.v1beta.Schema.schema\] or an
+        /// `INVALID_ARGUMENT` error is thrown.
+        #[prost(string, tag = "5")]
+        JsonData(::prost::alloc::string::String),
     }
 }
 /// Cloud Storage location for input content.
@@ -1255,6 +1008,219 @@ pub struct ImportDocumentsResponse {
     #[prost(message, optional, tag = "2")]
     pub error_config: ::core::option::Option<ImportErrorConfig>,
 }
+/// Request message for WriteUserEvent method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WriteUserEventRequest {
+    /// Required. The parent DataStore resource name, such as
+    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. User event to write.
+    #[prost(message, optional, tag = "2")]
+    pub user_event: ::core::option::Option<UserEvent>,
+}
+/// Request message for CollectUserEvent method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CollectUserEventRequest {
+    /// Required. The parent DataStore resource name, such as
+    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}`.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Required. URL encoded UserEvent proto with a length limit of 2,000,000
+    /// characters.
+    #[prost(string, tag = "2")]
+    pub user_event: ::prost::alloc::string::String,
+    /// The URL including cgi-parameters but excluding the hash fragment with a
+    /// length limit of 5,000 characters. This is often more useful than the
+    /// referer URL, because many browsers only send the domain for 3rd party
+    /// requests.
+    #[prost(string, optional, tag = "3")]
+    pub uri: ::core::option::Option<::prost::alloc::string::String>,
+    /// The event timestamp in milliseconds. This prevents browser caching of
+    /// otherwise identical get requests. The name is abbreviated to reduce the
+    /// payload bytes.
+    #[prost(int64, optional, tag = "4")]
+    pub ets: ::core::option::Option<i64>,
+}
+/// Generated client implementations.
+pub mod user_event_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for ingesting end user actions on a website to Discovery Engine API.
+    #[derive(Debug, Clone)]
+    pub struct UserEventServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> UserEventServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> UserEventServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            UserEventServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Writes a single user event.
+        pub async fn write_user_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::WriteUserEventRequest>,
+        ) -> std::result::Result<tonic::Response<super::UserEvent>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.discoveryengine.v1beta.UserEventService/WriteUserEvent",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.UserEventService",
+                        "WriteUserEvent",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Writes a single user event from the browser. This uses a GET request to
+        /// due to browser restriction of POST-ing to a 3rd party domain.
+        ///
+        /// This method is used only by the Discovery Engine API JavaScript pixel and
+        /// Google Tag Manager. Users should not call this method directly.
+        pub async fn collect_user_event(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CollectUserEventRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::super::api::HttpBody>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.discoveryengine.v1beta.UserEventService/CollectUserEvent",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.UserEventService",
+                        "CollectUserEvent",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+        /// Bulk import of User events. Request processing might be
+        /// synchronous. Events that already exist are skipped.
+        /// Use this method for backfilling historical user events.
+        ///
+        /// Operation.response is of type ImportResponse. Note that it is
+        /// possible for a subset of the items to be successfully inserted.
+        /// Operation.metadata is of type ImportMetadata.
+        pub async fn import_user_events(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ImportUserEventsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::super::super::super::longrunning::Operation>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.discoveryengine.v1beta.UserEventService/ImportUserEvents",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.UserEventService",
+                        "ImportUserEvents",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// Request message for
 /// \[DocumentService.PurgeDocuments][google.cloud.discoveryengine.v1beta.DocumentService.PurgeDocuments\]
 /// method.
@@ -1309,6 +1275,223 @@ pub struct PurgeDocumentsMetadata {
     /// Count of entries that encountered errors while processing.
     #[prost(int64, tag = "4")]
     pub failure_count: i64,
+}
+/// Request message for
+/// \[CompletionService.CompleteQuery][google.cloud.discoveryengine.v1beta.CompletionService.CompleteQuery\]
+/// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryRequest {
+    /// Required. The parent data store resource name for which the completion is
+    /// performed, such as
+    /// `projects/*/locations/global/collections/default_collection/dataStores/default_data_store`.
+    #[prost(string, tag = "1")]
+    pub data_store: ::prost::alloc::string::String,
+    /// Required. The typeahead input used to fetch suggestions. Maximum length is
+    /// 128 characters.
+    #[prost(string, tag = "2")]
+    pub query: ::prost::alloc::string::String,
+    /// Selects data model of query suggestions for serving. Currently supported
+    /// values:
+    ///
+    /// * `document` - Using suggestions generated from user-imported documents.
+    /// * `search-history` - Using suggestions generated from the past history of
+    /// \[SearchService.Search][google.cloud.discoveryengine.v1beta.SearchService.Search\]
+    /// API calls. Do not use it when there is no traffic for Search API.
+    /// * `user-event` - Using suggestions generated from user-imported search
+    /// events.
+    ///
+    /// Default values:
+    ///
+    /// * `document` is the default model for regular dataStores.
+    /// * `search-history` is the default model for
+    /// \[IndustryVertical.SITE_SEARCH][google.cloud.discoveryengine.v1beta.IndustryVertical.SITE_SEARCH\]
+    /// dataStores.
+    #[prost(string, tag = "3")]
+    pub query_model: ::prost::alloc::string::String,
+    /// A unique identifier for tracking visitors. For example, this could be
+    /// implemented with an HTTP cookie, which should be able to uniquely identify
+    /// a visitor on a single device. This unique identifier should not change if
+    /// the visitor logs in or out of the website.
+    ///
+    /// This field should NOT have a fixed value such as `unknown_visitor`.
+    ///
+    /// This should be the same identifier as
+    /// \[UserEvent.user_pseudo_id][google.cloud.discoveryengine.v1beta.UserEvent.user_pseudo_id\]
+    /// and
+    /// \[SearchRequest.user_pseudo_id][google.cloud.discoveryengine.v1beta.SearchRequest.user_pseudo_id\].
+    ///
+    /// The field must be a UTF-8 encoded string with a length limit of 128
+    /// characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
+    #[prost(string, tag = "4")]
+    pub user_pseudo_id: ::prost::alloc::string::String,
+}
+/// Response message for
+/// \[CompletionService.CompleteQuery][google.cloud.discoveryengine.v1beta.CompletionService.CompleteQuery\]
+/// method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CompleteQueryResponse {
+    /// Results of the matched query suggestions. The result list is ordered and
+    /// the first result is a top suggestion.
+    #[prost(message, repeated, tag = "1")]
+    pub query_suggestions: ::prost::alloc::vec::Vec<
+        complete_query_response::QuerySuggestion,
+    >,
+}
+/// Nested message and enum types in `CompleteQueryResponse`.
+pub mod complete_query_response {
+    /// Suggestions as search queries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct QuerySuggestion {
+        /// The suggestion for the query.
+        #[prost(string, tag = "1")]
+        pub suggestion: ::prost::alloc::string::String,
+    }
+}
+/// Generated client implementations.
+pub mod completion_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for Auto-Completion.
+    #[derive(Debug, Clone)]
+    pub struct CompletionServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> CompletionServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> CompletionServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            CompletionServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Completes the specified user input with keyword suggestions.
+        pub async fn complete_query(
+            &mut self,
+            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CompleteQueryResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.discoveryengine.v1beta.CompletionService/CompleteQuery",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.CompletionService",
+                        "CompleteQuery",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Defines the structure and layout of a type of document data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Schema {
+    /// Immutable. The full resource name of the schema, in the format of
+    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/schemas/{schema}`.
+    ///
+    /// This field must be a UTF-8 encoded string with a length limit of 1024
+    /// characters.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Schema representation. One of
+    /// \[struct_schema][google.cloud.discoveryengine.v1beta.Schema.struct_schema\]
+    /// or \[json_schema][google.cloud.discoveryengine.v1beta.Schema.json_schema\]
+    /// should be provided otherwise an INVALID_ARGUMENT error is thrown.
+    #[prost(oneof = "schema::Schema", tags = "2, 3")]
+    pub schema: ::core::option::Option<schema::Schema>,
+}
+/// Nested message and enum types in `Schema`.
+pub mod schema {
+    /// Schema representation. One of
+    /// \[struct_schema][google.cloud.discoveryengine.v1beta.Schema.struct_schema\]
+    /// or \[json_schema][google.cloud.discoveryengine.v1beta.Schema.json_schema\]
+    /// should be provided otherwise an INVALID_ARGUMENT error is thrown.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Schema {
+        /// The structured representation of the schema.
+        #[prost(message, tag = "2")]
+        StructSchema(::prost_types::Struct),
+        /// The JSON representation of the schema.
+        #[prost(string, tag = "3")]
+        JsonSchema(::prost::alloc::string::String),
+    }
 }
 /// Request message for
 /// \[DocumentService.GetDocument][google.cloud.discoveryengine.v1beta.DocumentService.GetDocument\]
@@ -1520,11 +1703,27 @@ pub mod document_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets a [Document][google.cloud.discoveryengine.v1beta.Document].
         pub async fn get_document(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDocumentRequest>,
-        ) -> Result<tonic::Response<super::Document>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Document>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1538,13 +1737,24 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/GetDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "GetDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a list of [Document][google.cloud.discoveryengine.v1beta.Document]s.
         pub async fn list_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDocumentsRequest>,
-        ) -> Result<tonic::Response<super::ListDocumentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDocumentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1558,13 +1768,21 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/ListDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "ListDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a [Document][google.cloud.discoveryengine.v1beta.Document].
         pub async fn create_document(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDocumentRequest>,
-        ) -> Result<tonic::Response<super::Document>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Document>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1578,13 +1796,21 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/CreateDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "CreateDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a [Document][google.cloud.discoveryengine.v1beta.Document].
         pub async fn update_document(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDocumentRequest>,
-        ) -> Result<tonic::Response<super::Document>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Document>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1598,13 +1824,21 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/UpdateDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "UpdateDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a [Document][google.cloud.discoveryengine.v1beta.Document].
         pub async fn delete_document(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDocumentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1618,7 +1852,15 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/DeleteDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "DeleteDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Bulk import of multiple
         /// [Document][google.cloud.discoveryengine.v1beta.Document]s. Request
@@ -1630,7 +1872,7 @@ pub mod document_service_client {
         pub async fn import_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1647,7 +1889,15 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/ImportDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "ImportDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Permanently deletes all selected
         /// [Document][google.cloud.discoveryengine.v1beta.Document]s in a branch.
@@ -1669,7 +1919,7 @@ pub mod document_service_client {
         pub async fn purge_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::PurgeDocumentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1686,43 +1936,16 @@ pub mod document_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.DocumentService/PurgeDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.DocumentService",
+                        "PurgeDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
-    }
-}
-/// Defines the structure and layout of a type of document data.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Schema {
-    /// Immutable. The full resource name of the schema, in the format of
-    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}/schemas/{schema}`.
-    ///
-    /// This field must be a UTF-8 encoded string with a length limit of 1024
-    /// characters.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Schema representation. One of
-    /// \[struct_schema][google.cloud.discoveryengine.v1beta.Schema.struct_schema\]
-    /// or \[json_schema][google.cloud.discoveryengine.v1beta.Schema.json_schema\]
-    /// should be provided otherwise an INVALID_ARGUMENT error is thrown.
-    #[prost(oneof = "schema::Schema", tags = "2, 3")]
-    pub schema: ::core::option::Option<schema::Schema>,
-}
-/// Nested message and enum types in `Schema`.
-pub mod schema {
-    /// Schema representation. One of
-    /// \[struct_schema][google.cloud.discoveryengine.v1beta.Schema.struct_schema\]
-    /// or \[json_schema][google.cloud.discoveryengine.v1beta.Schema.json_schema\]
-    /// should be provided otherwise an INVALID_ARGUMENT error is thrown.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Schema {
-        /// The structured representation of the schema.
-        #[prost(message, tag = "2")]
-        StructSchema(::prost_types::Struct),
-        /// The JSON representation of the schema.
-        #[prost(string, tag = "3")]
-        JsonSchema(::prost::alloc::string::String),
     }
 }
 /// Request message for
@@ -1929,11 +2152,27 @@ pub mod schema_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets a [Schema][google.cloud.discoveryengine.v1beta.Schema].
         pub async fn get_schema(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSchemaRequest>,
-        ) -> Result<tonic::Response<super::Schema>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Schema>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1947,13 +2186,24 @@ pub mod schema_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.SchemaService/GetSchema",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.SchemaService",
+                        "GetSchema",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a list of [Schema][google.cloud.discoveryengine.v1beta.Schema]s.
         pub async fn list_schemas(
             &mut self,
             request: impl tonic::IntoRequest<super::ListSchemasRequest>,
-        ) -> Result<tonic::Response<super::ListSchemasResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListSchemasResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1967,13 +2217,21 @@ pub mod schema_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.SchemaService/ListSchemas",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.SchemaService",
+                        "ListSchemas",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a [Schema][google.cloud.discoveryengine.v1beta.Schema].
         pub async fn create_schema(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateSchemaRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1990,13 +2248,21 @@ pub mod schema_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.SchemaService/CreateSchema",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.SchemaService",
+                        "CreateSchema",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a [Schema][google.cloud.discoveryengine.v1beta.Schema].
         pub async fn update_schema(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateSchemaRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2013,13 +2279,21 @@ pub mod schema_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.SchemaService/UpdateSchema",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.SchemaService",
+                        "UpdateSchema",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a [Schema][google.cloud.discoveryengine.v1beta.Schema].
         pub async fn delete_schema(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteSchemaRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2036,7 +2310,289 @@ pub mod schema_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.SchemaService/DeleteSchema",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.SchemaService",
+                        "DeleteSchema",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Request message for Recommend method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RecommendRequest {
+    /// Required. Full resource name of the format:
+    /// `projects/*/locations/global/collections/*/dataStores/*/servingConfigs/*`
+    ///
+    /// Before you can request recommendations from your model, you must create at
+    /// least one serving config  for it.
+    #[prost(string, tag = "1")]
+    pub serving_config: ::prost::alloc::string::String,
+    /// Required. Context about the user, what they are looking at and what action
+    /// they took to trigger the Recommend request. Note that this user event
+    /// detail won't be ingested to userEvent logs. Thus, a separate userEvent
+    /// write request is required for event logging.
+    ///
+    /// Don't set
+    /// \[UserEvent.user_pseudo_id][google.cloud.discoveryengine.v1beta.UserEvent.user_pseudo_id\]
+    /// or
+    /// \[UserEvent.user_info.user_id][google.cloud.discoveryengine.v1beta.UserInfo.user_id\]
+    /// to the same fixed ID for different users. If you are trying to receive
+    /// non-personalized recommendations (not recommended; this can negatively
+    /// impact model performance), instead set
+    /// \[UserEvent.user_pseudo_id][google.cloud.discoveryengine.v1beta.UserEvent.user_pseudo_id\]
+    /// to a random unique ID and leave
+    /// \[UserEvent.user_info.user_id][google.cloud.discoveryengine.v1beta.UserInfo.user_id\]
+    /// unset.
+    #[prost(message, optional, tag = "2")]
+    pub user_event: ::core::option::Option<UserEvent>,
+    /// Maximum number of results to return. Set this property
+    /// to the number of recommendation results needed. If zero, the service will
+    /// choose a reasonable default. The maximum allowed value is 100. Values
+    /// above 100 will be coerced to 100.
+    #[prost(int32, tag = "3")]
+    pub page_size: i32,
+    /// Filter for restricting recommendation results with a length limit of 5,000
+    /// characters. Currently, only filter expressions on the `filter_tags`
+    /// attribute is supported.
+    ///
+    ///
+    /// Examples:
+    ///
+    ///   * `(filter_tags: ANY("Red", "Blue") OR filter_tags: ANY("Hot", "Cold"))`
+    ///   * `(filter_tags: ANY("Red", "Blue")) AND NOT (filter_tags: ANY("Green"))`
+    ///
+    /// If your filter blocks all results, the API will return generic
+    /// (unfiltered) popular Documents. If you only want results strictly matching
+    /// the filters, set `strictFiltering` to True in
+    /// \[RecommendRequest.params][google.cloud.discoveryengine.v1beta.RecommendRequest.params\]
+    /// to receive empty results instead.
+    ///
+    /// Note that the API will never return
+    /// \[Document][google.cloud.discoveryengine.v1beta.Document\]s with
+    /// `storageStatus` of `EXPIRED` or `DELETED` regardless of filter choices.
+    #[prost(string, tag = "4")]
+    pub filter: ::prost::alloc::string::String,
+    /// Use validate only mode for this recommendation query. If set to true, a
+    /// fake model will be used that returns arbitrary Document IDs.
+    /// Note that the validate only mode should only be used for testing the API,
+    /// or if the model is not ready.
+    #[prost(bool, tag = "5")]
+    pub validate_only: bool,
+    /// Additional domain specific parameters for the recommendations.
+    ///
+    /// Allowed values:
+    ///
+    /// * `returnDocument`: Boolean. If set to true, the associated Document
+    ///     object will be returned in
+    ///     \[RecommendResponse.RecommendationResult.document][google.cloud.discoveryengine.v1beta.RecommendResponse.RecommendationResult.document\].
+    /// * `returnScore`: Boolean. If set to true, the recommendation 'score'
+    ///     corresponding to each returned Document will be set in
+    ///     \[RecommendResponse.RecommendationResult.metadata][google.cloud.discoveryengine.v1beta.RecommendResponse.RecommendationResult.metadata\].
+    ///     The given 'score' indicates the probability of a Document conversion
+    ///     given the user's context and history.
+    /// * `strictFiltering`: Boolean. True by default. If set to false, the service
+    ///     will return generic (unfiltered) popular Documents instead of empty if
+    ///     your filter blocks all recommendation results.
+    /// * `diversityLevel`: String. Default empty. If set to be non-empty, then
+    ///     it needs to be one of:
+    ///      *  `no-diversity`
+    ///      *  `low-diversity`
+    ///      *  `medium-diversity`
+    ///      *  `high-diversity`
+    ///      *  `auto-diversity`
+    ///     This gives request-level control and adjusts recommendation results
+    ///     based on Document category.
+    #[prost(btree_map = "string, message", tag = "6")]
+    pub params: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::Value,
+    >,
+    /// The user labels applied to a resource must meet the following requirements:
+    ///
+    /// * Each resource can have multiple labels, up to a maximum of 64.
+    /// * Each label must be a key-value pair.
+    /// * Keys have a minimum length of 1 character and a maximum length of 63
+    ///    characters and cannot be empty. Values can be empty and have a maximum
+    ///    length of 63 characters.
+    /// * Keys and values can contain only lowercase letters, numeric characters,
+    ///    underscores, and dashes. All characters must use UTF-8 encoding, and
+    ///    international characters are allowed.
+    /// * The key portion of a label must be unique. However, you can use the same
+    ///    key with multiple resources.
+    /// * Keys must start with a lowercase letter or international character.
+    ///
+    /// See [Requirements for
+    /// labels](<https://cloud.google.com/resource-manager/docs/creating-managing-labels#requirements>)
+    /// for more details.
+    #[prost(btree_map = "string, string", tag = "8")]
+    pub user_labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+}
+/// Response message for Recommend method.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RecommendResponse {
+    /// A list of recommended Documents. The order represents the ranking (from the
+    /// most relevant Document to the least).
+    #[prost(message, repeated, tag = "1")]
+    pub results: ::prost::alloc::vec::Vec<recommend_response::RecommendationResult>,
+    /// A unique attribution token. This should be included in the
+    /// \[UserEvent][google.cloud.discoveryengine.v1beta.UserEvent\] logs resulting
+    /// from this recommendation, which enables accurate attribution of
+    /// recommendation model performance.
+    #[prost(string, tag = "2")]
+    pub attribution_token: ::prost::alloc::string::String,
+    /// IDs of documents in the request that were missing from the default Branch
+    /// associated with the requested ServingConfig.
+    #[prost(string, repeated, tag = "3")]
+    pub missing_ids: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// True if
+    /// \[RecommendRequest.validate_only][google.cloud.discoveryengine.v1beta.RecommendRequest.validate_only\]
+    /// was set.
+    #[prost(bool, tag = "4")]
+    pub validate_only: bool,
+}
+/// Nested message and enum types in `RecommendResponse`.
+pub mod recommend_response {
+    /// RecommendationResult represents a generic recommendation result with
+    /// associated metadata.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct RecommendationResult {
+        /// Resource ID of the recommended Document.
+        #[prost(string, tag = "1")]
+        pub id: ::prost::alloc::string::String,
+        /// Set if `returnDocument` is set to true in
+        /// \[RecommendRequest.params][google.cloud.discoveryengine.v1beta.RecommendRequest.params\].
+        #[prost(message, optional, tag = "2")]
+        pub document: ::core::option::Option<super::Document>,
+        /// Additional Document metadata / annotations.
+        ///
+        /// Possible values:
+        ///
+        /// * `score`: Recommendation score in double value. Is set if
+        ///    `returnScore` is set to true in
+        ///    \[RecommendRequest.params][google.cloud.discoveryengine.v1beta.RecommendRequest.params\].
+        #[prost(btree_map = "string, message", tag = "3")]
+        pub metadata: ::prost::alloc::collections::BTreeMap<
+            ::prost::alloc::string::String,
+            ::prost_types::Value,
+        >,
+    }
+}
+/// Generated client implementations.
+pub mod recommendation_service_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Service for making recommendations.
+    #[derive(Debug, Clone)]
+    pub struct RecommendationServiceClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> RecommendationServiceClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> RecommendationServiceClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            RecommendationServiceClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// Makes a recommendation, which requires a contextual user event.
+        pub async fn recommend(
+            &mut self,
+            request: impl tonic::IntoRequest<super::RecommendRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::RecommendResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.discoveryengine.v1beta.RecommendationService/Recommend",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.RecommendationService",
+                        "Recommend",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -2186,7 +2742,7 @@ pub struct SearchRequest {
     /// Document](<https://cloud.google.com/resource-manager/docs/creating-managing-labels#requirements>)
     /// for more details.
     #[prost(btree_map = "string, string", tag = "22")]
-    pub user_label: ::prost::alloc::collections::BTreeMap<
+    pub user_labels: ::prost::alloc::collections::BTreeMap<
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
@@ -2761,11 +3317,27 @@ pub mod search_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Performs a search.
         pub async fn search(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchRequest>,
-        ) -> Result<tonic::Response<super::SearchResponse>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::SearchResponse>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2779,335 +3351,15 @@ pub mod search_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.discoveryengine.v1beta.SearchService/Search",
             );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for WriteUserEvent method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WriteUserEventRequest {
-    /// Required. The parent DataStore resource name, such as
-    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. User event to write.
-    #[prost(message, optional, tag = "2")]
-    pub user_event: ::core::option::Option<UserEvent>,
-}
-/// Request message for CollectUserEvent method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CollectUserEventRequest {
-    /// Required. The parent DataStore resource name, such as
-    /// `projects/{project}/locations/{location}/collections/{collection}/dataStores/{data_store}`.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Required. URL encoded UserEvent proto with a length limit of 2,000,000
-    /// characters.
-    #[prost(string, tag = "2")]
-    pub user_event: ::prost::alloc::string::String,
-    /// The URL including cgi-parameters but excluding the hash fragment with a
-    /// length limit of 5,000 characters. This is often more useful than the
-    /// referer URL, because many browsers only send the domain for 3rd party
-    /// requests.
-    #[prost(string, optional, tag = "3")]
-    pub uri: ::core::option::Option<::prost::alloc::string::String>,
-    /// The event timestamp in milliseconds. This prevents browser caching of
-    /// otherwise identical get requests. The name is abbreviated to reduce the
-    /// payload bytes.
-    #[prost(int64, optional, tag = "4")]
-    pub ets: ::core::option::Option<i64>,
-}
-/// Generated client implementations.
-pub mod user_event_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for ingesting end user actions on a website to Discovery Engine API.
-    #[derive(Debug, Clone)]
-    pub struct UserEventServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> UserEventServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> UserEventServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            UserEventServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Writes a single user event.
-        pub async fn write_user_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::WriteUserEventRequest>,
-        ) -> Result<tonic::Response<super::UserEvent>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.discoveryengine.v1beta.UserEventService/WriteUserEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Writes a single user event from the browser. This uses a GET request to
-        /// due to browser restriction of POST-ing to a 3rd party domain.
-        ///
-        /// This method is used only by the Discovery Engine API JavaScript pixel and
-        /// Google Tag Manager. Users should not call this method directly.
-        pub async fn collect_user_event(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CollectUserEventRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::api::HttpBody>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.discoveryengine.v1beta.UserEventService/CollectUserEvent",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-        /// Bulk import of User events. Request processing might be
-        /// synchronous. Events that already exist are skipped.
-        /// Use this method for backfilling historical user events.
-        ///
-        /// Operation.response is of type ImportResponse. Note that it is
-        /// possible for a subset of the items to be successfully inserted.
-        /// Operation.metadata is of type ImportMetadata.
-        pub async fn import_user_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImportUserEventsRequest>,
-        ) -> Result<
-            tonic::Response<super::super::super::super::longrunning::Operation>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.discoveryengine.v1beta.UserEventService/ImportUserEvents",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Request message for
-/// \[CompletionService.CompleteQuery][google.cloud.discoveryengine.v1beta.CompletionService.CompleteQuery\]
-/// method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryRequest {
-    /// Required. The parent data store resource name for which the completion is
-    /// performed, such as
-    /// `projects/*/locations/global/collections/default_collection/dataStores/default_data_store`.
-    #[prost(string, tag = "1")]
-    pub data_store: ::prost::alloc::string::String,
-    /// Required. The typeahead input used to fetch suggestions. Maximum length is
-    /// 128 characters.
-    #[prost(string, tag = "2")]
-    pub query: ::prost::alloc::string::String,
-    /// Selects data model of query suggestions for serving. Currently supported
-    /// values:
-    ///
-    /// * `document` - Using suggestions generated from user-imported documents.
-    /// * `search-history` - Using suggestions generated from the past history of
-    /// \[SearchService.Search][google.cloud.discoveryengine.v1beta.SearchService.Search\]
-    /// API calls. Do not use it when there is no traffic for Search API.
-    /// * `user-event` - Using suggestions generated from user-imported search
-    /// events.
-    ///
-    /// Default values:
-    ///
-    /// * `document` is the default model for regular dataStores.
-    /// * `search-history` is the default model for
-    /// \[IndustryVertical.SITE_SEARCH][google.cloud.discoveryengine.v1beta.IndustryVertical.SITE_SEARCH\]
-    /// dataStores.
-    #[prost(string, tag = "3")]
-    pub query_model: ::prost::alloc::string::String,
-    /// A unique identifier for tracking visitors. For example, this could be
-    /// implemented with an HTTP cookie, which should be able to uniquely identify
-    /// a visitor on a single device. This unique identifier should not change if
-    /// the visitor logs in or out of the website.
-    ///
-    /// This field should NOT have a fixed value such as `unknown_visitor`.
-    ///
-    /// This should be the same identifier as
-    /// \[UserEvent.user_pseudo_id][google.cloud.discoveryengine.v1beta.UserEvent.user_pseudo_id\]
-    /// and
-    /// \[SearchRequest.user_pseudo_id][google.cloud.discoveryengine.v1beta.SearchRequest.user_pseudo_id\].
-    ///
-    /// The field must be a UTF-8 encoded string with a length limit of 128
-    /// characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
-    #[prost(string, tag = "4")]
-    pub user_pseudo_id: ::prost::alloc::string::String,
-}
-/// Response message for
-/// \[CompletionService.CompleteQuery][google.cloud.discoveryengine.v1beta.CompletionService.CompleteQuery\]
-/// method.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CompleteQueryResponse {
-    /// Results of the matched query suggestions. The result list is ordered and
-    /// the first result is a top suggestion.
-    #[prost(message, repeated, tag = "1")]
-    pub query_suggestions: ::prost::alloc::vec::Vec<
-        complete_query_response::QuerySuggestion,
-    >,
-}
-/// Nested message and enum types in `CompleteQueryResponse`.
-pub mod complete_query_response {
-    /// Suggestions as search queries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct QuerySuggestion {
-        /// The suggestion for the query.
-        #[prost(string, tag = "1")]
-        pub suggestion: ::prost::alloc::string::String,
-    }
-}
-/// Generated client implementations.
-pub mod completion_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Service for Auto-Completion.
-    #[derive(Debug, Clone)]
-    pub struct CompletionServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> CompletionServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> CompletionServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            CompletionServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Completes the specified user input with keyword suggestions.
-        pub async fn complete_query(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CompleteQueryRequest>,
-        ) -> Result<tonic::Response<super::CompleteQueryResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.discoveryengine.v1beta.CompletionService/CompleteQuery",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.discoveryengine.v1beta.SearchService",
+                        "Search",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

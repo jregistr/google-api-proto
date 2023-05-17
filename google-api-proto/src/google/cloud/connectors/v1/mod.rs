@@ -427,170 +427,6 @@ impl LaunchStage {
         }
     }
 }
-/// Ssl config details of a connector version
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SslConfigTemplate {
-    /// Controls the ssl type for the given connector version
-    #[prost(enumeration = "SslType", tag = "1")]
-    pub ssl_type: i32,
-    /// Boolean for determining if the connector version mandates TLS.
-    #[prost(bool, tag = "2")]
-    pub is_tls_mandatory: bool,
-    /// List of supported Server Cert Types
-    #[prost(enumeration = "CertType", repeated, tag = "3")]
-    pub server_cert_type: ::prost::alloc::vec::Vec<i32>,
-    /// List of supported Client Cert Types
-    #[prost(enumeration = "CertType", repeated, tag = "4")]
-    pub client_cert_type: ::prost::alloc::vec::Vec<i32>,
-    /// Any additional fields that need to be rendered
-    #[prost(message, repeated, tag = "5")]
-    pub additional_variables: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
-}
-/// SSL Configuration of a connection
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SslConfig {
-    /// Controls the ssl type for the given connector version.
-    #[prost(enumeration = "SslType", tag = "1")]
-    pub r#type: i32,
-    /// Trust Model of the SSL connection
-    #[prost(enumeration = "ssl_config::TrustModel", tag = "2")]
-    pub trust_model: i32,
-    /// Private Server Certificate. Needs to be specified if trust model is
-    /// `PRIVATE`.
-    #[prost(message, optional, tag = "3")]
-    pub private_server_certificate: ::core::option::Option<Secret>,
-    /// Client Certificate
-    #[prost(message, optional, tag = "4")]
-    pub client_certificate: ::core::option::Option<Secret>,
-    /// Client Private Key
-    #[prost(message, optional, tag = "5")]
-    pub client_private_key: ::core::option::Option<Secret>,
-    /// Secret containing the passphrase protecting the Client Private Key
-    #[prost(message, optional, tag = "6")]
-    pub client_private_key_pass: ::core::option::Option<Secret>,
-    /// Type of Server Cert (PEM/JKS/.. etc.)
-    #[prost(enumeration = "CertType", tag = "7")]
-    pub server_cert_type: i32,
-    /// Type of Client Cert (PEM/JKS/.. etc.)
-    #[prost(enumeration = "CertType", tag = "8")]
-    pub client_cert_type: i32,
-    /// Bool for enabling SSL
-    #[prost(bool, tag = "9")]
-    pub use_ssl: bool,
-    /// Additional SSL related field values
-    #[prost(message, repeated, tag = "10")]
-    pub additional_variables: ::prost::alloc::vec::Vec<ConfigVariable>,
-}
-/// Nested message and enum types in `SslConfig`.
-pub mod ssl_config {
-    /// Enum for Ttust Model
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum TrustModel {
-        /// Public Trust Model. Takes the Default Java trust store.
-        Public = 0,
-        /// Private Trust Model. Takes custom/private trust store.
-        Private = 1,
-        /// Insecure Trust Model. Accept all certificates.
-        Insecure = 2,
-    }
-    impl TrustModel {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                TrustModel::Public => "PUBLIC",
-                TrustModel::Private => "PRIVATE",
-                TrustModel::Insecure => "INSECURE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "PUBLIC" => Some(Self::Public),
-                "PRIVATE" => Some(Self::Private),
-                "INSECURE" => Some(Self::Insecure),
-                _ => None,
-            }
-        }
-    }
-}
-/// Enum for controlling the SSL Type (TLS/MTLS)
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum SslType {
-    /// No SSL configuration required.
-    Unspecified = 0,
-    /// TLS Handshake
-    Tls = 1,
-    /// mutual TLS (MTLS) Handshake
-    Mtls = 2,
-}
-impl SslType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            SslType::Unspecified => "SSL_TYPE_UNSPECIFIED",
-            SslType::Tls => "TLS",
-            SslType::Mtls => "MTLS",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "SSL_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "TLS" => Some(Self::Tls),
-            "MTLS" => Some(Self::Mtls),
-            _ => None,
-        }
-    }
-}
-/// Enum for Cert Types
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum CertType {
-    /// Cert type unspecified.
-    Unspecified = 0,
-    /// Privacy Enhanced Mail (PEM) Type
-    Pem = 1,
-}
-impl CertType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            CertType::Unspecified => "CERT_TYPE_UNSPECIFIED",
-            CertType::Pem => "PEM",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "CERT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "PEM" => Some(Self::Pem),
-            _ => None,
-        }
-    }
-}
 /// AuthConfig defines details of a authentication type.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -760,6 +596,532 @@ impl AuthType {
             _ => None,
         }
     }
+}
+/// Ssl config details of a connector version
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SslConfigTemplate {
+    /// Controls the ssl type for the given connector version
+    #[prost(enumeration = "SslType", tag = "1")]
+    pub ssl_type: i32,
+    /// Boolean for determining if the connector version mandates TLS.
+    #[prost(bool, tag = "2")]
+    pub is_tls_mandatory: bool,
+    /// List of supported Server Cert Types
+    #[prost(enumeration = "CertType", repeated, tag = "3")]
+    pub server_cert_type: ::prost::alloc::vec::Vec<i32>,
+    /// List of supported Client Cert Types
+    #[prost(enumeration = "CertType", repeated, tag = "4")]
+    pub client_cert_type: ::prost::alloc::vec::Vec<i32>,
+    /// Any additional fields that need to be rendered
+    #[prost(message, repeated, tag = "5")]
+    pub additional_variables: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
+}
+/// SSL Configuration of a connection
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SslConfig {
+    /// Controls the ssl type for the given connector version.
+    #[prost(enumeration = "SslType", tag = "1")]
+    pub r#type: i32,
+    /// Trust Model of the SSL connection
+    #[prost(enumeration = "ssl_config::TrustModel", tag = "2")]
+    pub trust_model: i32,
+    /// Private Server Certificate. Needs to be specified if trust model is
+    /// `PRIVATE`.
+    #[prost(message, optional, tag = "3")]
+    pub private_server_certificate: ::core::option::Option<Secret>,
+    /// Client Certificate
+    #[prost(message, optional, tag = "4")]
+    pub client_certificate: ::core::option::Option<Secret>,
+    /// Client Private Key
+    #[prost(message, optional, tag = "5")]
+    pub client_private_key: ::core::option::Option<Secret>,
+    /// Secret containing the passphrase protecting the Client Private Key
+    #[prost(message, optional, tag = "6")]
+    pub client_private_key_pass: ::core::option::Option<Secret>,
+    /// Type of Server Cert (PEM/JKS/.. etc.)
+    #[prost(enumeration = "CertType", tag = "7")]
+    pub server_cert_type: i32,
+    /// Type of Client Cert (PEM/JKS/.. etc.)
+    #[prost(enumeration = "CertType", tag = "8")]
+    pub client_cert_type: i32,
+    /// Bool for enabling SSL
+    #[prost(bool, tag = "9")]
+    pub use_ssl: bool,
+    /// Additional SSL related field values
+    #[prost(message, repeated, tag = "10")]
+    pub additional_variables: ::prost::alloc::vec::Vec<ConfigVariable>,
+}
+/// Nested message and enum types in `SslConfig`.
+pub mod ssl_config {
+    /// Enum for Ttust Model
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum TrustModel {
+        /// Public Trust Model. Takes the Default Java trust store.
+        Public = 0,
+        /// Private Trust Model. Takes custom/private trust store.
+        Private = 1,
+        /// Insecure Trust Model. Accept all certificates.
+        Insecure = 2,
+    }
+    impl TrustModel {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                TrustModel::Public => "PUBLIC",
+                TrustModel::Private => "PRIVATE",
+                TrustModel::Insecure => "INSECURE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PUBLIC" => Some(Self::Public),
+                "PRIVATE" => Some(Self::Private),
+                "INSECURE" => Some(Self::Insecure),
+                _ => None,
+            }
+        }
+    }
+}
+/// Enum for controlling the SSL Type (TLS/MTLS)
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum SslType {
+    /// No SSL configuration required.
+    Unspecified = 0,
+    /// TLS Handshake
+    Tls = 1,
+    /// mutual TLS (MTLS) Handshake
+    Mtls = 2,
+}
+impl SslType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            SslType::Unspecified => "SSL_TYPE_UNSPECIFIED",
+            SslType::Tls => "TLS",
+            SslType::Mtls => "MTLS",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "SSL_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "TLS" => Some(Self::Tls),
+            "MTLS" => Some(Self::Mtls),
+            _ => None,
+        }
+    }
+}
+/// Enum for Cert Types
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum CertType {
+    /// Cert type unspecified.
+    Unspecified = 0,
+    /// Privacy Enhanced Mail (PEM) Type
+    Pem = 1,
+}
+impl CertType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            CertType::Unspecified => "CERT_TYPE_UNSPECIFIED",
+            CertType::Pem => "PEM",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CERT_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "PEM" => Some(Self::Pem),
+            _ => None,
+        }
+    }
+}
+/// ConnectorVersion indicates a specific version of a connector.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ConnectorVersion {
+    /// Output only. Resource name of the Version.
+    /// Format:
+    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}/versions/{version}
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration = "LaunchStage", tag = "6")]
+    pub launch_stage: i32,
+    /// Output only. ReleaseVersion of the connector, for example: "1.0.1-alpha".
+    #[prost(string, tag = "7")]
+    pub release_version: ::prost::alloc::string::String,
+    /// Output only. List of auth configs supported by the Connector Version.
+    #[prost(message, repeated, tag = "8")]
+    pub auth_config_templates: ::prost::alloc::vec::Vec<AuthConfigTemplate>,
+    /// Output only. List of config variables needed to create a connection.
+    #[prost(message, repeated, tag = "9")]
+    pub config_variable_templates: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
+    /// Output only. Information about the runtime features supported by the
+    /// Connector.
+    #[prost(message, optional, tag = "10")]
+    pub supported_runtime_features: ::core::option::Option<SupportedRuntimeFeatures>,
+    /// Output only. Display name.
+    #[prost(string, tag = "11")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Configuration for Egress Control.
+    #[prost(message, optional, tag = "12")]
+    pub egress_control_config: ::core::option::Option<EgressControlConfig>,
+    /// Output only. Role grant configurations for this connector version.
+    #[prost(message, repeated, tag = "14")]
+    pub role_grants: ::prost::alloc::vec::Vec<RoleGrant>,
+    /// Output only. Role grant configuration for this config variable. It will be
+    /// DEPRECATED soon.
+    #[prost(message, optional, tag = "15")]
+    pub role_grant: ::core::option::Option<RoleGrant>,
+    /// Output only. Ssl configuration supported by the Connector.
+    #[prost(message, optional, tag = "17")]
+    pub ssl_config_template: ::core::option::Option<SslConfigTemplate>,
+}
+/// Request message for Connectors.GetConnectorVersion.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetConnectorVersionRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*/versions/*`
+    /// Only global location is supported for ConnectorVersion resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Specifies which fields of the ConnectorVersion are returned in the
+    /// response. Defaults to `CUSTOMER` view.
+    #[prost(enumeration = "ConnectorVersionView", tag = "2")]
+    pub view: i32,
+}
+/// Request message for Connectors.ListConnectorVersions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorVersionsRequest {
+    /// Required. Parent resource of the connectors, of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*`
+    /// Only global location is supported for ConnectorVersion resource.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Specifies which fields of the ConnectorVersion are returned in the
+    /// response. Defaults to `BASIC` view.
+    #[prost(enumeration = "ConnectorVersionView", tag = "4")]
+    pub view: i32,
+}
+/// Response message for Connectors.ListConnectorVersions.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorVersionsResponse {
+    /// A list of connector versions.
+    #[prost(message, repeated, tag = "1")]
+    pub connector_versions: ::prost::alloc::vec::Vec<ConnectorVersion>,
+    /// Next page token.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Supported runtime features of a connector version. This is passed to the
+/// management layer to add a new connector version by the connector developer.
+/// Details about how this proto is passed to the management layer is covered in
+/// this doc - go/runtime-manifest.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SupportedRuntimeFeatures {
+    /// Specifies if the connector supports entity apis like 'createEntity'.
+    #[prost(bool, tag = "1")]
+    pub entity_apis: bool,
+    /// Specifies if the connector supports action apis like 'executeAction'.
+    #[prost(bool, tag = "2")]
+    pub action_apis: bool,
+    /// Specifies if the connector supports 'ExecuteSqlQuery' operation.
+    #[prost(bool, tag = "3")]
+    pub sql_query: bool,
+}
+/// Egress control config for connector runtime. These configurations define the
+/// rules to identify which outbound domains/hosts needs to be whitelisted. It
+/// may be a static information for a particular connector version or it is
+/// derived from the configurations provided by the customer in Connection
+/// resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EgressControlConfig {
+    #[prost(oneof = "egress_control_config::OneofBackends", tags = "1, 2")]
+    pub oneof_backends: ::core::option::Option<egress_control_config::OneofBackends>,
+}
+/// Nested message and enum types in `EgressControlConfig`.
+pub mod egress_control_config {
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum OneofBackends {
+        /// Static Comma separated backends which are common for all Connection
+        /// resources. Supported formats for each backend are host:port or just
+        /// host (host can be ip address or domain name).
+        #[prost(string, tag = "1")]
+        Backends(::prost::alloc::string::String),
+        /// Extractions Rules to extract the backends from customer provided
+        /// configuration.
+        #[prost(message, tag = "2")]
+        ExtractionRules(super::ExtractionRules),
+    }
+}
+/// Extraction Rules to identity the backends from customer provided
+/// configuration in Connection resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExtractionRules {
+    /// Collection of Extraction Rule.
+    #[prost(message, repeated, tag = "1")]
+    pub extraction_rule: ::prost::alloc::vec::Vec<ExtractionRule>,
+}
+/// Extraction Rule.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExtractionRule {
+    /// Source on which the rule is applied.
+    #[prost(message, optional, tag = "1")]
+    pub source: ::core::option::Option<extraction_rule::Source>,
+    /// Regex used to extract backend details from source. If empty, whole source
+    /// value will be used.
+    #[prost(string, tag = "2")]
+    pub extraction_regex: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `ExtractionRule`.
+pub mod extraction_rule {
+    /// Source to extract the backend from.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Source {
+        /// Type of the source.
+        #[prost(enumeration = "SourceType", tag = "1")]
+        pub source_type: i32,
+        /// Field identifier. For example config vaiable name.
+        #[prost(string, tag = "2")]
+        pub field_id: ::prost::alloc::string::String,
+    }
+    /// Supported Source types for extraction.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum SourceType {
+        /// Default SOURCE.
+        Unspecified = 0,
+        /// Config Variable source type.
+        ConfigVariable = 1,
+    }
+    impl SourceType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SourceType::Unspecified => "SOURCE_TYPE_UNSPECIFIED",
+                SourceType::ConfigVariable => "CONFIG_VARIABLE",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SOURCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONFIG_VARIABLE" => Some(Self::ConfigVariable),
+                _ => None,
+            }
+        }
+    }
+}
+/// Enum to control which fields should be included in the response.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ConnectorVersionView {
+    /// CONNECTOR_VERSION_VIEW_UNSPECIFIED.
+    Unspecified = 0,
+    /// Do not include role grant configs.
+    Basic = 1,
+    /// Include role grant configs.
+    Full = 2,
+}
+impl ConnectorVersionView {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ConnectorVersionView::Unspecified => "CONNECTOR_VERSION_VIEW_UNSPECIFIED",
+            ConnectorVersionView::Basic => "CONNECTOR_VERSION_VIEW_BASIC",
+            ConnectorVersionView::Full => "CONNECTOR_VERSION_VIEW_FULL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CONNECTOR_VERSION_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
+            "CONNECTOR_VERSION_VIEW_BASIC" => Some(Self::Basic),
+            "CONNECTOR_VERSION_VIEW_FULL" => Some(Self::Full),
+            _ => None,
+        }
+    }
+}
+/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Connector {
+    /// Output only. Resource name of the Connector.
+    /// Format:
+    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Created time.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Updated time.
+    #[prost(message, optional, tag = "3")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Resource labels to represent user-provided metadata.
+    /// Refer to cloud documentation on labels for more details.
+    /// <https://cloud.google.com/compute/docs/labeling-resources>
+    #[prost(btree_map = "string, string", tag = "4")]
+    pub labels: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// Output only. Link to documentation page.
+    #[prost(string, tag = "6")]
+    pub documentation_uri: ::prost::alloc::string::String,
+    /// Output only. Link to external page.
+    #[prost(string, tag = "7")]
+    pub external_uri: ::prost::alloc::string::String,
+    /// Output only. Description of the resource.
+    #[prost(string, tag = "8")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. Cloud storage location of icons etc consumed by UI.
+    #[prost(string, tag = "9")]
+    pub web_assets_location: ::prost::alloc::string::String,
+    /// Output only. Display name.
+    #[prost(string, tag = "10")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. Flag to mark the version indicating the launch stage.
+    #[prost(enumeration = "LaunchStage", tag = "11")]
+    pub launch_stage: i32,
+}
+/// Request message for Connectors.GetConnector.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetConnectorRequest {
+    /// Required. Resource name of the form:
+    /// `projects/*/locations/*/providers/*/connectors/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Request message for Connectors.ListConnectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsRequest {
+    /// Required. Parent resource of the connectors, of the form:
+    /// `projects/*/locations/*/providers/*`
+    /// Only global location is supported for Connector resource.
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// Page size.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// Page token.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+}
+/// Response message for Connectors.ListConnectors.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListConnectorsResponse {
+    /// A list of connectors.
+    #[prost(message, repeated, tag = "1")]
+    pub connectors: ::prost::alloc::vec::Vec<Connector>,
+    /// Next page token.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+    /// Locations that could not be reached.
+    #[prost(string, repeated, tag = "3")]
+    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Request for \[GetGlobalSettingsRequest\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GetGlobalSettingsRequest {
+    /// Required. The resource name of the Settings.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// Global Settings details.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Settings {
+    /// Output only. Resource name of the Connection.
+    /// Format: projects/{project}/locations/global/settings}
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Optional. Flag indicates whether vpc-sc is enabled.
+    #[prost(bool, tag = "2")]
+    pub vpcsc: bool,
+    /// Output only. Flag indicates if user is in PayG model
+    #[prost(bool, tag = "3")]
+    pub payg: bool,
 }
 /// Define the Connectors target endpoint.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1584,345 +1946,6 @@ impl ConnectionView {
         }
     }
 }
-/// Connectors indicates a specific connector type, e.x. Salesforce, SAP etc.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Connector {
-    /// Output only. Resource name of the Connector.
-    /// Format:
-    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Link to documentation page.
-    #[prost(string, tag = "6")]
-    pub documentation_uri: ::prost::alloc::string::String,
-    /// Output only. Link to external page.
-    #[prost(string, tag = "7")]
-    pub external_uri: ::prost::alloc::string::String,
-    /// Output only. Description of the resource.
-    #[prost(string, tag = "8")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. Cloud storage location of icons etc consumed by UI.
-    #[prost(string, tag = "9")]
-    pub web_assets_location: ::prost::alloc::string::String,
-    /// Output only. Display name.
-    #[prost(string, tag = "10")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration = "LaunchStage", tag = "11")]
-    pub launch_stage: i32,
-}
-/// Request message for Connectors.GetConnector.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetConnectorRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Request message for Connectors.ListConnectors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsRequest {
-    /// Required. Parent resource of the connectors, of the form:
-    /// `projects/*/locations/*/providers/*`
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-}
-/// Response message for Connectors.ListConnectors.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorsResponse {
-    /// A list of connectors.
-    #[prost(message, repeated, tag = "1")]
-    pub connectors: ::prost::alloc::vec::Vec<Connector>,
-    /// Next page token.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// ConnectorVersion indicates a specific version of a connector.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ConnectorVersion {
-    /// Output only. Resource name of the Version.
-    /// Format:
-    /// projects/{project}/locations/{location}/providers/{provider}/connectors/{connector}/versions/{version}
-    /// Only global location is supported for Connector resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Created time.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Updated time.
-    #[prost(message, optional, tag = "3")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Resource labels to represent user-provided metadata.
-    /// Refer to cloud documentation on labels for more details.
-    /// <https://cloud.google.com/compute/docs/labeling-resources>
-    #[prost(btree_map = "string, string", tag = "4")]
-    pub labels: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// Output only. Flag to mark the version indicating the launch stage.
-    #[prost(enumeration = "LaunchStage", tag = "6")]
-    pub launch_stage: i32,
-    /// Output only. ReleaseVersion of the connector, for example: "1.0.1-alpha".
-    #[prost(string, tag = "7")]
-    pub release_version: ::prost::alloc::string::String,
-    /// Output only. List of auth configs supported by the Connector Version.
-    #[prost(message, repeated, tag = "8")]
-    pub auth_config_templates: ::prost::alloc::vec::Vec<AuthConfigTemplate>,
-    /// Output only. List of config variables needed to create a connection.
-    #[prost(message, repeated, tag = "9")]
-    pub config_variable_templates: ::prost::alloc::vec::Vec<ConfigVariableTemplate>,
-    /// Output only. Information about the runtime features supported by the
-    /// Connector.
-    #[prost(message, optional, tag = "10")]
-    pub supported_runtime_features: ::core::option::Option<SupportedRuntimeFeatures>,
-    /// Output only. Display name.
-    #[prost(string, tag = "11")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. Configuration for Egress Control.
-    #[prost(message, optional, tag = "12")]
-    pub egress_control_config: ::core::option::Option<EgressControlConfig>,
-    /// Output only. Role grant configurations for this connector version.
-    #[prost(message, repeated, tag = "14")]
-    pub role_grants: ::prost::alloc::vec::Vec<RoleGrant>,
-    /// Output only. Role grant configuration for this config variable. It will be
-    /// DEPRECATED soon.
-    #[prost(message, optional, tag = "15")]
-    pub role_grant: ::core::option::Option<RoleGrant>,
-    /// Output only. Ssl configuration supported by the Connector.
-    #[prost(message, optional, tag = "17")]
-    pub ssl_config_template: ::core::option::Option<SslConfigTemplate>,
-}
-/// Request message for Connectors.GetConnectorVersion.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetConnectorVersionRequest {
-    /// Required. Resource name of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*/versions/*`
-    /// Only global location is supported for ConnectorVersion resource.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Specifies which fields of the ConnectorVersion are returned in the
-    /// response. Defaults to `CUSTOMER` view.
-    #[prost(enumeration = "ConnectorVersionView", tag = "2")]
-    pub view: i32,
-}
-/// Request message for Connectors.ListConnectorVersions.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorVersionsRequest {
-    /// Required. Parent resource of the connectors, of the form:
-    /// `projects/*/locations/*/providers/*/connectors/*`
-    /// Only global location is supported for ConnectorVersion resource.
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// Page size.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// Page token.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Specifies which fields of the ConnectorVersion are returned in the
-    /// response. Defaults to `BASIC` view.
-    #[prost(enumeration = "ConnectorVersionView", tag = "4")]
-    pub view: i32,
-}
-/// Response message for Connectors.ListConnectorVersions.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListConnectorVersionsResponse {
-    /// A list of connector versions.
-    #[prost(message, repeated, tag = "1")]
-    pub connector_versions: ::prost::alloc::vec::Vec<ConnectorVersion>,
-    /// Next page token.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-    /// Locations that could not be reached.
-    #[prost(string, repeated, tag = "3")]
-    pub unreachable: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Supported runtime features of a connector version. This is passed to the
-/// management layer to add a new connector version by the connector developer.
-/// Details about how this proto is passed to the management layer is covered in
-/// this doc - go/runtime-manifest.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SupportedRuntimeFeatures {
-    /// Specifies if the connector supports entity apis like 'createEntity'.
-    #[prost(bool, tag = "1")]
-    pub entity_apis: bool,
-    /// Specifies if the connector supports action apis like 'executeAction'.
-    #[prost(bool, tag = "2")]
-    pub action_apis: bool,
-    /// Specifies if the connector supports 'ExecuteSqlQuery' operation.
-    #[prost(bool, tag = "3")]
-    pub sql_query: bool,
-}
-/// Egress control config for connector runtime. These configurations define the
-/// rules to identify which outbound domains/hosts needs to be whitelisted. It
-/// may be a static information for a particular connector version or it is
-/// derived from the configurations provided by the customer in Connection
-/// resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EgressControlConfig {
-    #[prost(oneof = "egress_control_config::OneofBackends", tags = "1, 2")]
-    pub oneof_backends: ::core::option::Option<egress_control_config::OneofBackends>,
-}
-/// Nested message and enum types in `EgressControlConfig`.
-pub mod egress_control_config {
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum OneofBackends {
-        /// Static Comma separated backends which are common for all Connection
-        /// resources. Supported formats for each backend are host:port or just
-        /// host (host can be ip address or domain name).
-        #[prost(string, tag = "1")]
-        Backends(::prost::alloc::string::String),
-        /// Extractions Rules to extract the backends from customer provided
-        /// configuration.
-        #[prost(message, tag = "2")]
-        ExtractionRules(super::ExtractionRules),
-    }
-}
-/// Extraction Rules to identity the backends from customer provided
-/// configuration in Connection resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtractionRules {
-    /// Collection of Extraction Rule.
-    #[prost(message, repeated, tag = "1")]
-    pub extraction_rule: ::prost::alloc::vec::Vec<ExtractionRule>,
-}
-/// Extraction Rule.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExtractionRule {
-    /// Source on which the rule is applied.
-    #[prost(message, optional, tag = "1")]
-    pub source: ::core::option::Option<extraction_rule::Source>,
-    /// Regex used to extract backend details from source. If empty, whole source
-    /// value will be used.
-    #[prost(string, tag = "2")]
-    pub extraction_regex: ::prost::alloc::string::String,
-}
-/// Nested message and enum types in `ExtractionRule`.
-pub mod extraction_rule {
-    /// Source to extract the backend from.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Source {
-        /// Type of the source.
-        #[prost(enumeration = "SourceType", tag = "1")]
-        pub source_type: i32,
-        /// Field identifier. For example config vaiable name.
-        #[prost(string, tag = "2")]
-        pub field_id: ::prost::alloc::string::String,
-    }
-    /// Supported Source types for extraction.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum SourceType {
-        /// Default SOURCE.
-        Unspecified = 0,
-        /// Config Variable source type.
-        ConfigVariable = 1,
-    }
-    impl SourceType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SourceType::Unspecified => "SOURCE_TYPE_UNSPECIFIED",
-                SourceType::ConfigVariable => "CONFIG_VARIABLE",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SOURCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CONFIG_VARIABLE" => Some(Self::ConfigVariable),
-                _ => None,
-            }
-        }
-    }
-}
-/// Enum to control which fields should be included in the response.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ConnectorVersionView {
-    /// CONNECTOR_VERSION_VIEW_UNSPECIFIED.
-    Unspecified = 0,
-    /// Do not include role grant configs.
-    Basic = 1,
-    /// Include role grant configs.
-    Full = 2,
-}
-impl ConnectorVersionView {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            ConnectorVersionView::Unspecified => "CONNECTOR_VERSION_VIEW_UNSPECIFIED",
-            ConnectorVersionView::Basic => "CONNECTOR_VERSION_VIEW_BASIC",
-            ConnectorVersionView::Full => "CONNECTOR_VERSION_VIEW_FULL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "CONNECTOR_VERSION_VIEW_UNSPECIFIED" => Some(Self::Unspecified),
-            "CONNECTOR_VERSION_VIEW_BASIC" => Some(Self::Basic),
-            "CONNECTOR_VERSION_VIEW_FULL" => Some(Self::Full),
-            _ => None,
-        }
-    }
-}
 /// Provider indicates the owner who provides the connectors.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2121,29 +2144,6 @@ pub mod runtime_config {
         }
     }
 }
-/// Request for \[GetGlobalSettingsRequest\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GetGlobalSettingsRequest {
-    /// Required. The resource name of the Settings.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// Global Settings details.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Settings {
-    /// Output only. Resource name of the Connection.
-    /// Format: projects/{project}/locations/global/settings}
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Optional. Flag indicates whether vpc-sc is enabled.
-    #[prost(bool, tag = "2")]
-    pub vpcsc: bool,
-    /// Output only. Flag indicates if user is in PayG model
-    #[prost(bool, tag = "3")]
-    pub payg: bool,
-}
 /// Generated client implementations.
 pub mod connectors_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -2203,11 +2203,30 @@ pub mod connectors_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists Connections in a given project and location.
         pub async fn list_connections(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectionsRequest>,
-        ) -> Result<tonic::Response<super::ListConnectionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListConnectionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2221,13 +2240,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/ListConnections",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "ListConnections",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Connection.
         pub async fn get_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectionRequest>,
-        ) -> Result<tonic::Response<super::Connection>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Connection>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2241,13 +2268,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Connection in a given project and location.
         pub async fn create_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConnectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2264,13 +2299,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/CreateConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "CreateConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single Connection.
         pub async fn update_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateConnectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2287,13 +2330,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/UpdateConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "UpdateConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Connection.
         pub async fn delete_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConnectionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2310,13 +2361,24 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/DeleteConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "DeleteConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Providers in a given project and location.
         pub async fn list_providers(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProvidersRequest>,
-        ) -> Result<tonic::Response<super::ListProvidersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListProvidersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2330,13 +2392,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/ListProviders",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "ListProviders",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a provider.
         pub async fn get_provider(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProviderRequest>,
-        ) -> Result<tonic::Response<super::Provider>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Provider>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2350,13 +2420,24 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetProvider",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetProvider",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Connectors in a given project and location.
         pub async fn list_connectors(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectorsRequest>,
-        ) -> Result<tonic::Response<super::ListConnectorsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListConnectorsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2370,13 +2451,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/ListConnectors",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "ListConnectors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Connector.
         pub async fn get_connector(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectorRequest>,
-        ) -> Result<tonic::Response<super::Connector>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Connector>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2390,13 +2479,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetConnector",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetConnector",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Connector Versions in a given project and location.
         pub async fn list_connector_versions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectorVersionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListConnectorVersionsResponse>,
             tonic::Status,
         > {
@@ -2413,13 +2510,24 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/ListConnectorVersions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "ListConnectorVersions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single connector version.
         pub async fn get_connector_version(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectorVersionRequest>,
-        ) -> Result<tonic::Response<super::ConnectorVersion>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ConnectorVersion>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2433,14 +2541,25 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetConnectorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetConnectorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets schema metadata of a connection.
         /// SchemaMetadata is a singleton resource for each connection.
         pub async fn get_connection_schema_metadata(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectionSchemaMetadataRequest>,
-        ) -> Result<tonic::Response<super::ConnectionSchemaMetadata>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ConnectionSchemaMetadata>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2454,7 +2573,15 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetConnectionSchemaMetadata",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetConnectionSchemaMetadata",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Refresh runtime schema of a connection.
         pub async fn refresh_connection_schema_metadata(
@@ -2462,7 +2589,7 @@ pub mod connectors_client {
             request: impl tonic::IntoRequest<
                 super::RefreshConnectionSchemaMetadataRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2479,13 +2606,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/RefreshConnectionSchemaMetadata",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "RefreshConnectionSchemaMetadata",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List schema of a runtime entities filtered by entity name.
         pub async fn list_runtime_entity_schemas(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRuntimeEntitySchemasRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListRuntimeEntitySchemasResponse>,
             tonic::Status,
         > {
@@ -2502,13 +2637,21 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/ListRuntimeEntitySchemas",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "ListRuntimeEntitySchemas",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List schema of a runtime actions filtered by action name.
         pub async fn list_runtime_action_schemas(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRuntimeActionSchemasRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListRuntimeActionSchemasResponse>,
             tonic::Status,
         > {
@@ -2525,14 +2668,22 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/ListRuntimeActionSchemas",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "ListRuntimeActionSchemas",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the runtimeConfig of a location.
         /// RuntimeConfig is a singleton resource for each location.
         pub async fn get_runtime_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRuntimeConfigRequest>,
-        ) -> Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::RuntimeConfig>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2546,14 +2697,22 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetRuntimeConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetRuntimeConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// GetGlobalSettings gets settings of a project.
         /// GlobalSettings is a singleton resource.
         pub async fn get_global_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetGlobalSettingsRequest>,
-        ) -> Result<tonic::Response<super::Settings>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Settings>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2567,7 +2726,15 @@ pub mod connectors_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.connectors.v1.Connectors/GetGlobalSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.connectors.v1.Connectors",
+                        "GetGlobalSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

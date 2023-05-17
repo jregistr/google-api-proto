@@ -1,69 +1,183 @@
-/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
+/// An Instance resource is the computing unit that App Engine uses to
+/// automatically scale an application.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OperationMetadataV1Beta {
-    /// API method that initiated this operation. Example:
-    /// `google.appengine.v1beta.Versions.CreateVersion`.
-    ///
-    /// @OutputOnly
+pub struct Instance {
+    /// Output only. Full path to the Instance resource in the API.
+    /// Example: `apps/myapp/services/default/versions/v1/instances/instance-1`.
     #[prost(string, tag = "1")]
-    pub method: ::prost::alloc::string::String,
-    /// Time that this operation was created.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "2")]
-    pub insert_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Time that this operation completed.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "3")]
-    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// User who requested this operation.
-    ///
-    /// @OutputOnly
-    #[prost(string, tag = "4")]
-    pub user: ::prost::alloc::string::String,
-    /// Name of the resource that this operation is acting on. Example:
-    /// `apps/myapp/services/default`.
-    ///
-    /// @OutputOnly
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Relative name of the instance within the version.
+    /// Example: `instance-1`.
+    #[prost(string, tag = "2")]
+    pub id: ::prost::alloc::string::String,
+    /// Output only. App Engine release this instance is running on.
+    #[prost(string, tag = "3")]
+    pub app_engine_release: ::prost::alloc::string::String,
+    /// Output only. Availability of the instance.
+    #[prost(enumeration = "instance::Availability", tag = "4")]
+    pub availability: i32,
+    /// Output only. Name of the virtual machine where this instance lives. Only applicable
+    /// for instances in App Engine flexible environment.
     #[prost(string, tag = "5")]
-    pub target: ::prost::alloc::string::String,
-    /// Ephemeral message that may change every time the operation is polled.
-    /// @OutputOnly
+    pub vm_name: ::prost::alloc::string::String,
+    /// Output only. Zone where the virtual machine is located. Only applicable for instances
+    /// in App Engine flexible environment.
     #[prost(string, tag = "6")]
-    pub ephemeral_message: ::prost::alloc::string::String,
-    /// Durable messages that persist on every operation poll.
+    pub vm_zone_name: ::prost::alloc::string::String,
+    /// Output only. Virtual machine ID of this instance. Only applicable for instances in
+    /// App Engine flexible environment.
+    #[prost(string, tag = "7")]
+    pub vm_id: ::prost::alloc::string::String,
+    /// Output only. Time that this instance was started.
+    ///
     /// @OutputOnly
-    #[prost(string, repeated, tag = "7")]
-    pub warning: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Metadata specific to the type of operation in progress.
-    /// @OutputOnly
-    #[prost(oneof = "operation_metadata_v1_beta::MethodMetadata", tags = "8")]
-    pub method_metadata: ::core::option::Option<
-        operation_metadata_v1_beta::MethodMetadata,
-    >,
+    #[prost(message, optional, tag = "8")]
+    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Number of requests since this instance was started.
+    #[prost(int32, tag = "9")]
+    pub requests: i32,
+    /// Output only. Number of errors since this instance was started.
+    #[prost(int32, tag = "10")]
+    pub errors: i32,
+    /// Output only. Average queries per second (QPS) over the last minute.
+    #[prost(float, tag = "11")]
+    pub qps: f32,
+    /// Output only. Average latency (ms) over the last minute.
+    #[prost(int32, tag = "12")]
+    pub average_latency: i32,
+    /// Output only. Total memory in use (bytes).
+    #[prost(int64, tag = "13")]
+    pub memory_usage: i64,
+    /// Output only. Status of the virtual machine where this instance lives. Only applicable
+    /// for instances in App Engine flexible environment.
+    #[prost(string, tag = "14")]
+    pub vm_status: ::prost::alloc::string::String,
+    /// Output only. Whether this instance is in debug mode. Only applicable for instances in
+    /// App Engine flexible environment.
+    #[prost(bool, tag = "15")]
+    pub vm_debug_enabled: bool,
+    /// Output only. The IP address of this instance. Only applicable for instances in App
+    /// Engine flexible environment.
+    #[prost(string, tag = "16")]
+    pub vm_ip: ::prost::alloc::string::String,
+    /// Output only. The liveness health check of this instance. Only applicable for instances
+    /// in App Engine flexible environment.
+    #[prost(enumeration = "instance::liveness::LivenessState", tag = "17")]
+    pub vm_liveness: i32,
 }
-/// Nested message and enum types in `OperationMetadataV1Beta`.
-pub mod operation_metadata_v1_beta {
-    /// Metadata specific to the type of operation in progress.
-    /// @OutputOnly
+/// Nested message and enum types in `Instance`.
+pub mod instance {
+    /// Wrapper for LivenessState enum.
     #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum MethodMetadata {
-        #[prost(message, tag = "8")]
-        CreateVersionMetadata(super::CreateVersionMetadataV1Beta),
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Liveness {}
+    /// Nested message and enum types in `Liveness`.
+    pub mod liveness {
+        /// Liveness health check status for Flex instances.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum LivenessState {
+            /// There is no liveness health check for the instance. Only applicable for
+            /// instances in App Engine standard environment.
+            Unspecified = 0,
+            /// The health checking system is aware of the instance but its health is
+            /// not known at the moment.
+            Unknown = 1,
+            /// The instance is reachable i.e. a connection to the application health
+            /// checking endpoint can be established, and conforms to the requirements
+            /// defined by the health check.
+            Healthy = 2,
+            /// The instance is reachable, but does not conform to the requirements
+            /// defined by the health check.
+            Unhealthy = 3,
+            /// The instance is being drained. The existing connections to the instance
+            /// have time to complete, but the new ones are being refused.
+            Draining = 4,
+            /// The instance is unreachable i.e. a connection to the application health
+            /// checking endpoint cannot be established, or the server does not respond
+            /// within the specified timeout.
+            Timeout = 5,
+        }
+        impl LivenessState {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    LivenessState::Unspecified => "LIVENESS_STATE_UNSPECIFIED",
+                    LivenessState::Unknown => "UNKNOWN",
+                    LivenessState::Healthy => "HEALTHY",
+                    LivenessState::Unhealthy => "UNHEALTHY",
+                    LivenessState::Draining => "DRAINING",
+                    LivenessState::Timeout => "TIMEOUT",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "LIVENESS_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "UNKNOWN" => Some(Self::Unknown),
+                    "HEALTHY" => Some(Self::Healthy),
+                    "UNHEALTHY" => Some(Self::Unhealthy),
+                    "DRAINING" => Some(Self::Draining),
+                    "TIMEOUT" => Some(Self::Timeout),
+                    _ => None,
+                }
+            }
+        }
     }
-}
-/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
-/// \[google.appengine.v1beta.CreateVersionRequest][google.appengine.v1beta.CreateVersionRequest\].
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CreateVersionMetadataV1Beta {
-    /// The Cloud Build ID if one was created as part of the version create.
-    /// @OutputOnly
-    #[prost(string, tag = "1")]
-    pub cloud_build_id: ::prost::alloc::string::String,
+    /// Availability of the instance.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Availability {
+        Unspecified = 0,
+        Resident = 1,
+        Dynamic = 2,
+    }
+    impl Availability {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Availability::Unspecified => "UNSPECIFIED",
+                Availability::Resident => "RESIDENT",
+                Availability::Dynamic => "DYNAMIC",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "UNSPECIFIED" => Some(Self::Unspecified),
+                "RESIDENT" => Some(Self::Resident),
+                "DYNAMIC" => Some(Self::Dynamic),
+                _ => None,
+            }
+        }
+    }
 }
 /// An Application resource contains the top-level configuration of an App
 /// Engine application.
@@ -746,187 +860,6 @@ pub mod firewall_rule {
                 "UNSPECIFIED_ACTION" => Some(Self::UnspecifiedAction),
                 "ALLOW" => Some(Self::Allow),
                 "DENY" => Some(Self::Deny),
-                _ => None,
-            }
-        }
-    }
-}
-/// An Instance resource is the computing unit that App Engine uses to
-/// automatically scale an application.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Instance {
-    /// Output only. Full path to the Instance resource in the API.
-    /// Example: `apps/myapp/services/default/versions/v1/instances/instance-1`.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Relative name of the instance within the version.
-    /// Example: `instance-1`.
-    #[prost(string, tag = "2")]
-    pub id: ::prost::alloc::string::String,
-    /// Output only. App Engine release this instance is running on.
-    #[prost(string, tag = "3")]
-    pub app_engine_release: ::prost::alloc::string::String,
-    /// Output only. Availability of the instance.
-    #[prost(enumeration = "instance::Availability", tag = "4")]
-    pub availability: i32,
-    /// Output only. Name of the virtual machine where this instance lives. Only applicable
-    /// for instances in App Engine flexible environment.
-    #[prost(string, tag = "5")]
-    pub vm_name: ::prost::alloc::string::String,
-    /// Output only. Zone where the virtual machine is located. Only applicable for instances
-    /// in App Engine flexible environment.
-    #[prost(string, tag = "6")]
-    pub vm_zone_name: ::prost::alloc::string::String,
-    /// Output only. Virtual machine ID of this instance. Only applicable for instances in
-    /// App Engine flexible environment.
-    #[prost(string, tag = "7")]
-    pub vm_id: ::prost::alloc::string::String,
-    /// Output only. Time that this instance was started.
-    ///
-    /// @OutputOnly
-    #[prost(message, optional, tag = "8")]
-    pub start_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Number of requests since this instance was started.
-    #[prost(int32, tag = "9")]
-    pub requests: i32,
-    /// Output only. Number of errors since this instance was started.
-    #[prost(int32, tag = "10")]
-    pub errors: i32,
-    /// Output only. Average queries per second (QPS) over the last minute.
-    #[prost(float, tag = "11")]
-    pub qps: f32,
-    /// Output only. Average latency (ms) over the last minute.
-    #[prost(int32, tag = "12")]
-    pub average_latency: i32,
-    /// Output only. Total memory in use (bytes).
-    #[prost(int64, tag = "13")]
-    pub memory_usage: i64,
-    /// Output only. Status of the virtual machine where this instance lives. Only applicable
-    /// for instances in App Engine flexible environment.
-    #[prost(string, tag = "14")]
-    pub vm_status: ::prost::alloc::string::String,
-    /// Output only. Whether this instance is in debug mode. Only applicable for instances in
-    /// App Engine flexible environment.
-    #[prost(bool, tag = "15")]
-    pub vm_debug_enabled: bool,
-    /// Output only. The IP address of this instance. Only applicable for instances in App
-    /// Engine flexible environment.
-    #[prost(string, tag = "16")]
-    pub vm_ip: ::prost::alloc::string::String,
-    /// Output only. The liveness health check of this instance. Only applicable for instances
-    /// in App Engine flexible environment.
-    #[prost(enumeration = "instance::liveness::LivenessState", tag = "17")]
-    pub vm_liveness: i32,
-}
-/// Nested message and enum types in `Instance`.
-pub mod instance {
-    /// Wrapper for LivenessState enum.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Liveness {}
-    /// Nested message and enum types in `Liveness`.
-    pub mod liveness {
-        /// Liveness health check status for Flex instances.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum LivenessState {
-            /// There is no liveness health check for the instance. Only applicable for
-            /// instances in App Engine standard environment.
-            Unspecified = 0,
-            /// The health checking system is aware of the instance but its health is
-            /// not known at the moment.
-            Unknown = 1,
-            /// The instance is reachable i.e. a connection to the application health
-            /// checking endpoint can be established, and conforms to the requirements
-            /// defined by the health check.
-            Healthy = 2,
-            /// The instance is reachable, but does not conform to the requirements
-            /// defined by the health check.
-            Unhealthy = 3,
-            /// The instance is being drained. The existing connections to the instance
-            /// have time to complete, but the new ones are being refused.
-            Draining = 4,
-            /// The instance is unreachable i.e. a connection to the application health
-            /// checking endpoint cannot be established, or the server does not respond
-            /// within the specified timeout.
-            Timeout = 5,
-        }
-        impl LivenessState {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    LivenessState::Unspecified => "LIVENESS_STATE_UNSPECIFIED",
-                    LivenessState::Unknown => "UNKNOWN",
-                    LivenessState::Healthy => "HEALTHY",
-                    LivenessState::Unhealthy => "UNHEALTHY",
-                    LivenessState::Draining => "DRAINING",
-                    LivenessState::Timeout => "TIMEOUT",
-                }
-            }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "LIVENESS_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "UNKNOWN" => Some(Self::Unknown),
-                    "HEALTHY" => Some(Self::Healthy),
-                    "UNHEALTHY" => Some(Self::Unhealthy),
-                    "DRAINING" => Some(Self::Draining),
-                    "TIMEOUT" => Some(Self::Timeout),
-                    _ => None,
-                }
-            }
-        }
-    }
-    /// Availability of the instance.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Availability {
-        Unspecified = 0,
-        Resident = 1,
-        Dynamic = 2,
-    }
-    impl Availability {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Availability::Unspecified => "UNSPECIFIED",
-                Availability::Resident => "RESIDENT",
-                Availability::Dynamic => "DYNAMIC",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "UNSPECIFIED" => Some(Self::Unspecified),
-                "RESIDENT" => Some(Self::Resident),
-                "DYNAMIC" => Some(Self::Dynamic),
                 _ => None,
             }
         }
@@ -3136,11 +3069,27 @@ pub mod applications_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets information about an application.
         pub async fn get_application(
             &mut self,
             request: impl tonic::IntoRequest<super::GetApplicationRequest>,
-        ) -> Result<tonic::Response<super::Application>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Application>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3154,7 +3103,15 @@ pub mod applications_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Applications/GetApplication",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Applications",
+                        "GetApplication",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an App Engine application for a Google Cloud Platform project.
         /// Required fields:
@@ -3166,7 +3123,7 @@ pub mod applications_client {
         pub async fn create_application(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateApplicationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3183,7 +3140,15 @@ pub mod applications_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Applications/CreateApplication",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Applications",
+                        "CreateApplication",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified Application resource.
         /// You can update the following fields:
@@ -3193,7 +3158,7 @@ pub mod applications_client {
         pub async fn update_application(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateApplicationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3210,7 +3175,15 @@ pub mod applications_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Applications/UpdateApplication",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Applications",
+                        "UpdateApplication",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Recreates the required App Engine features for the specified App Engine
         /// application, for example a Cloud Storage bucket or App Engine service
@@ -3225,7 +3198,7 @@ pub mod applications_client {
         pub async fn repair_application(
             &mut self,
             request: impl tonic::IntoRequest<super::RepairApplicationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3242,7 +3215,15 @@ pub mod applications_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Applications/RepairApplication",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Applications",
+                        "RepairApplication",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -3305,11 +3286,30 @@ pub mod services_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists all the services in the application.
         pub async fn list_services(
             &mut self,
             request: impl tonic::IntoRequest<super::ListServicesRequest>,
-        ) -> Result<tonic::Response<super::ListServicesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListServicesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3323,13 +3323,18 @@ pub mod services_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Services/ListServices",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Services", "ListServices"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the current configuration of the specified service.
         pub async fn get_service(
             &mut self,
             request: impl tonic::IntoRequest<super::GetServiceRequest>,
-        ) -> Result<tonic::Response<super::Service>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Service>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3343,13 +3348,18 @@ pub mod services_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Services/GetService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Services", "GetService"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the configuration of the specified service.
         pub async fn update_service(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateServiceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3366,13 +3376,18 @@ pub mod services_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Services/UpdateService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Services", "UpdateService"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified service and all enclosed versions.
         pub async fn delete_service(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteServiceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3389,7 +3404,12 @@ pub mod services_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Services/DeleteService",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Services", "DeleteService"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -3452,11 +3472,30 @@ pub mod versions_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the versions of a service.
         pub async fn list_versions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListVersionsRequest>,
-        ) -> Result<tonic::Response<super::ListVersionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListVersionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3470,7 +3509,12 @@ pub mod versions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Versions/ListVersions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Versions", "ListVersions"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the specified Version resource.
         /// By default, only a `BASIC_VIEW` will be returned.
@@ -3478,7 +3522,7 @@ pub mod versions_client {
         pub async fn get_version(
             &mut self,
             request: impl tonic::IntoRequest<super::GetVersionRequest>,
-        ) -> Result<tonic::Response<super::Version>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Version>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3492,13 +3536,18 @@ pub mod versions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Versions/GetVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Versions", "GetVersion"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deploys code and resource files to a new version.
         pub async fn create_version(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3515,7 +3564,12 @@ pub mod versions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Versions/CreateVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Versions", "CreateVersion"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified Version resource.
         /// You can specify the following fields depending on the App Engine
@@ -3556,7 +3610,7 @@ pub mod versions_client {
         pub async fn update_version(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3573,13 +3627,18 @@ pub mod versions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Versions/UpdateVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Versions", "UpdateVersion"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing Version resource.
         pub async fn delete_version(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3596,7 +3655,12 @@ pub mod versions_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Versions/DeleteVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Versions", "DeleteVersion"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -3659,6 +3723,22 @@ pub mod instances_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the instances of a version.
         ///
         /// Tip: To aggregate details about instances over time, see the
@@ -3666,7 +3746,10 @@ pub mod instances_client {
         pub async fn list_instances(
             &mut self,
             request: impl tonic::IntoRequest<super::ListInstancesRequest>,
-        ) -> Result<tonic::Response<super::ListInstancesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListInstancesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3680,13 +3763,18 @@ pub mod instances_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Instances/ListInstances",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Instances", "ListInstances"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets instance information.
         pub async fn get_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInstanceRequest>,
-        ) -> Result<tonic::Response<super::Instance>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Instance>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3700,7 +3788,12 @@ pub mod instances_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Instances/GetInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Instances", "GetInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Stops a running instance.
         ///
@@ -3717,7 +3810,7 @@ pub mod instances_client {
         pub async fn delete_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3734,7 +3827,15 @@ pub mod instances_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Instances/DeleteInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Instances",
+                        "DeleteInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Enables debugging on a VM instance. This allows you to use the SSH
         /// command to connect to the virtual machine where the instance lives.
@@ -3747,7 +3848,7 @@ pub mod instances_client {
         pub async fn debug_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::DebugInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3764,7 +3865,12 @@ pub mod instances_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Instances/DebugInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Instances", "DebugInstance"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -3836,11 +3942,30 @@ pub mod firewall_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the firewall rules of an application.
         pub async fn list_ingress_rules(
             &mut self,
             request: impl tonic::IntoRequest<super::ListIngressRulesRequest>,
-        ) -> Result<tonic::Response<super::ListIngressRulesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListIngressRulesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3854,7 +3979,15 @@ pub mod firewall_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Firewall/ListIngressRules",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Firewall",
+                        "ListIngressRules",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Replaces the entire firewall ruleset in one bulk operation. This overrides
         /// and replaces the rules of an existing firewall with the new rules.
@@ -3864,7 +3997,7 @@ pub mod firewall_client {
         pub async fn batch_update_ingress_rules(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchUpdateIngressRulesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchUpdateIngressRulesResponse>,
             tonic::Status,
         > {
@@ -3881,13 +4014,21 @@ pub mod firewall_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Firewall/BatchUpdateIngressRules",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Firewall",
+                        "BatchUpdateIngressRules",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a firewall rule for the application.
         pub async fn create_ingress_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateIngressRuleRequest>,
-        ) -> Result<tonic::Response<super::FirewallRule>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::FirewallRule>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3901,13 +4042,21 @@ pub mod firewall_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Firewall/CreateIngressRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Firewall",
+                        "CreateIngressRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the specified firewall rule.
         pub async fn get_ingress_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::GetIngressRuleRequest>,
-        ) -> Result<tonic::Response<super::FirewallRule>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::FirewallRule>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3921,13 +4070,18 @@ pub mod firewall_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Firewall/GetIngressRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.appengine.v1beta.Firewall", "GetIngressRule"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified firewall rule.
         pub async fn update_ingress_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateIngressRuleRequest>,
-        ) -> Result<tonic::Response<super::FirewallRule>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::FirewallRule>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3941,13 +4095,21 @@ pub mod firewall_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Firewall/UpdateIngressRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Firewall",
+                        "UpdateIngressRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified firewall rule.
         pub async fn delete_ingress_rule(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteIngressRuleRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3961,7 +4123,15 @@ pub mod firewall_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.Firewall/DeleteIngressRule",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.Firewall",
+                        "DeleteIngressRule",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -4026,11 +4196,27 @@ pub mod authorized_domains_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists all domains the user is authorized to administer.
         pub async fn list_authorized_domains(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAuthorizedDomainsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListAuthorizedDomainsResponse>,
             tonic::Status,
         > {
@@ -4047,7 +4233,15 @@ pub mod authorized_domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.AuthorizedDomains/ListAuthorizedDomains",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.AuthorizedDomains",
+                        "ListAuthorizedDomains",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -4113,11 +4307,27 @@ pub mod authorized_certificates_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists all SSL certificates the user is authorized to administer.
         pub async fn list_authorized_certificates(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAuthorizedCertificatesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListAuthorizedCertificatesResponse>,
             tonic::Status,
         > {
@@ -4134,13 +4344,24 @@ pub mod authorized_certificates_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.AuthorizedCertificates/ListAuthorizedCertificates",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.AuthorizedCertificates",
+                        "ListAuthorizedCertificates",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the specified SSL certificate.
         pub async fn get_authorized_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAuthorizedCertificateRequest>,
-        ) -> Result<tonic::Response<super::AuthorizedCertificate>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AuthorizedCertificate>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4154,13 +4375,24 @@ pub mod authorized_certificates_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.AuthorizedCertificates/GetAuthorizedCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.AuthorizedCertificates",
+                        "GetAuthorizedCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Uploads the specified SSL certificate.
         pub async fn create_authorized_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAuthorizedCertificateRequest>,
-        ) -> Result<tonic::Response<super::AuthorizedCertificate>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AuthorizedCertificate>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4174,7 +4406,15 @@ pub mod authorized_certificates_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.AuthorizedCertificates/CreateAuthorizedCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.AuthorizedCertificates",
+                        "CreateAuthorizedCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified SSL certificate. To renew a certificate and maintain
         /// its existing domain mappings, update `certificate_data` with a new
@@ -4184,7 +4424,10 @@ pub mod authorized_certificates_client {
         pub async fn update_authorized_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAuthorizedCertificateRequest>,
-        ) -> Result<tonic::Response<super::AuthorizedCertificate>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AuthorizedCertificate>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4198,13 +4441,21 @@ pub mod authorized_certificates_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.AuthorizedCertificates/UpdateAuthorizedCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.AuthorizedCertificates",
+                        "UpdateAuthorizedCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified SSL certificate.
         pub async fn delete_authorized_certificate(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAuthorizedCertificateRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4218,7 +4469,15 @@ pub mod authorized_certificates_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.AuthorizedCertificates/DeleteAuthorizedCertificate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.AuthorizedCertificates",
+                        "DeleteAuthorizedCertificate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -4281,11 +4540,30 @@ pub mod domain_mappings_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists the domain mappings on an application.
         pub async fn list_domain_mappings(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDomainMappingsRequest>,
-        ) -> Result<tonic::Response<super::ListDomainMappingsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDomainMappingsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4299,13 +4577,21 @@ pub mod domain_mappings_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.DomainMappings/ListDomainMappings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.DomainMappings",
+                        "ListDomainMappings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the specified domain mapping.
         pub async fn get_domain_mapping(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDomainMappingRequest>,
-        ) -> Result<tonic::Response<super::DomainMapping>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::DomainMapping>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4319,7 +4605,15 @@ pub mod domain_mappings_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.DomainMappings/GetDomainMapping",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.DomainMappings",
+                        "GetDomainMapping",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Maps a domain to an application. A user must be authorized to administer a
         /// domain in order to map it to an application. For a list of available
@@ -4327,7 +4621,7 @@ pub mod domain_mappings_client {
         pub async fn create_domain_mapping(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDomainMappingRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4344,7 +4638,15 @@ pub mod domain_mappings_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.DomainMappings/CreateDomainMapping",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.DomainMappings",
+                        "CreateDomainMapping",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified domain mapping. To map an SSL certificate to a
         /// domain mapping, update `certificate_id` to point to an `AuthorizedCertificate`
@@ -4353,7 +4655,7 @@ pub mod domain_mappings_client {
         pub async fn update_domain_mapping(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDomainMappingRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4370,7 +4672,15 @@ pub mod domain_mappings_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.DomainMappings/UpdateDomainMapping",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.DomainMappings",
+                        "UpdateDomainMapping",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified domain mapping. A user must be authorized to
         /// administer the associated domain in order to delete a `DomainMapping`
@@ -4378,7 +4688,7 @@ pub mod domain_mappings_client {
         pub async fn delete_domain_mapping(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDomainMappingRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4395,7 +4705,15 @@ pub mod domain_mappings_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.appengine.v1beta.DomainMappings/DeleteDomainMapping",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.appengine.v1beta.DomainMappings",
+                        "DeleteDomainMapping",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
@@ -4442,6 +4760,73 @@ pub struct CreateVersionMethod {
     /// Create version request.
     #[prost(message, optional, tag = "1")]
     pub request: ::core::option::Option<CreateVersionRequest>,
+}
+/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OperationMetadataV1Beta {
+    /// API method that initiated this operation. Example:
+    /// `google.appengine.v1beta.Versions.CreateVersion`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub method: ::prost::alloc::string::String,
+    /// Time that this operation was created.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "2")]
+    pub insert_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Time that this operation completed.
+    ///
+    /// @OutputOnly
+    #[prost(message, optional, tag = "3")]
+    pub end_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// User who requested this operation.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "4")]
+    pub user: ::prost::alloc::string::String,
+    /// Name of the resource that this operation is acting on. Example:
+    /// `apps/myapp/services/default`.
+    ///
+    /// @OutputOnly
+    #[prost(string, tag = "5")]
+    pub target: ::prost::alloc::string::String,
+    /// Ephemeral message that may change every time the operation is polled.
+    /// @OutputOnly
+    #[prost(string, tag = "6")]
+    pub ephemeral_message: ::prost::alloc::string::String,
+    /// Durable messages that persist on every operation poll.
+    /// @OutputOnly
+    #[prost(string, repeated, tag = "7")]
+    pub warning: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Metadata specific to the type of operation in progress.
+    /// @OutputOnly
+    #[prost(oneof = "operation_metadata_v1_beta::MethodMetadata", tags = "8")]
+    pub method_metadata: ::core::option::Option<
+        operation_metadata_v1_beta::MethodMetadata,
+    >,
+}
+/// Nested message and enum types in `OperationMetadataV1Beta`.
+pub mod operation_metadata_v1_beta {
+    /// Metadata specific to the type of operation in progress.
+    /// @OutputOnly
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum MethodMetadata {
+        #[prost(message, tag = "8")]
+        CreateVersionMetadata(super::CreateVersionMetadataV1Beta),
+    }
+}
+/// Metadata for the given \[google.longrunning.Operation][google.longrunning.Operation\] during a
+/// \[google.appengine.v1beta.CreateVersionRequest][google.appengine.v1beta.CreateVersionRequest\].
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CreateVersionMetadataV1Beta {
+    /// The Cloud Build ID if one was created as part of the version create.
+    /// @OutputOnly
+    #[prost(string, tag = "1")]
+    pub cloud_build_id: ::prost::alloc::string::String,
 }
 /// Metadata for the given \[google.cloud.location.Location][google.cloud.location.Location\].
 #[allow(clippy::derive_partial_eq_without_eq)]

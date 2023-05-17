@@ -136,6 +136,173 @@ pub mod operation_metadata {
         }
     }
 }
+/// List ImageVersions in a project and location.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListImageVersionsRequest {
+    /// List ImageVersions in the given project and location, in the form:
+    /// "projects/{projectId}/locations/{locationId}"
+    #[prost(string, tag = "1")]
+    pub parent: ::prost::alloc::string::String,
+    /// The maximum number of image_versions to return.
+    #[prost(int32, tag = "2")]
+    pub page_size: i32,
+    /// The next_page_token value returned from a previous List request, if any.
+    #[prost(string, tag = "3")]
+    pub page_token: ::prost::alloc::string::String,
+    /// Whether or not image versions from old releases should be included.
+    #[prost(bool, tag = "4")]
+    pub include_past_releases: bool,
+}
+/// The ImageVersions in a project and location.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListImageVersionsResponse {
+    /// The list of supported ImageVersions in a location.
+    #[prost(message, repeated, tag = "1")]
+    pub image_versions: ::prost::alloc::vec::Vec<ImageVersion>,
+    /// The page token used to query for the next page if one exists.
+    #[prost(string, tag = "2")]
+    pub next_page_token: ::prost::alloc::string::String,
+}
+/// ImageVersion information
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageVersion {
+    /// The string identifier of the ImageVersion, in the form:
+    /// "composer-x.y.z-airflow-a.b.c"
+    #[prost(string, tag = "1")]
+    pub image_version_id: ::prost::alloc::string::String,
+    /// Whether this is the default ImageVersion used by Composer during
+    /// environment creation if no input ImageVersion is specified.
+    #[prost(bool, tag = "2")]
+    pub is_default: bool,
+    /// supported python versions
+    #[prost(string, repeated, tag = "3")]
+    pub supported_python_versions: ::prost::alloc::vec::Vec<
+        ::prost::alloc::string::String,
+    >,
+    /// The date of the version release.
+    #[prost(message, optional, tag = "4")]
+    pub release_date: ::core::option::Option<
+        super::super::super::super::super::r#type::Date,
+    >,
+    /// Whether it is impossible to create an environment with the image version.
+    #[prost(bool, tag = "5")]
+    pub creation_disabled: bool,
+    /// Whether it is impossible to upgrade an environment running with the image
+    /// version.
+    #[prost(bool, tag = "6")]
+    pub upgrade_disabled: bool,
+}
+/// Generated client implementations.
+pub mod image_versions_client {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    use tonic::codegen::http::Uri;
+    /// Readonly service to query available ImageVersions.
+    #[derive(Debug, Clone)]
+    pub struct ImageVersionsClient<T> {
+        inner: tonic::client::Grpc<T>,
+    }
+    impl<T> ImageVersionsClient<T>
+    where
+        T: tonic::client::GrpcService<tonic::body::BoxBody>,
+        T::Error: Into<StdError>,
+        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
+        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
+    {
+        pub fn new(inner: T) -> Self {
+            let inner = tonic::client::Grpc::new(inner);
+            Self { inner }
+        }
+        pub fn with_origin(inner: T, origin: Uri) -> Self {
+            let inner = tonic::client::Grpc::with_origin(inner, origin);
+            Self { inner }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> ImageVersionsClient<InterceptedService<T, F>>
+        where
+            F: tonic::service::Interceptor,
+            T::ResponseBody: Default,
+            T: tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+                Response = http::Response<
+                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
+                >,
+            >,
+            <T as tonic::codegen::Service<
+                http::Request<tonic::body::BoxBody>,
+            >>::Error: Into<StdError> + Send + Sync,
+        {
+            ImageVersionsClient::new(InterceptedService::new(inner, interceptor))
+        }
+        /// Compress requests with the given encoding.
+        ///
+        /// This requires the server to support it otherwise it might respond with an
+        /// error.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.send_compressed(encoding);
+            self
+        }
+        /// Enable decompressing responses.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.inner = self.inner.accept_compressed(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
+        /// List ImageVersions for provided location.
+        pub async fn list_image_versions(
+            &mut self,
+            request: impl tonic::IntoRequest<super::ListImageVersionsRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::ListImageVersionsResponse>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/google.cloud.orchestration.airflow.service.v1.ImageVersions/ListImageVersions",
+            );
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.ImageVersions",
+                        "ListImageVersions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
 /// Create a new environment.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1470,11 +1637,27 @@ pub mod environments_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Create a new environment.
         pub async fn create_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateEnvironmentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::super::longrunning::Operation,
             >,
@@ -1493,13 +1676,21 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/CreateEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "CreateEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get an existing environment.
         pub async fn get_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEnvironmentRequest>,
-        ) -> Result<tonic::Response<super::Environment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Environment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1513,13 +1704,24 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/GetEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "GetEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List environments.
         pub async fn list_environments(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEnvironmentsRequest>,
-        ) -> Result<tonic::Response<super::ListEnvironmentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListEnvironmentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1533,13 +1735,21 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/ListEnvironments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "ListEnvironments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Update an environment.
         pub async fn update_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateEnvironmentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::super::longrunning::Operation,
             >,
@@ -1558,13 +1768,21 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/UpdateEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "UpdateEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Delete an environment.
         pub async fn delete_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteEnvironmentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::super::longrunning::Operation,
             >,
@@ -1583,7 +1801,15 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/DeleteEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "DeleteEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a snapshots of a Cloud Composer environment.
         ///
@@ -1592,7 +1818,7 @@ pub mod environments_client {
         pub async fn save_snapshot(
             &mut self,
             request: impl tonic::IntoRequest<super::SaveSnapshotRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::super::longrunning::Operation,
             >,
@@ -1611,7 +1837,15 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/SaveSnapshot",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "SaveSnapshot",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Loads a snapshot of a Cloud Composer environment.
         ///
@@ -1620,7 +1854,7 @@ pub mod environments_client {
         pub async fn load_snapshot(
             &mut self,
             request: impl tonic::IntoRequest<super::LoadSnapshotRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::super::longrunning::Operation,
             >,
@@ -1639,147 +1873,15 @@ pub mod environments_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.orchestration.airflow.service.v1.Environments/LoadSnapshot",
             );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// List ImageVersions in a project and location.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListImageVersionsRequest {
-    /// List ImageVersions in the given project and location, in the form:
-    /// "projects/{projectId}/locations/{locationId}"
-    #[prost(string, tag = "1")]
-    pub parent: ::prost::alloc::string::String,
-    /// The maximum number of image_versions to return.
-    #[prost(int32, tag = "2")]
-    pub page_size: i32,
-    /// The next_page_token value returned from a previous List request, if any.
-    #[prost(string, tag = "3")]
-    pub page_token: ::prost::alloc::string::String,
-    /// Whether or not image versions from old releases should be included.
-    #[prost(bool, tag = "4")]
-    pub include_past_releases: bool,
-}
-/// The ImageVersions in a project and location.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListImageVersionsResponse {
-    /// The list of supported ImageVersions in a location.
-    #[prost(message, repeated, tag = "1")]
-    pub image_versions: ::prost::alloc::vec::Vec<ImageVersion>,
-    /// The page token used to query for the next page if one exists.
-    #[prost(string, tag = "2")]
-    pub next_page_token: ::prost::alloc::string::String,
-}
-/// ImageVersion information
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageVersion {
-    /// The string identifier of the ImageVersion, in the form:
-    /// "composer-x.y.z-airflow-a.b.c"
-    #[prost(string, tag = "1")]
-    pub image_version_id: ::prost::alloc::string::String,
-    /// Whether this is the default ImageVersion used by Composer during
-    /// environment creation if no input ImageVersion is specified.
-    #[prost(bool, tag = "2")]
-    pub is_default: bool,
-    /// supported python versions
-    #[prost(string, repeated, tag = "3")]
-    pub supported_python_versions: ::prost::alloc::vec::Vec<
-        ::prost::alloc::string::String,
-    >,
-    /// The date of the version release.
-    #[prost(message, optional, tag = "4")]
-    pub release_date: ::core::option::Option<
-        super::super::super::super::super::r#type::Date,
-    >,
-    /// Whether it is impossible to create an environment with the image version.
-    #[prost(bool, tag = "5")]
-    pub creation_disabled: bool,
-    /// Whether it is impossible to upgrade an environment running with the image
-    /// version.
-    #[prost(bool, tag = "6")]
-    pub upgrade_disabled: bool,
-}
-/// Generated client implementations.
-pub mod image_versions_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Readonly service to query available ImageVersions.
-    #[derive(Debug, Clone)]
-    pub struct ImageVersionsClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl<T> ImageVersionsClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> ImageVersionsClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            ImageVersionsClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// List ImageVersions for provided location.
-        pub async fn list_image_versions(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListImageVersionsRequest>,
-        ) -> Result<tonic::Response<super::ListImageVersionsResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/google.cloud.orchestration.airflow.service.v1.ImageVersions/ListImageVersions",
-            );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.orchestration.airflow.service.v1.Environments",
+                        "LoadSnapshot",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

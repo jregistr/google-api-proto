@@ -1,3 +1,150 @@
+/// Payload proto for "clouddeploy.googleapis.com/release_render"
+/// Platform Log event that describes the render status change.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseRenderEvent {
+    /// Debug message for when a render transition occurs. Provides further
+    /// details as rendering progresses through render states.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `Release`.
+    #[prost(string, tag = "2")]
+    pub release: ::prost::alloc::string::String,
+}
+/// Type indicates the type of the log entry and can be used as a filter.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum Type {
+    /// Type is unspecified.
+    Unspecified = 0,
+    /// A Pub/Sub notification failed to be sent.
+    PubsubNotificationFailure = 1,
+    /// Deprecated: This field is never used. Use release_render log type instead.
+    RenderStatuesChange = 2,
+}
+impl Type {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            Type::Unspecified => "TYPE_UNSPECIFIED",
+            Type::PubsubNotificationFailure => "TYPE_PUBSUB_NOTIFICATION_FAILURE",
+            Type::RenderStatuesChange => "TYPE_RENDER_STATUES_CHANGE",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "TYPE_PUBSUB_NOTIFICATION_FAILURE" => Some(Self::PubsubNotificationFailure),
+            "TYPE_RENDER_STATUES_CHANGE" => Some(Self::RenderStatuesChange),
+            _ => None,
+        }
+    }
+}
+/// Payload proto for "clouddeploy.googleapis.com/target_notification"
+/// Platform Log event that describes the failure to send target status change
+/// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TargetNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `Target`.
+    #[prost(string, tag = "2")]
+    pub target: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration = "Type", tag = "3")]
+    pub r#type: i32,
+}
+/// Payload proto for "clouddeploy.googleapis.com/rollout_notification"
+/// Platform Log event that describes the failure to send rollout status change
+/// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RolloutNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// Unique identifier of the `DeliveryPipeline`.
+    #[prost(string, tag = "2")]
+    pub pipeline_uid: ::prost::alloc::string::String,
+    /// Unique identifier of the `Release`.
+    #[prost(string, tag = "3")]
+    pub release_uid: ::prost::alloc::string::String,
+    /// The name of the `Rollout`.
+    #[prost(string, tag = "4")]
+    pub rollout: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration = "Type", tag = "5")]
+    pub r#type: i32,
+    /// ID of the `Target` that the rollout is deployed to.
+    #[prost(string, tag = "6")]
+    pub target_id: ::prost::alloc::string::String,
+}
+/// Payload proto for "clouddeploy.googleapis.com/jobrun_notification"
+/// Platform Log event that describes the failure to send JobRun resource update
+/// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct JobRunNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `JobRun`.
+    #[prost(string, tag = "2")]
+    pub job_run: ::prost::alloc::string::String,
+    /// Unique identifier of the `DeliveryPipeline`.
+    #[prost(string, tag = "3")]
+    pub pipeline_uid: ::prost::alloc::string::String,
+    /// Unique identifier of the `Release`.
+    #[prost(string, tag = "4")]
+    pub release_uid: ::prost::alloc::string::String,
+    /// Unique identifier of the `Rollout`.
+    #[prost(string, tag = "5")]
+    pub rollout_uid: ::prost::alloc::string::String,
+    /// ID of the `Target`.
+    #[prost(string, tag = "6")]
+    pub target_id: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration = "Type", tag = "7")]
+    pub r#type: i32,
+}
+/// Payload proto for "clouddeploy.googleapis.com/release_notification"
+/// Platform Log event that describes the failure to send release status change
+/// Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ReleaseNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `Release`.
+    #[prost(string, tag = "2")]
+    pub release: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration = "Type", tag = "3")]
+    pub r#type: i32,
+}
+/// Payload proto for "clouddeploy.googleapis.com/deliverypipeline_notification"
+/// Platform Log event that describes the failure to send delivery pipeline
+/// status change Pub/Sub notification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeliveryPipelineNotificationEvent {
+    /// Debug message for when a notification fails to send.
+    #[prost(string, tag = "1")]
+    pub message: ::prost::alloc::string::String,
+    /// The name of the `Delivery Pipeline`.
+    #[prost(string, tag = "2")]
+    pub delivery_pipeline: ::prost::alloc::string::String,
+    /// Type of this notification, e.g. for a Pub/Sub failure.
+    #[prost(enumeration = "Type", tag = "3")]
+    pub r#type: i32,
+}
 /// A `DeliveryPipeline` resource in the Google Cloud Deploy API.
 ///
 /// A `DeliveryPipeline` defines a pipeline through which a Skaffold
@@ -2797,11 +2944,27 @@ pub mod cloud_deploy_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists DeliveryPipelines in a given project and location.
         pub async fn list_delivery_pipelines(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDeliveryPipelinesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListDeliveryPipelinesResponse>,
             tonic::Status,
         > {
@@ -2818,13 +2981,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/ListDeliveryPipelines",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "ListDeliveryPipelines",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single DeliveryPipeline.
         pub async fn get_delivery_pipeline(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDeliveryPipelineRequest>,
-        ) -> Result<tonic::Response<super::DeliveryPipeline>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DeliveryPipeline>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2838,13 +3012,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/GetDeliveryPipeline",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "GetDeliveryPipeline",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new DeliveryPipeline in a given project and location.
         pub async fn create_delivery_pipeline(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDeliveryPipelineRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2861,13 +3043,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/CreateDeliveryPipeline",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "CreateDeliveryPipeline",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single DeliveryPipeline.
         pub async fn update_delivery_pipeline(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDeliveryPipelineRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2884,13 +3074,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/UpdateDeliveryPipeline",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "UpdateDeliveryPipeline",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single DeliveryPipeline.
         pub async fn delete_delivery_pipeline(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDeliveryPipelineRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2907,13 +3105,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/DeleteDeliveryPipeline",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "DeleteDeliveryPipeline",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Targets in a given project and location.
         pub async fn list_targets(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTargetsRequest>,
-        ) -> Result<tonic::Response<super::ListTargetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTargetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2927,13 +3136,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/ListTargets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "ListTargets"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Target.
         pub async fn get_target(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTargetRequest>,
-        ) -> Result<tonic::Response<super::Target>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Target>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2947,13 +3161,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/GetTarget",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "GetTarget"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Target in a given project and location.
         pub async fn create_target(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTargetRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2970,13 +3189,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/CreateTarget",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "CreateTarget"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single Target.
         pub async fn update_target(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTargetRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2993,13 +3217,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/UpdateTarget",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "UpdateTarget"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Target.
         pub async fn delete_target(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTargetRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3016,13 +3245,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/DeleteTarget",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "DeleteTarget"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Releases in a given project and location.
         pub async fn list_releases(
             &mut self,
             request: impl tonic::IntoRequest<super::ListReleasesRequest>,
-        ) -> Result<tonic::Response<super::ListReleasesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListReleasesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3036,13 +3273,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/ListReleases",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "ListReleases"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Release.
         pub async fn get_release(
             &mut self,
             request: impl tonic::IntoRequest<super::GetReleaseRequest>,
-        ) -> Result<tonic::Response<super::Release>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Release>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3056,13 +3298,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/GetRelease",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "GetRelease"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Release in a given project and location.
         pub async fn create_release(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateReleaseRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3079,13 +3326,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/CreateRelease",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "CreateRelease",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Abandons a Release in the Delivery Pipeline.
         pub async fn abandon_release(
             &mut self,
             request: impl tonic::IntoRequest<super::AbandonReleaseRequest>,
-        ) -> Result<tonic::Response<super::AbandonReleaseResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AbandonReleaseResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3099,13 +3357,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/AbandonRelease",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "AbandonRelease",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Approves a Rollout.
         pub async fn approve_rollout(
             &mut self,
             request: impl tonic::IntoRequest<super::ApproveRolloutRequest>,
-        ) -> Result<tonic::Response<super::ApproveRolloutResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ApproveRolloutResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3119,13 +3388,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/ApproveRollout",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "ApproveRollout",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Advances a Rollout in a given project and location.
         pub async fn advance_rollout(
             &mut self,
             request: impl tonic::IntoRequest<super::AdvanceRolloutRequest>,
-        ) -> Result<tonic::Response<super::AdvanceRolloutResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AdvanceRolloutResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3139,13 +3419,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/AdvanceRollout",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "AdvanceRollout",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Cancels a Rollout in a given project and location.
         pub async fn cancel_rollout(
             &mut self,
             request: impl tonic::IntoRequest<super::CancelRolloutRequest>,
-        ) -> Result<tonic::Response<super::CancelRolloutResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CancelRolloutResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3159,13 +3450,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/CancelRollout",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "CancelRollout",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Rollouts in a given project and location.
         pub async fn list_rollouts(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRolloutsRequest>,
-        ) -> Result<tonic::Response<super::ListRolloutsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListRolloutsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3179,13 +3481,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/ListRollouts",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "ListRollouts"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Rollout.
         pub async fn get_rollout(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRolloutRequest>,
-        ) -> Result<tonic::Response<super::Rollout>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Rollout>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3199,13 +3506,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/GetRollout",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "GetRollout"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Rollout in a given project and location.
         pub async fn create_rollout(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateRolloutRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3222,13 +3534,24 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/CreateRollout",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "CreateRollout",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Ignores the specified Job in a Rollout.
         pub async fn ignore_job(
             &mut self,
             request: impl tonic::IntoRequest<super::IgnoreJobRequest>,
-        ) -> Result<tonic::Response<super::IgnoreJobResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::IgnoreJobResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3242,13 +3565,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/IgnoreJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "IgnoreJob"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retries the specified Job in a Rollout.
         pub async fn retry_job(
             &mut self,
             request: impl tonic::IntoRequest<super::RetryJobRequest>,
-        ) -> Result<tonic::Response<super::RetryJobResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::RetryJobResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3262,13 +3593,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/RetryJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "RetryJob"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists JobRuns in a given project and location.
         pub async fn list_job_runs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListJobRunsRequest>,
-        ) -> Result<tonic::Response<super::ListJobRunsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListJobRunsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3282,13 +3621,18 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/ListJobRuns",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "ListJobRuns"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single JobRun.
         pub async fn get_job_run(
             &mut self,
             request: impl tonic::IntoRequest<super::GetJobRunRequest>,
-        ) -> Result<tonic::Response<super::JobRun>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::JobRun>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3302,13 +3646,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/GetJobRun",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "GetJobRun"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Terminates a Job Run in a given project and location.
         pub async fn terminate_job_run(
             &mut self,
             request: impl tonic::IntoRequest<super::TerminateJobRunRequest>,
-        ) -> Result<tonic::Response<super::TerminateJobRunResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::TerminateJobRunResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3322,13 +3674,21 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/TerminateJobRun",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.deploy.v1.CloudDeploy",
+                        "TerminateJobRun",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the configuration for a location.
         pub async fn get_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConfigRequest>,
-        ) -> Result<tonic::Response<super::Config>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Config>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3342,154 +3702,12 @@ pub mod cloud_deploy_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.deploy.v1.CloudDeploy/GetConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.deploy.v1.CloudDeploy", "GetConfig"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
-}
-/// Type indicates the type of the log entry and can be used as a filter.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum Type {
-    /// Type is unspecified.
-    Unspecified = 0,
-    /// A Pub/Sub notification failed to be sent.
-    PubsubNotificationFailure = 1,
-    /// Deprecated: This field is never used. Use release_render log type instead.
-    RenderStatuesChange = 2,
-}
-impl Type {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            Type::Unspecified => "TYPE_UNSPECIFIED",
-            Type::PubsubNotificationFailure => "TYPE_PUBSUB_NOTIFICATION_FAILURE",
-            Type::RenderStatuesChange => "TYPE_RENDER_STATUES_CHANGE",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "TYPE_PUBSUB_NOTIFICATION_FAILURE" => Some(Self::PubsubNotificationFailure),
-            "TYPE_RENDER_STATUES_CHANGE" => Some(Self::RenderStatuesChange),
-            _ => None,
-        }
-    }
-}
-/// Payload proto for "clouddeploy.googleapis.com/rollout_notification"
-/// Platform Log event that describes the failure to send rollout status change
-/// Pub/Sub notification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RolloutNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// Unique identifier of the `DeliveryPipeline`.
-    #[prost(string, tag = "2")]
-    pub pipeline_uid: ::prost::alloc::string::String,
-    /// Unique identifier of the `Release`.
-    #[prost(string, tag = "3")]
-    pub release_uid: ::prost::alloc::string::String,
-    /// The name of the `Rollout`.
-    #[prost(string, tag = "4")]
-    pub rollout: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration = "Type", tag = "5")]
-    pub r#type: i32,
-    /// ID of the `Target` that the rollout is deployed to.
-    #[prost(string, tag = "6")]
-    pub target_id: ::prost::alloc::string::String,
-}
-/// Payload proto for "clouddeploy.googleapis.com/deliverypipeline_notification"
-/// Platform Log event that describes the failure to send delivery pipeline
-/// status change Pub/Sub notification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeliveryPipelineNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `Delivery Pipeline`.
-    #[prost(string, tag = "2")]
-    pub delivery_pipeline: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration = "Type", tag = "3")]
-    pub r#type: i32,
-}
-/// Payload proto for "clouddeploy.googleapis.com/release_notification"
-/// Platform Log event that describes the failure to send release status change
-/// Pub/Sub notification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `Release`.
-    #[prost(string, tag = "2")]
-    pub release: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration = "Type", tag = "3")]
-    pub r#type: i32,
-}
-/// Payload proto for "clouddeploy.googleapis.com/target_notification"
-/// Platform Log event that describes the failure to send target status change
-/// Pub/Sub notification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TargetNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `Target`.
-    #[prost(string, tag = "2")]
-    pub target: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration = "Type", tag = "3")]
-    pub r#type: i32,
-}
-/// Payload proto for "clouddeploy.googleapis.com/release_render"
-/// Platform Log event that describes the render status change.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ReleaseRenderEvent {
-    /// Debug message for when a render transition occurs. Provides further
-    /// details as rendering progresses through render states.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `Release`.
-    #[prost(string, tag = "2")]
-    pub release: ::prost::alloc::string::String,
-}
-/// Payload proto for "clouddeploy.googleapis.com/jobrun_notification"
-/// Platform Log event that describes the failure to send JobRun resource update
-/// Pub/Sub notification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct JobRunNotificationEvent {
-    /// Debug message for when a notification fails to send.
-    #[prost(string, tag = "1")]
-    pub message: ::prost::alloc::string::String,
-    /// The name of the `JobRun`.
-    #[prost(string, tag = "2")]
-    pub job_run: ::prost::alloc::string::String,
-    /// Unique identifier of the `DeliveryPipeline`.
-    #[prost(string, tag = "3")]
-    pub pipeline_uid: ::prost::alloc::string::String,
-    /// Unique identifier of the `Release`.
-    #[prost(string, tag = "4")]
-    pub release_uid: ::prost::alloc::string::String,
-    /// Unique identifier of the `Rollout`.
-    #[prost(string, tag = "5")]
-    pub rollout_uid: ::prost::alloc::string::String,
-    /// ID of the `Target`.
-    #[prost(string, tag = "6")]
-    pub target_id: ::prost::alloc::string::String,
-    /// Type of this notification, e.g. for a Pub/Sub failure.
-    #[prost(enumeration = "Type", tag = "7")]
-    pub r#type: i32,
 }

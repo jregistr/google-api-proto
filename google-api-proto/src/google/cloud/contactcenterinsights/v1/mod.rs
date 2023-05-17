@@ -2803,11 +2803,27 @@ pub mod contact_center_insights_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a conversation.
         pub async fn create_conversation(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConversationRequest>,
-        ) -> Result<tonic::Response<super::Conversation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Conversation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2821,7 +2837,15 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CreateConversation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CreateConversation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Create a longrunning conversation upload operation. This method differs
         /// from CreateConversation by allowing audio transcription and optional DLP
@@ -2829,7 +2853,7 @@ pub mod contact_center_insights_client {
         pub async fn upload_conversation(
             &mut self,
             request: impl tonic::IntoRequest<super::UploadConversationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2846,13 +2870,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UploadConversation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UploadConversation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a conversation.
         pub async fn update_conversation(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateConversationRequest>,
-        ) -> Result<tonic::Response<super::Conversation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Conversation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2866,13 +2898,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdateConversation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UpdateConversation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a conversation.
         pub async fn get_conversation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConversationRequest>,
-        ) -> Result<tonic::Response<super::Conversation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Conversation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2886,13 +2926,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetConversation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetConversation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists conversations.
         pub async fn list_conversations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConversationsRequest>,
-        ) -> Result<tonic::Response<super::ListConversationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListConversationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2906,13 +2957,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ListConversations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ListConversations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a conversation.
         pub async fn delete_conversation(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConversationRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2926,14 +2985,22 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeleteConversation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeleteConversation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an analysis. The long running operation is done when the analysis
         /// has completed.
         pub async fn create_analysis(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAnalysisRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2950,13 +3017,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CreateAnalysis",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CreateAnalysis",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an analysis.
         pub async fn get_analysis(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAnalysisRequest>,
-        ) -> Result<tonic::Response<super::Analysis>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Analysis>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2970,13 +3045,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetAnalysis",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetAnalysis",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists analyses.
         pub async fn list_analyses(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAnalysesRequest>,
-        ) -> Result<tonic::Response<super::ListAnalysesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAnalysesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2990,13 +3076,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ListAnalyses",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ListAnalyses",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an analysis.
         pub async fn delete_analysis(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAnalysisRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3010,13 +3104,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeleteAnalysis",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeleteAnalysis",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Analyzes multiple conversations in a single request.
         pub async fn bulk_analyze_conversations(
             &mut self,
             request: impl tonic::IntoRequest<super::BulkAnalyzeConversationsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3033,14 +3135,22 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/BulkAnalyzeConversations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "BulkAnalyzeConversations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Imports conversations and processes them according to the user's
         /// configuration.
         pub async fn ingest_conversations(
             &mut self,
             request: impl tonic::IntoRequest<super::IngestConversationsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3057,13 +3167,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/IngestConversations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "IngestConversations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Export insights data to a destination defined in the request body.
         pub async fn export_insights_data(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportInsightsDataRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3080,13 +3198,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ExportInsightsData",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ExportInsightsData",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an issue model.
         pub async fn create_issue_model(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateIssueModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3103,13 +3229,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CreateIssueModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CreateIssueModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an issue model.
         pub async fn update_issue_model(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateIssueModelRequest>,
-        ) -> Result<tonic::Response<super::IssueModel>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::IssueModel>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3123,13 +3257,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdateIssueModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UpdateIssueModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an issue model.
         pub async fn get_issue_model(
             &mut self,
             request: impl tonic::IntoRequest<super::GetIssueModelRequest>,
-        ) -> Result<tonic::Response<super::IssueModel>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::IssueModel>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3143,13 +3285,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetIssueModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetIssueModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists issue models.
         pub async fn list_issue_models(
             &mut self,
             request: impl tonic::IntoRequest<super::ListIssueModelsRequest>,
-        ) -> Result<tonic::Response<super::ListIssueModelsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListIssueModelsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3163,13 +3316,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ListIssueModels",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ListIssueModels",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an issue model.
         pub async fn delete_issue_model(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteIssueModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3186,14 +3347,22 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeleteIssueModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeleteIssueModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deploys an issue model. Returns an error if a model is already deployed.
         /// An issue model can only be used in analysis after it has been deployed.
         pub async fn deploy_issue_model(
             &mut self,
             request: impl tonic::IntoRequest<super::DeployIssueModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3210,14 +3379,22 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeployIssueModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeployIssueModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Undeploys an issue model.
         /// An issue model can not be used in analysis after it has been undeployed.
         pub async fn undeploy_issue_model(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeployIssueModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3234,13 +3411,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UndeployIssueModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UndeployIssueModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an issue.
         pub async fn get_issue(
             &mut self,
             request: impl tonic::IntoRequest<super::GetIssueRequest>,
-        ) -> Result<tonic::Response<super::Issue>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Issue>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3254,13 +3439,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetIssue",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetIssue",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists issues.
         pub async fn list_issues(
             &mut self,
             request: impl tonic::IntoRequest<super::ListIssuesRequest>,
-        ) -> Result<tonic::Response<super::ListIssuesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListIssuesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3274,13 +3470,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ListIssues",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ListIssues",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an issue.
         pub async fn update_issue(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateIssueRequest>,
-        ) -> Result<tonic::Response<super::Issue>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Issue>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3294,13 +3498,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdateIssue",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UpdateIssue",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an issue.
         pub async fn delete_issue(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteIssueRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3314,13 +3526,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeleteIssue",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeleteIssue",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an issue model's statistics.
         pub async fn calculate_issue_model_stats(
             &mut self,
             request: impl tonic::IntoRequest<super::CalculateIssueModelStatsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::CalculateIssueModelStatsResponse>,
             tonic::Status,
         > {
@@ -3337,13 +3557,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CalculateIssueModelStats",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CalculateIssueModelStats",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a phrase matcher.
         pub async fn create_phrase_matcher(
             &mut self,
             request: impl tonic::IntoRequest<super::CreatePhraseMatcherRequest>,
-        ) -> Result<tonic::Response<super::PhraseMatcher>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PhraseMatcher>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3357,13 +3585,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CreatePhraseMatcher",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CreatePhraseMatcher",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a phrase matcher.
         pub async fn get_phrase_matcher(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPhraseMatcherRequest>,
-        ) -> Result<tonic::Response<super::PhraseMatcher>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PhraseMatcher>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3377,13 +3613,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetPhraseMatcher",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetPhraseMatcher",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists phrase matchers.
         pub async fn list_phrase_matchers(
             &mut self,
             request: impl tonic::IntoRequest<super::ListPhraseMatchersRequest>,
-        ) -> Result<tonic::Response<super::ListPhraseMatchersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListPhraseMatchersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3397,13 +3644,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ListPhraseMatchers",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ListPhraseMatchers",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a phrase matcher.
         pub async fn delete_phrase_matcher(
             &mut self,
             request: impl tonic::IntoRequest<super::DeletePhraseMatcherRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3417,13 +3672,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeletePhraseMatcher",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeletePhraseMatcher",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a phrase matcher.
         pub async fn update_phrase_matcher(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdatePhraseMatcherRequest>,
-        ) -> Result<tonic::Response<super::PhraseMatcher>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PhraseMatcher>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3437,13 +3700,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdatePhraseMatcher",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UpdatePhraseMatcher",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets conversation statistics.
         pub async fn calculate_stats(
             &mut self,
             request: impl tonic::IntoRequest<super::CalculateStatsRequest>,
-        ) -> Result<tonic::Response<super::CalculateStatsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CalculateStatsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3457,13 +3731,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CalculateStats",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CalculateStats",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets project-level settings.
         pub async fn get_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSettingsRequest>,
-        ) -> Result<tonic::Response<super::Settings>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Settings>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3477,13 +3759,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates project-level settings.
         pub async fn update_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateSettingsRequest>,
-        ) -> Result<tonic::Response<super::Settings>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Settings>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3497,13 +3787,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdateSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UpdateSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a view.
         pub async fn create_view(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateViewRequest>,
-        ) -> Result<tonic::Response<super::View>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::View>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3517,13 +3815,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/CreateView",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "CreateView",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a view.
         pub async fn get_view(
             &mut self,
             request: impl tonic::IntoRequest<super::GetViewRequest>,
-        ) -> Result<tonic::Response<super::View>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::View>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3537,13 +3843,24 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/GetView",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "GetView",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists views.
         pub async fn list_views(
             &mut self,
             request: impl tonic::IntoRequest<super::ListViewsRequest>,
-        ) -> Result<tonic::Response<super::ListViewsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListViewsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3557,13 +3874,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/ListViews",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "ListViews",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a view.
         pub async fn update_view(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateViewRequest>,
-        ) -> Result<tonic::Response<super::View>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::View>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3577,13 +3902,21 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/UpdateView",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "UpdateView",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a view.
         pub async fn delete_view(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteViewRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3597,7 +3930,15 @@ pub mod contact_center_insights_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.contactcenterinsights.v1.ContactCenterInsights/DeleteView",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.contactcenterinsights.v1.ContactCenterInsights",
+                        "DeleteView",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

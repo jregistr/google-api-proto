@@ -1,17 +1,11 @@
-/// A widget that displays a stream of log.
+/// A widget that groups the other widgets. All widgets that are within
+/// the area spanned by the grouping widget are considered member widgets.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LogsPanel {
-    /// A filter that chooses which log entries to return.  See [Advanced Logs
-    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
-    /// Only log entries that match the filter are returned.  An empty filter
-    /// matches all log entries.
-    #[prost(string, tag = "1")]
-    pub filter: ::prost::alloc::string::String,
-    /// The names of logging resources to collect logs for. Currently only projects
-    /// are supported. If empty, the widget will default to the host project.
-    #[prost(string, repeated, tag = "2")]
-    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+pub struct CollapsibleGroup {
+    /// The collapsed state of the widget on first page load.
+    #[prost(bool, tag = "1")]
+    pub collapsed: bool,
 }
 /// Describes how to combine multiple time series to provide a different view of
 /// the data.  Aggregation of time series is done in two steps. First, each time
@@ -957,6 +951,297 @@ impl SparkChartType {
         }
     }
 }
+/// A widget showing the latest value of a metric, and how this value relates to
+/// one or more thresholds.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Scorecard {
+    /// Required. Fields for querying time series data from the
+    /// Stackdriver metrics API.
+    #[prost(message, optional, tag = "1")]
+    pub time_series_query: ::core::option::Option<TimeSeriesQuery>,
+    /// The thresholds used to determine the state of the scorecard given the
+    /// time series' current value. For an actual value x, the scorecard is in a
+    /// danger state if x is less than or equal to a danger threshold that triggers
+    /// below, or greater than or equal to a danger threshold that triggers above.
+    /// Similarly, if x is above/below a warning threshold that triggers
+    /// above/below, then the scorecard is in a warning state - unless x also puts
+    /// it in a danger state. (Danger trumps warning.)
+    ///
+    /// As an example, consider a scorecard with the following four thresholds:
+    ///
+    /// ```
+    /// {
+    ///    value: 90,
+    ///    category: 'DANGER',
+    ///    trigger: 'ABOVE',
+    /// },
+    /// {
+    ///    value: 70,
+    ///    category: 'WARNING',
+    ///    trigger: 'ABOVE',
+    /// },
+    /// {
+    ///    value: 10,
+    ///    category: 'DANGER',
+    ///    trigger: 'BELOW',
+    /// },
+    /// {
+    ///    value: 20,
+    ///    category: 'WARNING',
+    ///    trigger: 'BELOW',
+    /// }
+    /// ```
+    ///
+    /// Then: values less than or equal to 10 would put the scorecard in a DANGER
+    /// state, values greater than 10 but less than or equal to 20 a WARNING state,
+    /// values strictly between 20 and 70 an OK state, values greater than or equal
+    /// to 70 but less than 90 a WARNING state, and values greater than or equal to
+    /// 90 a DANGER state.
+    #[prost(message, repeated, tag = "6")]
+    pub thresholds: ::prost::alloc::vec::Vec<Threshold>,
+    /// Defines the optional additional chart shown on the scorecard. If
+    /// neither is included - then a default scorecard is shown.
+    #[prost(oneof = "scorecard::DataView", tags = "4, 5")]
+    pub data_view: ::core::option::Option<scorecard::DataView>,
+}
+/// Nested message and enum types in `Scorecard`.
+pub mod scorecard {
+    /// A gauge chart shows where the current value sits within a pre-defined
+    /// range. The upper and lower bounds should define the possible range of
+    /// values for the scorecard's query (inclusive).
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GaugeView {
+        /// The lower bound for this gauge chart. The value of the chart should
+        /// always be greater than or equal to this.
+        #[prost(double, tag = "1")]
+        pub lower_bound: f64,
+        /// The upper bound for this gauge chart. The value of the chart should
+        /// always be less than or equal to this.
+        #[prost(double, tag = "2")]
+        pub upper_bound: f64,
+    }
+    /// A sparkChart is a small chart suitable for inclusion in a table-cell or
+    /// inline in text. This message contains the configuration for a sparkChart
+    /// to show up on a Scorecard, showing recent trends of the scorecard's
+    /// timeseries.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SparkChartView {
+        /// Required. The type of sparkchart to show in this chartView.
+        #[prost(enumeration = "super::SparkChartType", tag = "1")]
+        pub spark_chart_type: i32,
+        /// The lower bound on data point frequency in the chart implemented by
+        /// specifying the minimum alignment period to use in a time series query.
+        /// For example, if the data is published once every 10 minutes it would not
+        /// make sense to fetch and align data at one minute intervals. This field is
+        /// optional and exists only as a hint.
+        #[prost(message, optional, tag = "2")]
+        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
+    }
+    /// Defines the optional additional chart shown on the scorecard. If
+    /// neither is included - then a default scorecard is shown.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DataView {
+        /// Will cause the scorecard to show a gauge chart.
+        #[prost(message, tag = "4")]
+        GaugeView(GaugeView),
+        /// Will cause the scorecard to show a spark chart.
+        #[prost(message, tag = "5")]
+        SparkChartView(SparkChartView),
+    }
+}
+/// A chart that displays alert policy data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AlertChart {
+    /// Required. The resource name of the alert policy. The format is:
+    ///
+    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+}
+/// A widget that displays a stream of log.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LogsPanel {
+    /// A filter that chooses which log entries to return.  See [Advanced Logs
+    /// Queries](<https://cloud.google.com/logging/docs/view/advanced-queries>).
+    /// Only log entries that match the filter are returned.  An empty filter
+    /// matches all log entries.
+    #[prost(string, tag = "1")]
+    pub filter: ::prost::alloc::string::String,
+    /// The names of logging resources to collect logs for. Currently only projects
+    /// are supported. If empty, the widget will default to the host project.
+    #[prost(string, repeated, tag = "2")]
+    pub resource_names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Table display options that can be reused.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TableDisplayOptions {
+    /// Optional. This field is unused and has been replaced by
+    /// TimeSeriesTable.column_settings
+    #[deprecated]
+    #[prost(string, repeated, tag = "1")]
+    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// A table that displays time series data.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSeriesTable {
+    /// Required. The data displayed in this table.
+    #[prost(message, repeated, tag = "1")]
+    pub data_sets: ::prost::alloc::vec::Vec<time_series_table::TableDataSet>,
+    /// Optional. Store rendering strategy
+    #[prost(enumeration = "time_series_table::MetricVisualization", tag = "2")]
+    pub metric_visualization: i32,
+    /// Optional. The list of the persistent column settings for the table.
+    #[prost(message, repeated, tag = "4")]
+    pub column_settings: ::prost::alloc::vec::Vec<time_series_table::ColumnSettings>,
+}
+/// Nested message and enum types in `TimeSeriesTable`.
+pub mod time_series_table {
+    /// Groups a time series query definition with table options.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct TableDataSet {
+        /// Required. Fields for querying time series data from the
+        /// Stackdriver metrics API.
+        #[prost(message, optional, tag = "1")]
+        pub time_series_query: ::core::option::Option<super::TimeSeriesQuery>,
+        /// Optional. A template string for naming `TimeSeries` in the resulting data
+        /// set. This should be a string with interpolations of the form
+        /// `${label_name}`, which will resolve to the label's value i.e.
+        /// "${resource.labels.project_id}."
+        #[prost(string, tag = "2")]
+        pub table_template: ::prost::alloc::string::String,
+        /// Optional. The lower bound on data point frequency for this data set,
+        /// implemented by specifying the minimum alignment period to use in a time
+        /// series query For example, if the data is published once every 10 minutes,
+        /// the `min_alignment_period` should be at least 10 minutes. It would not
+        /// make sense to fetch and align data at one minute intervals.
+        #[prost(message, optional, tag = "3")]
+        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
+        /// Optional. Table display options for configuring how the table is
+        /// rendered.
+        #[prost(message, optional, tag = "4")]
+        pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
+    }
+    /// The persistent settings for a table's columns.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ColumnSettings {
+        /// Required. The id of the column.
+        #[prost(string, tag = "1")]
+        pub column: ::prost::alloc::string::String,
+        /// Required. Whether the column should be visible on page load.
+        #[prost(bool, tag = "2")]
+        pub visible: bool,
+    }
+    /// Enum for metric metric_visualization
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum MetricVisualization {
+        /// Unspecified state
+        Unspecified = 0,
+        /// Default text rendering
+        Number = 1,
+        /// Horizontal bar rendering
+        Bar = 2,
+    }
+    impl MetricVisualization {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                MetricVisualization::Unspecified => "METRIC_VISUALIZATION_UNSPECIFIED",
+                MetricVisualization::Number => "NUMBER",
+                MetricVisualization::Bar => "BAR",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "METRIC_VISUALIZATION_UNSPECIFIED" => Some(Self::Unspecified),
+                "NUMBER" => Some(Self::Number),
+                "BAR" => Some(Self::Bar),
+                _ => None,
+            }
+        }
+    }
+}
+/// A widget that displays textual content.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Text {
+    /// The text content to be displayed.
+    #[prost(string, tag = "1")]
+    pub content: ::prost::alloc::string::String,
+    /// How the text content is formatted.
+    #[prost(enumeration = "text::Format", tag = "2")]
+    pub format: i32,
+}
+/// Nested message and enum types in `Text`.
+pub mod text {
+    /// The format type of the text content.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Format {
+        /// Format is unspecified. Defaults to MARKDOWN.
+        Unspecified = 0,
+        /// The text contains Markdown formatting.
+        Markdown = 1,
+        /// The text contains no special formatting.
+        Raw = 2,
+    }
+    impl Format {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Format::Unspecified => "FORMAT_UNSPECIFIED",
+                Format::Markdown => "MARKDOWN",
+                Format::Raw => "RAW",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
+                "MARKDOWN" => Some(Self::Markdown),
+                "RAW" => Some(Self::Raw),
+                _ => None,
+            }
+        }
+    }
+}
 /// A chart that displays data on a 2D (X and Y axes) plane.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1241,376 +1526,6 @@ pub mod chart_options {
         }
     }
 }
-/// A widget that displays textual content.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Text {
-    /// The text content to be displayed.
-    #[prost(string, tag = "1")]
-    pub content: ::prost::alloc::string::String,
-    /// How the text content is formatted.
-    #[prost(enumeration = "text::Format", tag = "2")]
-    pub format: i32,
-}
-/// Nested message and enum types in `Text`.
-pub mod text {
-    /// The format type of the text content.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Format {
-        /// Format is unspecified. Defaults to MARKDOWN.
-        Unspecified = 0,
-        /// The text contains Markdown formatting.
-        Markdown = 1,
-        /// The text contains no special formatting.
-        Raw = 2,
-    }
-    impl Format {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Format::Unspecified => "FORMAT_UNSPECIFIED",
-                Format::Markdown => "MARKDOWN",
-                Format::Raw => "RAW",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FORMAT_UNSPECIFIED" => Some(Self::Unspecified),
-                "MARKDOWN" => Some(Self::Markdown),
-                "RAW" => Some(Self::Raw),
-                _ => None,
-            }
-        }
-    }
-}
-/// A filter to reduce the amount of data charted in relevant widgets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DashboardFilter {
-    /// Required. The key for the label
-    #[prost(string, tag = "1")]
-    pub label_key: ::prost::alloc::string::String,
-    /// The placeholder text that can be referenced in a filter string or MQL
-    /// query. If omitted, the dashboard filter will be applied to all relevant
-    /// widgets in the dashboard.
-    #[prost(string, tag = "3")]
-    pub template_variable: ::prost::alloc::string::String,
-    /// The specified filter type
-    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
-    pub filter_type: i32,
-    /// The default value used in the filter comparison
-    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
-    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
-}
-/// Nested message and enum types in `DashboardFilter`.
-pub mod dashboard_filter {
-    /// The type for the dashboard filter
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum FilterType {
-        /// Filter type is unspecified. This is not valid in a well-formed request.
-        Unspecified = 0,
-        /// Filter on a resource label value
-        ResourceLabel = 1,
-        /// Filter on a metrics label value
-        MetricLabel = 2,
-        /// Filter on a user metadata label value
-        UserMetadataLabel = 3,
-        /// Filter on a system metadata label value
-        SystemMetadataLabel = 4,
-        /// Filter on a group id
-        Group = 5,
-    }
-    impl FilterType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
-                FilterType::ResourceLabel => "RESOURCE_LABEL",
-                FilterType::MetricLabel => "METRIC_LABEL",
-                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
-                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
-                FilterType::Group => "GROUP",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "FILTER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "RESOURCE_LABEL" => Some(Self::ResourceLabel),
-                "METRIC_LABEL" => Some(Self::MetricLabel),
-                "USER_METADATA_LABEL" => Some(Self::UserMetadataLabel),
-                "SYSTEM_METADATA_LABEL" => Some(Self::SystemMetadataLabel),
-                "GROUP" => Some(Self::Group),
-                _ => None,
-            }
-        }
-    }
-    /// The default value used in the filter comparison
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DefaultValue {
-        /// A variable-length string value.
-        #[prost(string, tag = "4")]
-        StringValue(::prost::alloc::string::String),
-    }
-}
-/// A chart that displays alert policy data.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AlertChart {
-    /// Required. The resource name of the alert policy. The format is:
-    ///
-    ///      projects/\[PROJECT_ID_OR_NUMBER]/alertPolicies/[ALERT_POLICY_ID\]
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-}
-/// A widget that groups the other widgets. All widgets that are within
-/// the area spanned by the grouping widget are considered member widgets.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CollapsibleGroup {
-    /// The collapsed state of the widget on first page load.
-    #[prost(bool, tag = "1")]
-    pub collapsed: bool,
-}
-/// A widget showing the latest value of a metric, and how this value relates to
-/// one or more thresholds.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Scorecard {
-    /// Required. Fields for querying time series data from the
-    /// Stackdriver metrics API.
-    #[prost(message, optional, tag = "1")]
-    pub time_series_query: ::core::option::Option<TimeSeriesQuery>,
-    /// The thresholds used to determine the state of the scorecard given the
-    /// time series' current value. For an actual value x, the scorecard is in a
-    /// danger state if x is less than or equal to a danger threshold that triggers
-    /// below, or greater than or equal to a danger threshold that triggers above.
-    /// Similarly, if x is above/below a warning threshold that triggers
-    /// above/below, then the scorecard is in a warning state - unless x also puts
-    /// it in a danger state. (Danger trumps warning.)
-    ///
-    /// As an example, consider a scorecard with the following four thresholds:
-    ///
-    /// ```
-    /// {
-    ///    value: 90,
-    ///    category: 'DANGER',
-    ///    trigger: 'ABOVE',
-    /// },
-    /// {
-    ///    value: 70,
-    ///    category: 'WARNING',
-    ///    trigger: 'ABOVE',
-    /// },
-    /// {
-    ///    value: 10,
-    ///    category: 'DANGER',
-    ///    trigger: 'BELOW',
-    /// },
-    /// {
-    ///    value: 20,
-    ///    category: 'WARNING',
-    ///    trigger: 'BELOW',
-    /// }
-    /// ```
-    ///
-    /// Then: values less than or equal to 10 would put the scorecard in a DANGER
-    /// state, values greater than 10 but less than or equal to 20 a WARNING state,
-    /// values strictly between 20 and 70 an OK state, values greater than or equal
-    /// to 70 but less than 90 a WARNING state, and values greater than or equal to
-    /// 90 a DANGER state.
-    #[prost(message, repeated, tag = "6")]
-    pub thresholds: ::prost::alloc::vec::Vec<Threshold>,
-    /// Defines the optional additional chart shown on the scorecard. If
-    /// neither is included - then a default scorecard is shown.
-    #[prost(oneof = "scorecard::DataView", tags = "4, 5")]
-    pub data_view: ::core::option::Option<scorecard::DataView>,
-}
-/// Nested message and enum types in `Scorecard`.
-pub mod scorecard {
-    /// A gauge chart shows where the current value sits within a pre-defined
-    /// range. The upper and lower bounds should define the possible range of
-    /// values for the scorecard's query (inclusive).
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GaugeView {
-        /// The lower bound for this gauge chart. The value of the chart should
-        /// always be greater than or equal to this.
-        #[prost(double, tag = "1")]
-        pub lower_bound: f64,
-        /// The upper bound for this gauge chart. The value of the chart should
-        /// always be less than or equal to this.
-        #[prost(double, tag = "2")]
-        pub upper_bound: f64,
-    }
-    /// A sparkChart is a small chart suitable for inclusion in a table-cell or
-    /// inline in text. This message contains the configuration for a sparkChart
-    /// to show up on a Scorecard, showing recent trends of the scorecard's
-    /// timeseries.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SparkChartView {
-        /// Required. The type of sparkchart to show in this chartView.
-        #[prost(enumeration = "super::SparkChartType", tag = "1")]
-        pub spark_chart_type: i32,
-        /// The lower bound on data point frequency in the chart implemented by
-        /// specifying the minimum alignment period to use in a time series query.
-        /// For example, if the data is published once every 10 minutes it would not
-        /// make sense to fetch and align data at one minute intervals. This field is
-        /// optional and exists only as a hint.
-        #[prost(message, optional, tag = "2")]
-        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
-    }
-    /// Defines the optional additional chart shown on the scorecard. If
-    /// neither is included - then a default scorecard is shown.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DataView {
-        /// Will cause the scorecard to show a gauge chart.
-        #[prost(message, tag = "4")]
-        GaugeView(GaugeView),
-        /// Will cause the scorecard to show a spark chart.
-        #[prost(message, tag = "5")]
-        SparkChartView(SparkChartView),
-    }
-}
-/// Table display options that can be reused.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableDisplayOptions {
-    /// Optional. This field is unused and has been replaced by
-    /// TimeSeriesTable.column_settings
-    #[deprecated]
-    #[prost(string, repeated, tag = "1")]
-    pub shown_columns: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// A table that displays time series data.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSeriesTable {
-    /// Required. The data displayed in this table.
-    #[prost(message, repeated, tag = "1")]
-    pub data_sets: ::prost::alloc::vec::Vec<time_series_table::TableDataSet>,
-    /// Optional. Store rendering strategy
-    #[prost(enumeration = "time_series_table::MetricVisualization", tag = "2")]
-    pub metric_visualization: i32,
-    /// Optional. The list of the persistent column settings for the table.
-    #[prost(message, repeated, tag = "4")]
-    pub column_settings: ::prost::alloc::vec::Vec<time_series_table::ColumnSettings>,
-}
-/// Nested message and enum types in `TimeSeriesTable`.
-pub mod time_series_table {
-    /// Groups a time series query definition with table options.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct TableDataSet {
-        /// Required. Fields for querying time series data from the
-        /// Stackdriver metrics API.
-        #[prost(message, optional, tag = "1")]
-        pub time_series_query: ::core::option::Option<super::TimeSeriesQuery>,
-        /// Optional. A template string for naming `TimeSeries` in the resulting data
-        /// set. This should be a string with interpolations of the form
-        /// `${label_name}`, which will resolve to the label's value i.e.
-        /// "${resource.labels.project_id}."
-        #[prost(string, tag = "2")]
-        pub table_template: ::prost::alloc::string::String,
-        /// Optional. The lower bound on data point frequency for this data set,
-        /// implemented by specifying the minimum alignment period to use in a time
-        /// series query For example, if the data is published once every 10 minutes,
-        /// the `min_alignment_period` should be at least 10 minutes. It would not
-        /// make sense to fetch and align data at one minute intervals.
-        #[prost(message, optional, tag = "3")]
-        pub min_alignment_period: ::core::option::Option<::prost_types::Duration>,
-        /// Optional. Table display options for configuring how the table is
-        /// rendered.
-        #[prost(message, optional, tag = "4")]
-        pub table_display_options: ::core::option::Option<super::TableDisplayOptions>,
-    }
-    /// The persistent settings for a table's columns.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ColumnSettings {
-        /// Required. The id of the column.
-        #[prost(string, tag = "1")]
-        pub column: ::prost::alloc::string::String,
-        /// Required. Whether the column should be visible on page load.
-        #[prost(bool, tag = "2")]
-        pub visible: bool,
-    }
-    /// Enum for metric metric_visualization
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum MetricVisualization {
-        /// Unspecified state
-        Unspecified = 0,
-        /// Default text rendering
-        Number = 1,
-        /// Horizontal bar rendering
-        Bar = 2,
-    }
-    impl MetricVisualization {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                MetricVisualization::Unspecified => "METRIC_VISUALIZATION_UNSPECIFIED",
-                MetricVisualization::Number => "NUMBER",
-                MetricVisualization::Bar => "BAR",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "METRIC_VISUALIZATION_UNSPECIFIED" => Some(Self::Unspecified),
-                "NUMBER" => Some(Self::Number),
-                "BAR" => Some(Self::Bar),
-                _ => None,
-            }
-        }
-    }
-}
 /// Widget contains a single dashboard component and configuration of how to
 /// present the component in the dashboard.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1762,6 +1677,91 @@ pub mod column_layout {
         /// The display widgets arranged vertically in this column.
         #[prost(message, repeated, tag = "2")]
         pub widgets: ::prost::alloc::vec::Vec<super::Widget>,
+    }
+}
+/// A filter to reduce the amount of data charted in relevant widgets.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DashboardFilter {
+    /// Required. The key for the label
+    #[prost(string, tag = "1")]
+    pub label_key: ::prost::alloc::string::String,
+    /// The placeholder text that can be referenced in a filter string or MQL
+    /// query. If omitted, the dashboard filter will be applied to all relevant
+    /// widgets in the dashboard.
+    #[prost(string, tag = "3")]
+    pub template_variable: ::prost::alloc::string::String,
+    /// The specified filter type
+    #[prost(enumeration = "dashboard_filter::FilterType", tag = "5")]
+    pub filter_type: i32,
+    /// The default value used in the filter comparison
+    #[prost(oneof = "dashboard_filter::DefaultValue", tags = "4")]
+    pub default_value: ::core::option::Option<dashboard_filter::DefaultValue>,
+}
+/// Nested message and enum types in `DashboardFilter`.
+pub mod dashboard_filter {
+    /// The type for the dashboard filter
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum FilterType {
+        /// Filter type is unspecified. This is not valid in a well-formed request.
+        Unspecified = 0,
+        /// Filter on a resource label value
+        ResourceLabel = 1,
+        /// Filter on a metrics label value
+        MetricLabel = 2,
+        /// Filter on a user metadata label value
+        UserMetadataLabel = 3,
+        /// Filter on a system metadata label value
+        SystemMetadataLabel = 4,
+        /// Filter on a group id
+        Group = 5,
+    }
+    impl FilterType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                FilterType::Unspecified => "FILTER_TYPE_UNSPECIFIED",
+                FilterType::ResourceLabel => "RESOURCE_LABEL",
+                FilterType::MetricLabel => "METRIC_LABEL",
+                FilterType::UserMetadataLabel => "USER_METADATA_LABEL",
+                FilterType::SystemMetadataLabel => "SYSTEM_METADATA_LABEL",
+                FilterType::Group => "GROUP",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "FILTER_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RESOURCE_LABEL" => Some(Self::ResourceLabel),
+                "METRIC_LABEL" => Some(Self::MetricLabel),
+                "USER_METADATA_LABEL" => Some(Self::UserMetadataLabel),
+                "SYSTEM_METADATA_LABEL" => Some(Self::SystemMetadataLabel),
+                "GROUP" => Some(Self::Group),
+                _ => None,
+            }
+        }
+    }
+    /// The default value used in the filter comparison
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DefaultValue {
+        /// A variable-length string value.
+        #[prost(string, tag = "4")]
+        StringValue(::prost::alloc::string::String),
     }
 }
 /// A Google Stackdriver dashboard. Dashboards define the content and layout
@@ -1966,6 +1966,22 @@ pub mod dashboards_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new custom dashboard. For examples on how you can use this API to
         /// create dashboards, see [Managing dashboards by
         /// API](https://cloud.google.com/monitoring/dashboards/api-dashboard). This
@@ -1975,7 +1991,7 @@ pub mod dashboards_service_client {
         pub async fn create_dashboard(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDashboardRequest>,
-        ) -> Result<tonic::Response<super::Dashboard>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Dashboard>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1989,7 +2005,15 @@ pub mod dashboards_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.dashboard.v1.DashboardsService/CreateDashboard",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.dashboard.v1.DashboardsService",
+                        "CreateDashboard",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the existing dashboards.
         ///
@@ -1999,7 +2023,10 @@ pub mod dashboards_service_client {
         pub async fn list_dashboards(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDashboardsRequest>,
-        ) -> Result<tonic::Response<super::ListDashboardsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDashboardsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2013,7 +2040,15 @@ pub mod dashboards_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.dashboard.v1.DashboardsService/ListDashboards",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.dashboard.v1.DashboardsService",
+                        "ListDashboards",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches a specific dashboard.
         ///
@@ -2023,7 +2058,7 @@ pub mod dashboards_service_client {
         pub async fn get_dashboard(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDashboardRequest>,
-        ) -> Result<tonic::Response<super::Dashboard>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Dashboard>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2037,7 +2072,15 @@ pub mod dashboards_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.dashboard.v1.DashboardsService/GetDashboard",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.dashboard.v1.DashboardsService",
+                        "GetDashboard",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing custom dashboard.
         ///
@@ -2047,7 +2090,7 @@ pub mod dashboards_service_client {
         pub async fn delete_dashboard(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDashboardRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2061,7 +2104,15 @@ pub mod dashboards_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.dashboard.v1.DashboardsService/DeleteDashboard",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.dashboard.v1.DashboardsService",
+                        "DeleteDashboard",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Replaces an existing custom dashboard with a new definition.
         ///
@@ -2071,7 +2122,7 @@ pub mod dashboards_service_client {
         pub async fn update_dashboard(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDashboardRequest>,
-        ) -> Result<tonic::Response<super::Dashboard>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Dashboard>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2085,7 +2136,15 @@ pub mod dashboards_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.monitoring.dashboard.v1.DashboardsService/UpdateDashboard",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.monitoring.dashboard.v1.DashboardsService",
+                        "UpdateDashboard",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

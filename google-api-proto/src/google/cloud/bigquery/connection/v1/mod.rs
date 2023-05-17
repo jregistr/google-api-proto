@@ -461,11 +461,27 @@ pub mod connection_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new connection.
         pub async fn create_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConnectionRequest>,
-        ) -> Result<tonic::Response<super::Connection>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Connection>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -479,13 +495,21 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/CreateConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "CreateConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns specified connection.
         pub async fn get_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectionRequest>,
-        ) -> Result<tonic::Response<super::Connection>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Connection>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -499,13 +523,24 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/GetConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "GetConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns a list of connections in the given project.
         pub async fn list_connections(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectionsRequest>,
-        ) -> Result<tonic::Response<super::ListConnectionsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListConnectionsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -519,14 +554,22 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/ListConnections",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "ListConnections",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified connection. For security reasons, also resets
         /// credential if connection properties are in the update field mask.
         pub async fn update_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateConnectionRequest>,
-        ) -> Result<tonic::Response<super::Connection>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Connection>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -540,13 +583,21 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/UpdateConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "UpdateConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes connection and associated credential.
         pub async fn delete_connection(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConnectionRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -560,7 +611,15 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/DeleteConnection",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "DeleteConnection",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the access control policy for a resource.
         /// Returns an empty policy if the resource exists and does not have a policy
@@ -570,7 +629,7 @@ pub mod connection_service_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::super::iam::v1::GetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -587,7 +646,15 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/GetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Sets the access control policy on the specified resource. Replaces any
         /// existing policy.
@@ -598,7 +665,7 @@ pub mod connection_service_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::super::iam::v1::SetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -615,7 +682,15 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/SetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns permissions that a caller has on the specified resource.
         /// If the resource does not exist, this will return an empty set of
@@ -629,7 +704,7 @@ pub mod connection_service_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::super::iam::v1::TestIamPermissionsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::iam::v1::TestIamPermissionsResponse,
             >,
@@ -648,7 +723,15 @@ pub mod connection_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.connection.v1.ConnectionService/TestIamPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.connection.v1.ConnectionService",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

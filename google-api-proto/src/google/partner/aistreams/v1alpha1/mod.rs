@@ -392,11 +392,30 @@ pub mod ai_streams_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists Clusters in a given project and location.
         pub async fn list_clusters(
             &mut self,
             request: impl tonic::IntoRequest<super::ListClustersRequest>,
-        ) -> Result<tonic::Response<super::ListClustersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListClustersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -410,13 +429,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/ListClusters",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "ListClusters",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Cluster.
         pub async fn get_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::GetClusterRequest>,
-        ) -> Result<tonic::Response<super::Cluster>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Cluster>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -430,13 +457,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/GetCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "GetCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Cluster in a given project and location.
         pub async fn create_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -453,13 +488,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/CreateCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "CreateCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single Cluster.
         pub async fn update_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -476,13 +519,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/UpdateCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "UpdateCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Cluster.
         pub async fn delete_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -499,13 +550,24 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/DeleteCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "DeleteCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists Streams in a given project, location and cluster.
         pub async fn list_streams(
             &mut self,
             request: impl tonic::IntoRequest<super::ListStreamsRequest>,
-        ) -> Result<tonic::Response<super::ListStreamsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListStreamsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -519,13 +581,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/ListStreams",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "ListStreams",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Stream.
         pub async fn get_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::GetStreamRequest>,
-        ) -> Result<tonic::Response<super::Stream>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Stream>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -539,13 +609,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/GetStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "GetStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Stream in a given project and location.
         pub async fn create_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateStreamRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -562,13 +640,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/CreateStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "CreateStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the parameters of a single Stream.
         pub async fn update_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateStreamRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -585,13 +671,21 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/UpdateStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "UpdateStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Stream.
         pub async fn delete_stream(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteStreamRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -608,7 +702,15 @@ pub mod ai_streams_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.partner.aistreams.v1alpha1.AIStreams/DeleteStream",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.partner.aistreams.v1alpha1.AIStreams",
+                        "DeleteStream",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

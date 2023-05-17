@@ -57,6 +57,22 @@ pub mod routes_alpha_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns the primary route along with optional alternate routes, given a set
         /// of terminal and intermediate waypoints.
         ///
@@ -94,7 +110,7 @@ pub mod routes_alpha_client {
         pub async fn compute_routes(
             &mut self,
             request: impl tonic::IntoRequest<super::super::v1::ComputeRoutesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::v1::ComputeRoutesResponse>,
             tonic::Status,
         > {
@@ -111,7 +127,15 @@ pub mod routes_alpha_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.routes.v1alpha.RoutesAlpha/ComputeRoutes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.maps.routes.v1alpha.RoutesAlpha",
+                        "ComputeRoutes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Takes in a list of origins and destinations and returns a stream containing
         /// route information for each combination of origin and destination.
@@ -151,7 +175,7 @@ pub mod routes_alpha_client {
         pub async fn compute_route_matrix(
             &mut self,
             request: impl tonic::IntoRequest<super::super::v1::ComputeRouteMatrixRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 tonic::codec::Streaming<super::super::v1::RouteMatrixElement>,
             >,
@@ -170,7 +194,15 @@ pub mod routes_alpha_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.routes.v1alpha.RoutesAlpha/ComputeRouteMatrix",
             );
-            self.inner.server_streaming(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.maps.routes.v1alpha.RoutesAlpha",
+                        "ComputeRouteMatrix",
+                    ),
+                );
+            self.inner.server_streaming(req, path, codec).await
         }
         /// Given a set of terminal and intermediate waypoints, and a route objective,
         /// computes the best route for the route objective. Also returns fastest route
@@ -211,7 +243,7 @@ pub mod routes_alpha_client {
             request: impl tonic::IntoRequest<
                 super::super::v1::ComputeCustomRoutesRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::v1::ComputeCustomRoutesResponse>,
             tonic::Status,
         > {
@@ -228,7 +260,15 @@ pub mod routes_alpha_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.maps.routes.v1alpha.RoutesAlpha/ComputeCustomRoutes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.maps.routes.v1alpha.RoutesAlpha",
+                        "ComputeCustomRoutes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

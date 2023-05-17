@@ -1,3 +1,382 @@
+/// The schema defines the output of the processed document by a processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentSchema {
+    /// Display name to show to users.
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of the schema.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Entity types of the schema.
+    #[prost(message, repeated, tag = "3")]
+    pub entity_types: ::prost::alloc::vec::Vec<document_schema::EntityType>,
+    /// Metadata of the schema.
+    #[prost(message, optional, tag = "4")]
+    pub metadata: ::core::option::Option<document_schema::Metadata>,
+}
+/// Nested message and enum types in `DocumentSchema`.
+pub mod document_schema {
+    /// EntityType is the wrapper of a label of the corresponding model with
+    /// detailed attributes and limitations for entity-based processors. Multiple
+    /// types can also compose a dependency tree to represent nested types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EntityType {
+        /// User defined name for the type.
+        #[prost(string, tag = "13")]
+        pub display_name: ::prost::alloc::string::String,
+        /// Name of the type. It must be unique within the schema file and
+        /// cannot be a 'Common Type'.  Besides that we use the following naming
+        /// conventions:
+        ///
+        /// - *use `snake_casing`*
+        /// - name matching is case-sensitive
+        /// - Maximum 64 characters.
+        /// - Must start with a letter.
+        /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
+        ///    compatibility internal infrastructure and tooling can handle any ascii
+        ///    character)
+        /// - The `/` is sometimes used to denote a property of a type.  For example
+        ///    `line_item/amount`.  This convention is deprecated, but will still be
+        ///    honored for backward compatibility.
+        #[prost(string, tag = "1")]
+        pub name: ::prost::alloc::string::String,
+        /// The entity type that this type is derived from.  For now, one and only
+        /// one should be set.
+        #[prost(string, repeated, tag = "2")]
+        pub base_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Description the nested structure, or composition of an entity.
+        #[prost(message, repeated, tag = "6")]
+        pub properties: ::prost::alloc::vec::Vec<entity_type::Property>,
+        #[prost(oneof = "entity_type::ValueSource", tags = "14")]
+        pub value_source: ::core::option::Option<entity_type::ValueSource>,
+    }
+    /// Nested message and enum types in `EntityType`.
+    pub mod entity_type {
+        /// Defines the a list of enum values.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct EnumValues {
+            /// The individual values that this enum values type can include.
+            #[prost(string, repeated, tag = "1")]
+            pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        }
+        /// Defines properties that can be part of the entity type.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Property {
+            /// The name of the property.  Follows the same guidelines as the
+            /// EntityType name.
+            #[prost(string, tag = "1")]
+            pub name: ::prost::alloc::string::String,
+            /// A reference to the value type of the property.  This type is subject
+            /// to the same conventions as the `Entity.base_types` field.
+            #[prost(string, tag = "2")]
+            pub value_type: ::prost::alloc::string::String,
+            /// Occurrence type limits the number of instances an entity type appears
+            /// in the document.
+            #[prost(enumeration = "property::OccurrenceType", tag = "3")]
+            pub occurrence_type: i32,
+        }
+        /// Nested message and enum types in `Property`.
+        pub mod property {
+            /// Types of occurrences of the entity type in the document.  This
+            /// represents the number of instances of instances of an entity, not
+            /// number of mentions of an entity.  For example, a bank statement may
+            /// only have one `account_number`, but this account number may be
+            /// mentioned in several places on the document.  In this case the
+            /// 'account_number' would be considered a `REQUIRED_ONCE` entity type. If,
+            /// on the other hand, we expect a bank statement to contain the status of
+            /// multiple different accounts for the customers, the occurrence type will
+            /// be set to `REQUIRED_MULTIPLE`.
+            #[derive(
+                Clone,
+                Copy,
+                Debug,
+                PartialEq,
+                Eq,
+                Hash,
+                PartialOrd,
+                Ord,
+                ::prost::Enumeration
+            )]
+            #[repr(i32)]
+            pub enum OccurrenceType {
+                /// Unspecified occurrence type.
+                Unspecified = 0,
+                /// There will be zero or one instance of this entity type.  The same
+                /// entity instance may be mentioned multiple times.
+                OptionalOnce = 1,
+                /// The entity type will appear zero or multiple times.
+                OptionalMultiple = 2,
+                /// The entity type will only appear exactly once.  The same
+                /// entity instance may be mentioned multiple times.
+                RequiredOnce = 3,
+                /// The entity type will appear once or more times.
+                RequiredMultiple = 4,
+            }
+            impl OccurrenceType {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        OccurrenceType::Unspecified => "OCCURRENCE_TYPE_UNSPECIFIED",
+                        OccurrenceType::OptionalOnce => "OPTIONAL_ONCE",
+                        OccurrenceType::OptionalMultiple => "OPTIONAL_MULTIPLE",
+                        OccurrenceType::RequiredOnce => "REQUIRED_ONCE",
+                        OccurrenceType::RequiredMultiple => "REQUIRED_MULTIPLE",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "OCCURRENCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                        "OPTIONAL_ONCE" => Some(Self::OptionalOnce),
+                        "OPTIONAL_MULTIPLE" => Some(Self::OptionalMultiple),
+                        "REQUIRED_ONCE" => Some(Self::RequiredOnce),
+                        "REQUIRED_MULTIPLE" => Some(Self::RequiredMultiple),
+                        _ => None,
+                    }
+                }
+            }
+        }
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ValueSource {
+            /// If specified, lists all the possible values for this entity.  This
+            /// should not be more than a handful of values.  If the number of values
+            /// is >10 or could change frequently use the `EntityType.value_ontology`
+            /// field and specify a list of all possible values in a value ontology
+            /// file.
+            #[prost(message, tag = "14")]
+            EnumValues(EnumValues),
+        }
+    }
+    /// Metadata for global schema behavior.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Metadata {
+        /// If true, a `document` entity type can be applied to subdocument (
+        /// splitting). Otherwise, it can only be applied to the entire document
+        /// (classification).
+        #[prost(bool, tag = "1")]
+        pub document_splitter: bool,
+        /// If true, on a given page, there can be multiple `document` annotations
+        /// covering it.
+        #[prost(bool, tag = "2")]
+        pub document_allow_multiple_labels: bool,
+        /// If set, all the nested entities must be prefixed with the parents.
+        #[prost(bool, tag = "6")]
+        pub prefixed_naming_on_properties: bool,
+        /// If set, we will skip the naming format validation in the schema. So the
+        /// string values in `DocumentSchema.EntityType.name` and
+        /// `DocumentSchema.EntityType.Property.name` will not be checked.
+        #[prost(bool, tag = "7")]
+        pub skip_naming_validation: bool,
+    }
+}
+/// Gives a short summary of an evaluation, and links to the evaluation itself.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EvaluationReference {
+    /// The resource name of the Long Running Operation for the evaluation.
+    #[prost(string, tag = "1")]
+    pub operation: ::prost::alloc::string::String,
+    /// The resource name of the evaluation.
+    #[prost(string, tag = "2")]
+    pub evaluation: ::prost::alloc::string::String,
+    /// An aggregate of the statistics for the evaluation with fuzzy matching on.
+    #[prost(message, optional, tag = "4")]
+    pub aggregate_metrics: ::core::option::Option<evaluation::Metrics>,
+    /// An aggregate of the statistics for the evaluation with fuzzy matching off.
+    #[prost(message, optional, tag = "5")]
+    pub aggregate_metrics_exact: ::core::option::Option<evaluation::Metrics>,
+}
+/// An evaluation of a ProcessorVersion's performance.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Evaluation {
+    /// The resource name of the evaluation.
+    /// Format:
+    /// `projects/{project}/locations/{location}/processors/{processor}/processorVersions/{processor_version}/evaluations/{evaluation}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The time that the evaluation was created.
+    #[prost(message, optional, tag = "2")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Counters for the documents used in the evaluation.
+    #[prost(message, optional, tag = "5")]
+    pub document_counters: ::core::option::Option<evaluation::Counters>,
+    /// Metrics for all the entities in aggregate.
+    #[prost(message, optional, tag = "3")]
+    pub all_entities_metrics: ::core::option::Option<evaluation::MultiConfidenceMetrics>,
+    /// Metrics across confidence levels, for different entities.
+    #[prost(btree_map = "string, message", tag = "4")]
+    pub entity_metrics: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        evaluation::MultiConfidenceMetrics,
+    >,
+    /// The KMS key name used for encryption.
+    #[prost(string, tag = "6")]
+    pub kms_key_name: ::prost::alloc::string::String,
+    /// The KMS key version with which data is encrypted.
+    #[prost(string, tag = "7")]
+    pub kms_key_version_name: ::prost::alloc::string::String,
+}
+/// Nested message and enum types in `Evaluation`.
+pub mod evaluation {
+    /// Evaluation counters for the documents that were used.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Counters {
+        /// How many documents were sent for evaluation.
+        #[prost(int32, tag = "1")]
+        pub input_documents_count: i32,
+        /// How many documents were not included in the evaluation as they didn't
+        /// pass validation.
+        #[prost(int32, tag = "2")]
+        pub invalid_documents_count: i32,
+        /// How many documents were not included in the evaluation as Document AI
+        /// failed to process them.
+        #[prost(int32, tag = "3")]
+        pub failed_documents_count: i32,
+        /// How many documents were used in the evaluation.
+        #[prost(int32, tag = "4")]
+        pub evaluated_documents_count: i32,
+    }
+    /// Evaluation metrics, either in aggregate or about a specific entity.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Metrics {
+        /// The calculated precision.
+        #[prost(float, tag = "1")]
+        pub precision: f32,
+        /// The calculated recall.
+        #[prost(float, tag = "2")]
+        pub recall: f32,
+        /// The calculated f1 score.
+        #[prost(float, tag = "3")]
+        pub f1_score: f32,
+        /// The amount of occurrences in predicted documents.
+        #[prost(int32, tag = "4")]
+        pub predicted_occurrences_count: i32,
+        /// The amount of occurrences in ground truth documents.
+        #[prost(int32, tag = "5")]
+        pub ground_truth_occurrences_count: i32,
+        /// The amount of documents with a predicted occurrence.
+        #[prost(int32, tag = "10")]
+        pub predicted_document_count: i32,
+        /// The amount of documents with a ground truth occurrence.
+        #[prost(int32, tag = "11")]
+        pub ground_truth_document_count: i32,
+        /// The amount of true positives.
+        #[prost(int32, tag = "6")]
+        pub true_positives_count: i32,
+        /// The amount of false positives.
+        #[prost(int32, tag = "7")]
+        pub false_positives_count: i32,
+        /// The amount of false negatives.
+        #[prost(int32, tag = "8")]
+        pub false_negatives_count: i32,
+        /// The amount of documents that had an occurrence of this label.
+        #[prost(int32, tag = "9")]
+        pub total_documents_count: i32,
+    }
+    /// Evaluations metrics, at a specific confidence level.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceLevelMetrics {
+        /// The confidence level.
+        #[prost(float, tag = "1")]
+        pub confidence_level: f32,
+        /// The metrics at the specific confidence level.
+        #[prost(message, optional, tag = "2")]
+        pub metrics: ::core::option::Option<Metrics>,
+    }
+    /// Metrics across multiple confidence levels.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct MultiConfidenceMetrics {
+        /// Metrics across confidence levels with fuzzy matching enabled.
+        #[prost(message, repeated, tag = "1")]
+        pub confidence_level_metrics: ::prost::alloc::vec::Vec<ConfidenceLevelMetrics>,
+        /// Metrics across confidence levels with only exact matching.
+        #[prost(message, repeated, tag = "4")]
+        pub confidence_level_metrics_exact: ::prost::alloc::vec::Vec<
+            ConfidenceLevelMetrics,
+        >,
+        /// The calculated area under the precision recall curve (AUPRC), computed by
+        /// integrating over all confidence thresholds.
+        #[prost(float, tag = "2")]
+        pub auprc: f32,
+        /// The Estimated Calibration Error (ECE) of the confidence of the predicted
+        /// entities.
+        #[prost(float, tag = "3")]
+        pub estimated_calibration_error: f32,
+        /// The AUPRC for metrics with fuzzy matching disabled, i.e., exact matching
+        /// only.
+        #[prost(float, tag = "5")]
+        pub auprc_exact: f32,
+        /// The ECE for the predicted entities with fuzzy matching disabled, i.e.,
+        /// exact matching only.
+        #[prost(float, tag = "6")]
+        pub estimated_calibration_error_exact: f32,
+        /// The metrics type for the label.
+        #[prost(enumeration = "multi_confidence_metrics::MetricsType", tag = "7")]
+        pub metrics_type: i32,
+    }
+    /// Nested message and enum types in `MultiConfidenceMetrics`.
+    pub mod multi_confidence_metrics {
+        /// A type that determines how metrics should be interpreted.
+        #[derive(
+            Clone,
+            Copy,
+            Debug,
+            PartialEq,
+            Eq,
+            Hash,
+            PartialOrd,
+            Ord,
+            ::prost::Enumeration
+        )]
+        #[repr(i32)]
+        pub enum MetricsType {
+            /// The metrics type is unspecified. By default, metrics without a
+            /// particular specification are for leaf entity types (i.e., top-level
+            /// entity types without child types, or child types which are not
+            /// parent types themselves).
+            Unspecified = 0,
+            /// Indicates whether metrics for this particular label type represent an
+            /// aggregate of metrics for other types instead of being based on actual
+            /// TP/FP/FN values for the label type. Metrics for parent (i.e., non-leaf)
+            /// entity types are an aggregate of metrics for their children.
+            Aggregate = 1,
+        }
+        impl MetricsType {
+            /// String value of the enum field names used in the ProtoBuf definition.
+            ///
+            /// The values are not transformed in any way and thus are considered stable
+            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+            pub fn as_str_name(&self) -> &'static str {
+                match self {
+                    MetricsType::Unspecified => "METRICS_TYPE_UNSPECIFIED",
+                    MetricsType::Aggregate => "AGGREGATE",
+                }
+            }
+            /// Creates an enum from field names used in the ProtoBuf definition.
+            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                match value {
+                    "METRICS_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                    "AGGREGATE" => Some(Self::Aggregate),
+                    _ => None,
+                }
+            }
+        }
+    }
+}
 /// Encodes the detailed information of a barcode.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1229,201 +1608,80 @@ pub mod document {
         Content(::prost::bytes::Bytes),
     }
 }
-/// Gives a short summary of an evaluation, and links to the evaluation itself.
+/// The common metadata for long running operations.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct EvaluationReference {
-    /// The resource name of the Long Running Operation for the evaluation.
-    #[prost(string, tag = "1")]
-    pub operation: ::prost::alloc::string::String,
-    /// The resource name of the evaluation.
+pub struct CommonOperationMetadata {
+    /// The state of the operation.
+    #[prost(enumeration = "common_operation_metadata::State", tag = "1")]
+    pub state: i32,
+    /// A message providing more details about the current state of processing.
     #[prost(string, tag = "2")]
-    pub evaluation: ::prost::alloc::string::String,
-    /// An aggregate of the statistics for the evaluation with fuzzy matching on.
-    #[prost(message, optional, tag = "4")]
-    pub aggregate_metrics: ::core::option::Option<evaluation::Metrics>,
-    /// An aggregate of the statistics for the evaluation with fuzzy matching off.
-    #[prost(message, optional, tag = "5")]
-    pub aggregate_metrics_exact: ::core::option::Option<evaluation::Metrics>,
-}
-/// An evaluation of a ProcessorVersion's performance.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Evaluation {
-    /// The resource name of the evaluation.
-    /// Format:
-    /// `projects/{project}/locations/{location}/processors/{processor}/processorVersions/{processor_version}/evaluations/{evaluation}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The time that the evaluation was created.
-    #[prost(message, optional, tag = "2")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Counters for the documents used in the evaluation.
-    #[prost(message, optional, tag = "5")]
-    pub document_counters: ::core::option::Option<evaluation::Counters>,
-    /// Metrics for all the entities in aggregate.
+    pub state_message: ::prost::alloc::string::String,
+    /// A related resource to this operation.
+    #[prost(string, tag = "5")]
+    pub resource: ::prost::alloc::string::String,
+    /// The creation time of the operation.
     #[prost(message, optional, tag = "3")]
-    pub all_entities_metrics: ::core::option::Option<evaluation::MultiConfidenceMetrics>,
-    /// Metrics across confidence levels, for different entities.
-    #[prost(btree_map = "string, message", tag = "4")]
-    pub entity_metrics: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        evaluation::MultiConfidenceMetrics,
-    >,
-    /// The KMS key name used for encryption.
-    #[prost(string, tag = "6")]
-    pub kms_key_name: ::prost::alloc::string::String,
-    /// The KMS key version with which data is encrypted.
-    #[prost(string, tag = "7")]
-    pub kms_key_version_name: ::prost::alloc::string::String,
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The last update time of the operation.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
 }
-/// Nested message and enum types in `Evaluation`.
-pub mod evaluation {
-    /// Evaluation counters for the documents that were used.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Counters {
-        /// How many documents were sent for evaluation.
-        #[prost(int32, tag = "1")]
-        pub input_documents_count: i32,
-        /// How many documents were not included in the evaluation as they didn't
-        /// pass validation.
-        #[prost(int32, tag = "2")]
-        pub invalid_documents_count: i32,
-        /// How many documents were not included in the evaluation as Document AI
-        /// failed to process them.
-        #[prost(int32, tag = "3")]
-        pub failed_documents_count: i32,
-        /// How many documents were used in the evaluation.
-        #[prost(int32, tag = "4")]
-        pub evaluated_documents_count: i32,
+/// Nested message and enum types in `CommonOperationMetadata`.
+pub mod common_operation_metadata {
+    /// State of the longrunning operation.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Unspecified state.
+        Unspecified = 0,
+        /// Operation is still running.
+        Running = 1,
+        /// Operation is being cancelled.
+        Cancelling = 2,
+        /// Operation succeeded.
+        Succeeded = 3,
+        /// Operation failed.
+        Failed = 4,
+        /// Operation is cancelled.
+        Cancelled = 5,
     }
-    /// Evaluation metrics, either in aggregate or about a specific entity.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Metrics {
-        /// The calculated precision.
-        #[prost(float, tag = "1")]
-        pub precision: f32,
-        /// The calculated recall.
-        #[prost(float, tag = "2")]
-        pub recall: f32,
-        /// The calculated f1 score.
-        #[prost(float, tag = "3")]
-        pub f1_score: f32,
-        /// The amount of occurrences in predicted documents.
-        #[prost(int32, tag = "4")]
-        pub predicted_occurrences_count: i32,
-        /// The amount of occurrences in ground truth documents.
-        #[prost(int32, tag = "5")]
-        pub ground_truth_occurrences_count: i32,
-        /// The amount of documents with a predicted occurrence.
-        #[prost(int32, tag = "10")]
-        pub predicted_document_count: i32,
-        /// The amount of documents with a ground truth occurrence.
-        #[prost(int32, tag = "11")]
-        pub ground_truth_document_count: i32,
-        /// The amount of true positives.
-        #[prost(int32, tag = "6")]
-        pub true_positives_count: i32,
-        /// The amount of false positives.
-        #[prost(int32, tag = "7")]
-        pub false_positives_count: i32,
-        /// The amount of false negatives.
-        #[prost(int32, tag = "8")]
-        pub false_negatives_count: i32,
-        /// The amount of documents that had an occurrence of this label.
-        #[prost(int32, tag = "9")]
-        pub total_documents_count: i32,
-    }
-    /// Evaluations metrics, at a specific confidence level.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceLevelMetrics {
-        /// The confidence level.
-        #[prost(float, tag = "1")]
-        pub confidence_level: f32,
-        /// The metrics at the specific confidence level.
-        #[prost(message, optional, tag = "2")]
-        pub metrics: ::core::option::Option<Metrics>,
-    }
-    /// Metrics across multiple confidence levels.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct MultiConfidenceMetrics {
-        /// Metrics across confidence levels with fuzzy matching enabled.
-        #[prost(message, repeated, tag = "1")]
-        pub confidence_level_metrics: ::prost::alloc::vec::Vec<ConfidenceLevelMetrics>,
-        /// Metrics across confidence levels with only exact matching.
-        #[prost(message, repeated, tag = "4")]
-        pub confidence_level_metrics_exact: ::prost::alloc::vec::Vec<
-            ConfidenceLevelMetrics,
-        >,
-        /// The calculated area under the precision recall curve (AUPRC), computed by
-        /// integrating over all confidence thresholds.
-        #[prost(float, tag = "2")]
-        pub auprc: f32,
-        /// The Estimated Calibration Error (ECE) of the confidence of the predicted
-        /// entities.
-        #[prost(float, tag = "3")]
-        pub estimated_calibration_error: f32,
-        /// The AUPRC for metrics with fuzzy matching disabled, i.e., exact matching
-        /// only.
-        #[prost(float, tag = "5")]
-        pub auprc_exact: f32,
-        /// The ECE for the predicted entities with fuzzy matching disabled, i.e.,
-        /// exact matching only.
-        #[prost(float, tag = "6")]
-        pub estimated_calibration_error_exact: f32,
-        /// The metrics type for the label.
-        #[prost(enumeration = "multi_confidence_metrics::MetricsType", tag = "7")]
-        pub metrics_type: i32,
-    }
-    /// Nested message and enum types in `MultiConfidenceMetrics`.
-    pub mod multi_confidence_metrics {
-        /// A type that determines how metrics should be interpreted.
-        #[derive(
-            Clone,
-            Copy,
-            Debug,
-            PartialEq,
-            Eq,
-            Hash,
-            PartialOrd,
-            Ord,
-            ::prost::Enumeration
-        )]
-        #[repr(i32)]
-        pub enum MetricsType {
-            /// The metrics type is unspecified. By default, metrics without a
-            /// particular specification are for leaf entity types (i.e., top-level
-            /// entity types without child types, or child types which are not
-            /// parent types themselves).
-            Unspecified = 0,
-            /// Indicates whether metrics for this particular label type represent an
-            /// aggregate of metrics for other types instead of being based on actual
-            /// TP/FP/FN values for the label type. Metrics for parent (i.e., non-leaf)
-            /// entity types are an aggregate of metrics for their children.
-            Aggregate = 1,
-        }
-        impl MetricsType {
-            /// String value of the enum field names used in the ProtoBuf definition.
-            ///
-            /// The values are not transformed in any way and thus are considered stable
-            /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-            pub fn as_str_name(&self) -> &'static str {
-                match self {
-                    MetricsType::Unspecified => "METRICS_TYPE_UNSPECIFIED",
-                    MetricsType::Aggregate => "AGGREGATE",
-                }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Running => "RUNNING",
+                State::Cancelling => "CANCELLING",
+                State::Succeeded => "SUCCEEDED",
+                State::Failed => "FAILED",
+                State::Cancelled => "CANCELLED",
             }
-            /// Creates an enum from field names used in the ProtoBuf definition.
-            pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                match value {
-                    "METRICS_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                    "AGGREGATE" => Some(Self::Aggregate),
-                    _ => None,
-                }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "RUNNING" => Some(Self::Running),
+                "CANCELLING" => Some(Self::Cancelling),
+                "SUCCEEDED" => Some(Self::Succeeded),
+                "FAILED" => Some(Self::Failed),
+                "CANCELLED" => Some(Self::Cancelled),
+                _ => None,
             }
         }
     }
@@ -1577,264 +1835,6 @@ pub mod processor_type {
         /// The location id, currently must be one of [us, eu].
         #[prost(string, tag = "1")]
         pub location_id: ::prost::alloc::string::String,
-    }
-}
-/// The schema defines the output of the processed document by a processor.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentSchema {
-    /// Display name to show to users.
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the schema.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Entity types of the schema.
-    #[prost(message, repeated, tag = "3")]
-    pub entity_types: ::prost::alloc::vec::Vec<document_schema::EntityType>,
-    /// Metadata of the schema.
-    #[prost(message, optional, tag = "4")]
-    pub metadata: ::core::option::Option<document_schema::Metadata>,
-}
-/// Nested message and enum types in `DocumentSchema`.
-pub mod document_schema {
-    /// EntityType is the wrapper of a label of the corresponding model with
-    /// detailed attributes and limitations for entity-based processors. Multiple
-    /// types can also compose a dependency tree to represent nested types.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EntityType {
-        /// User defined name for the type.
-        #[prost(string, tag = "13")]
-        pub display_name: ::prost::alloc::string::String,
-        /// Name of the type. It must be unique within the schema file and
-        /// cannot be a 'Common Type'.  Besides that we use the following naming
-        /// conventions:
-        ///
-        /// - *use `snake_casing`*
-        /// - name matching is case-sensitive
-        /// - Maximum 64 characters.
-        /// - Must start with a letter.
-        /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
-        ///    compatibility internal infrastructure and tooling can handle any ascii
-        ///    character)
-        /// - The `/` is sometimes used to denote a property of a type.  For example
-        ///    `line_item/amount`.  This convention is deprecated, but will still be
-        ///    honored for backward compatibility.
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-        /// The entity type that this type is derived from.  For now, one and only
-        /// one should be set.
-        #[prost(string, repeated, tag = "2")]
-        pub base_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Description the nested structure, or composition of an entity.
-        #[prost(message, repeated, tag = "6")]
-        pub properties: ::prost::alloc::vec::Vec<entity_type::Property>,
-        #[prost(oneof = "entity_type::ValueSource", tags = "14")]
-        pub value_source: ::core::option::Option<entity_type::ValueSource>,
-    }
-    /// Nested message and enum types in `EntityType`.
-    pub mod entity_type {
-        /// Defines the a list of enum values.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct EnumValues {
-            /// The individual values that this enum values type can include.
-            #[prost(string, repeated, tag = "1")]
-            pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        }
-        /// Defines properties that can be part of the entity type.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Property {
-            /// The name of the property.  Follows the same guidelines as the
-            /// EntityType name.
-            #[prost(string, tag = "1")]
-            pub name: ::prost::alloc::string::String,
-            /// A reference to the value type of the property.  This type is subject
-            /// to the same conventions as the `Entity.base_types` field.
-            #[prost(string, tag = "2")]
-            pub value_type: ::prost::alloc::string::String,
-            /// Occurrence type limits the number of instances an entity type appears
-            /// in the document.
-            #[prost(enumeration = "property::OccurrenceType", tag = "3")]
-            pub occurrence_type: i32,
-        }
-        /// Nested message and enum types in `Property`.
-        pub mod property {
-            /// Types of occurrences of the entity type in the document.  This
-            /// represents the number of instances of instances of an entity, not
-            /// number of mentions of an entity.  For example, a bank statement may
-            /// only have one `account_number`, but this account number may be
-            /// mentioned in several places on the document.  In this case the
-            /// 'account_number' would be considered a `REQUIRED_ONCE` entity type. If,
-            /// on the other hand, we expect a bank statement to contain the status of
-            /// multiple different accounts for the customers, the occurrence type will
-            /// be set to `REQUIRED_MULTIPLE`.
-            #[derive(
-                Clone,
-                Copy,
-                Debug,
-                PartialEq,
-                Eq,
-                Hash,
-                PartialOrd,
-                Ord,
-                ::prost::Enumeration
-            )]
-            #[repr(i32)]
-            pub enum OccurrenceType {
-                /// Unspecified occurrence type.
-                Unspecified = 0,
-                /// There will be zero or one instance of this entity type.  The same
-                /// entity instance may be mentioned multiple times.
-                OptionalOnce = 1,
-                /// The entity type will appear zero or multiple times.
-                OptionalMultiple = 2,
-                /// The entity type will only appear exactly once.  The same
-                /// entity instance may be mentioned multiple times.
-                RequiredOnce = 3,
-                /// The entity type will appear once or more times.
-                RequiredMultiple = 4,
-            }
-            impl OccurrenceType {
-                /// String value of the enum field names used in the ProtoBuf definition.
-                ///
-                /// The values are not transformed in any way and thus are considered stable
-                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                pub fn as_str_name(&self) -> &'static str {
-                    match self {
-                        OccurrenceType::Unspecified => "OCCURRENCE_TYPE_UNSPECIFIED",
-                        OccurrenceType::OptionalOnce => "OPTIONAL_ONCE",
-                        OccurrenceType::OptionalMultiple => "OPTIONAL_MULTIPLE",
-                        OccurrenceType::RequiredOnce => "REQUIRED_ONCE",
-                        OccurrenceType::RequiredMultiple => "REQUIRED_MULTIPLE",
-                    }
-                }
-                /// Creates an enum from field names used in the ProtoBuf definition.
-                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                    match value {
-                        "OCCURRENCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                        "OPTIONAL_ONCE" => Some(Self::OptionalOnce),
-                        "OPTIONAL_MULTIPLE" => Some(Self::OptionalMultiple),
-                        "REQUIRED_ONCE" => Some(Self::RequiredOnce),
-                        "REQUIRED_MULTIPLE" => Some(Self::RequiredMultiple),
-                        _ => None,
-                    }
-                }
-            }
-        }
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ValueSource {
-            /// If specified, lists all the possible values for this entity.  This
-            /// should not be more than a handful of values.  If the number of values
-            /// is >10 or could change frequently use the `EntityType.value_ontology`
-            /// field and specify a list of all possible values in a value ontology
-            /// file.
-            #[prost(message, tag = "14")]
-            EnumValues(EnumValues),
-        }
-    }
-    /// Metadata for global schema behavior.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Metadata {
-        /// If true, a `document` entity type can be applied to subdocument (
-        /// splitting). Otherwise, it can only be applied to the entire document
-        /// (classification).
-        #[prost(bool, tag = "1")]
-        pub document_splitter: bool,
-        /// If true, on a given page, there can be multiple `document` annotations
-        /// covering it.
-        #[prost(bool, tag = "2")]
-        pub document_allow_multiple_labels: bool,
-        /// If set, all the nested entities must be prefixed with the parents.
-        #[prost(bool, tag = "6")]
-        pub prefixed_naming_on_properties: bool,
-        /// If set, we will skip the naming format validation in the schema. So the
-        /// string values in `DocumentSchema.EntityType.name` and
-        /// `DocumentSchema.EntityType.Property.name` will not be checked.
-        #[prost(bool, tag = "7")]
-        pub skip_naming_validation: bool,
-    }
-}
-/// The common metadata for long running operations.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct CommonOperationMetadata {
-    /// The state of the operation.
-    #[prost(enumeration = "common_operation_metadata::State", tag = "1")]
-    pub state: i32,
-    /// A message providing more details about the current state of processing.
-    #[prost(string, tag = "2")]
-    pub state_message: ::prost::alloc::string::String,
-    /// A related resource to this operation.
-    #[prost(string, tag = "5")]
-    pub resource: ::prost::alloc::string::String,
-    /// The creation time of the operation.
-    #[prost(message, optional, tag = "3")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The last update time of the operation.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `CommonOperationMetadata`.
-pub mod common_operation_metadata {
-    /// State of the longrunning operation.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Unspecified state.
-        Unspecified = 0,
-        /// Operation is still running.
-        Running = 1,
-        /// Operation is being cancelled.
-        Cancelling = 2,
-        /// Operation succeeded.
-        Succeeded = 3,
-        /// Operation failed.
-        Failed = 4,
-        /// Operation is cancelled.
-        Cancelled = 5,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Running => "RUNNING",
-                State::Cancelling => "CANCELLING",
-                State::Succeeded => "SUCCEEDED",
-                State::Failed => "FAILED",
-                State::Cancelled => "CANCELLED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "RUNNING" => Some(Self::Running),
-                "CANCELLING" => Some(Self::Cancelling),
-                "SUCCEEDED" => Some(Self::Succeeded),
-                "FAILED" => Some(Self::Failed),
-                "CANCELLED" => Some(Self::Cancelled),
-                _ => None,
-            }
-        }
     }
 }
 /// A processor version is an implementation of a processor. Each processor
@@ -2990,11 +2990,30 @@ pub mod document_processor_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Processes a single document.
         pub async fn process_document(
             &mut self,
             request: impl tonic::IntoRequest<super::ProcessRequest>,
-        ) -> Result<tonic::Response<super::ProcessResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ProcessResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3008,14 +3027,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/ProcessDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "ProcessDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// LRO endpoint to batch process many documents. The output is written
         /// to Cloud Storage as JSON in the [Document] format.
         pub async fn batch_process_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchProcessRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3032,14 +3059,25 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/BatchProcessDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "BatchProcessDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches processor types. Note that we do not use ListProcessorTypes here
         /// because it is not paginated.
         pub async fn fetch_processor_types(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchProcessorTypesRequest>,
-        ) -> Result<tonic::Response<super::FetchProcessorTypesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::FetchProcessorTypesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3053,13 +3091,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/FetchProcessorTypes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "FetchProcessorTypes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the processor types that exist.
         pub async fn list_processor_types(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProcessorTypesRequest>,
-        ) -> Result<tonic::Response<super::ListProcessorTypesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListProcessorTypesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3073,13 +3122,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/ListProcessorTypes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "ListProcessorTypes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a processor type detail.
         pub async fn get_processor_type(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProcessorTypeRequest>,
-        ) -> Result<tonic::Response<super::ProcessorType>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ProcessorType>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3093,13 +3150,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/GetProcessorType",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "GetProcessorType",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all processors which belong to this project.
         pub async fn list_processors(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProcessorsRequest>,
-        ) -> Result<tonic::Response<super::ListProcessorsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListProcessorsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3113,13 +3181,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/ListProcessors",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "ListProcessors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a processor detail.
         pub async fn get_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProcessorRequest>,
-        ) -> Result<tonic::Response<super::Processor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Processor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3133,7 +3209,15 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/GetProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "GetProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Trains a new processor version.
         /// Operation metadata is returned as
@@ -3141,7 +3225,7 @@ pub mod document_processor_service_client {
         pub async fn train_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::TrainProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3158,13 +3242,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/TrainProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "TrainProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a processor version detail.
         pub async fn get_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProcessorVersionRequest>,
-        ) -> Result<tonic::Response<super::ProcessorVersion>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ProcessorVersion>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3178,13 +3273,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/GetProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "GetProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all versions of a processor.
         pub async fn list_processor_versions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProcessorVersionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListProcessorVersionsResponse>,
             tonic::Status,
         > {
@@ -3201,14 +3304,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/ListProcessorVersions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "ListProcessorVersions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the processor version, all artifacts under the processor version
         /// will be deleted.
         pub async fn delete_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3225,13 +3336,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/DeleteProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "DeleteProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deploys the processor version.
         pub async fn deploy_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::DeployProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3248,13 +3367,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/DeployProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "DeployProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Undeploys the processor version.
         pub async fn undeploy_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeployProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3271,14 +3398,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/UndeployProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "UndeployProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a processor from the type processor that the user chose.
         /// The processor will be at "ENABLED" state by default after its creation.
         pub async fn create_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateProcessorRequest>,
-        ) -> Result<tonic::Response<super::Processor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Processor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3292,14 +3427,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/CreateProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "CreateProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the processor, unloads all deployed model artifacts if it was
         /// enabled and then deletes all artifacts associated with this processor.
         pub async fn delete_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteProcessorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3316,13 +3459,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/DeleteProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "DeleteProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Enables a processor
         pub async fn enable_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::EnableProcessorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3339,13 +3490,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/EnableProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "EnableProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Disables a processor
         pub async fn disable_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::DisableProcessorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3362,7 +3521,15 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/DisableProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "DisableProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Set the default (active) version of a
         /// [Processor][google.cloud.documentai.v1.Processor] that will be used in
@@ -3372,7 +3539,7 @@ pub mod document_processor_service_client {
         pub async fn set_default_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::SetDefaultProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3389,14 +3556,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/SetDefaultProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "SetDefaultProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Send a document for Human Review. The input document should be processed by
         /// the specified processor.
         pub async fn review_document(
             &mut self,
             request: impl tonic::IntoRequest<super::ReviewDocumentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3413,14 +3588,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/ReviewDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "ReviewDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Evaluates a ProcessorVersion against annotated documents, producing an
         /// Evaluation.
         pub async fn evaluate_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::EvaluateProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3437,13 +3620,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/EvaluateProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "EvaluateProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a specific evaluation.
         pub async fn get_evaluation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEvaluationRequest>,
-        ) -> Result<tonic::Response<super::Evaluation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Evaluation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3457,13 +3648,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/GetEvaluation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "GetEvaluation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a set of evaluations for a given processor version.
         pub async fn list_evaluations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEvaluationsRequest>,
-        ) -> Result<tonic::Response<super::ListEvaluationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListEvaluationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3477,7 +3679,15 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1.DocumentProcessorService/ListEvaluations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1.DocumentProcessorService",
+                        "ListEvaluations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

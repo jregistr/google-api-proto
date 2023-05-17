@@ -161,12 +161,31 @@ pub mod source_repo_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Returns all repos belonging to a project. The sizes of the repos are
         /// not set by ListRepos.  To get the size of a repo, use GetRepo.
         pub async fn list_repos(
             &mut self,
             request: impl tonic::IntoRequest<super::ListReposRequest>,
-        ) -> Result<tonic::Response<super::ListReposResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListReposResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -180,13 +199,21 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/ListRepos",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "ListRepos",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns information about a repo.
         pub async fn get_repo(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRepoRequest>,
-        ) -> Result<tonic::Response<super::Repo>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Repo>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -200,7 +227,15 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/GetRepo",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "GetRepo",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a repo in the given project with the given name.
         ///
@@ -209,7 +244,7 @@ pub mod source_repo_client {
         pub async fn create_repo(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateRepoRequest>,
-        ) -> Result<tonic::Response<super::Repo>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Repo>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -223,13 +258,21 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/CreateRepo",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "CreateRepo",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a repo.
         pub async fn delete_repo(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteRepoRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -243,7 +286,15 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/DeleteRepo",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "DeleteRepo",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Sets the access control policy on the specified resource. Replaces any
         /// existing policy.
@@ -252,7 +303,7 @@ pub mod source_repo_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::SetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -269,7 +320,15 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/SetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the access control policy for a resource.
         /// Returns an empty policy if the resource exists and does not have a policy
@@ -279,7 +338,7 @@ pub mod source_repo_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::GetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -296,7 +355,15 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/GetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns permissions that a caller has on the specified resource.
         /// If the resource does not exist, this will return an empty set of
@@ -306,7 +373,7 @@ pub mod source_repo_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::TestIamPermissionsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::iam::v1::TestIamPermissionsResponse,
             >,
@@ -325,7 +392,15 @@ pub mod source_repo_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.devtools.sourcerepo.v1.SourceRepo/TestIamPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.devtools.sourcerepo.v1.SourceRepo",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

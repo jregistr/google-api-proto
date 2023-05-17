@@ -1,59 +1,3 @@
-/// Configuration for a Recommender.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RecommenderConfig {
-    /// Name of recommender config.
-    /// Eg,
-    /// projects/\[PROJECT_NUMBER]/locations/[LOCATION]/recommenders/[RECOMMENDER_ID\]/config
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// RecommenderGenerationConfig which configures the Generation of
-    /// recommendations for this recommender.
-    #[prost(message, optional, tag = "2")]
-    pub recommender_generation_config: ::core::option::Option<
-        RecommenderGenerationConfig,
-    >,
-    /// Fingerprint of the RecommenderConfig. Provides optimistic locking when
-    /// updating.
-    #[prost(string, tag = "3")]
-    pub etag: ::prost::alloc::string::String,
-    /// Last time when the config was updated.
-    #[prost(message, optional, tag = "4")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Immutable. The revision ID of the config.
-    /// A new revision is committed whenever the config is changed in any way.
-    /// The format is an 8-character hexadecimal string.
-    #[prost(string, tag = "5")]
-    pub revision_id: ::prost::alloc::string::String,
-    /// Allows clients to store small amounts of arbitrary data. Annotations must
-    /// follow the Kubernetes syntax.
-    /// The total size of all keys and values combined is limited to 256k.
-    /// Key can have 2 segments: prefix (optional) and name (required),
-    /// separated by a slash (/).
-    /// Prefix must be a DNS subdomain.
-    /// Name must be 63 characters or less, begin and end with alphanumerics,
-    /// with dashes (-), underscores (_), dots (.), and alphanumerics between.
-    #[prost(btree_map = "string, string", tag = "6")]
-    pub annotations: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost::alloc::string::String,
-    >,
-    /// A user-settable field to provide a human-readable name to be used in user
-    /// interfaces.
-    #[prost(string, tag = "7")]
-    pub display_name: ::prost::alloc::string::String,
-}
-/// A Configuration to customize the generation of recommendations.
-/// Eg, customizing the lookback period considered when generating a
-/// recommendation.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RecommenderGenerationConfig {
-    /// Parameters for this RecommenderGenerationConfig. These configs can be used
-    /// by or are applied to all subtypes.
-    #[prost(message, optional, tag = "1")]
-    pub params: ::core::option::Option<::prost_types::Struct>,
-}
 /// An insight along with the information used to derive the insight. The insight
 /// may have associated recomendations as well.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -286,6 +230,62 @@ pub mod insight_state_info {
             }
         }
     }
+}
+/// Configuration for an InsightType.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightTypeConfig {
+    /// Name of insight type config.
+    /// Eg,
+    /// projects/\[PROJECT_NUMBER]/locations/[LOCATION]/insightTypes/[INSIGHT_TYPE_ID\]/config
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// InsightTypeGenerationConfig which configures the generation of
+    /// insights for this insight type.
+    #[prost(message, optional, tag = "2")]
+    pub insight_type_generation_config: ::core::option::Option<
+        InsightTypeGenerationConfig,
+    >,
+    /// Fingerprint of the InsightTypeConfig. Provides optimistic locking when
+    /// updating.
+    #[prost(string, tag = "3")]
+    pub etag: ::prost::alloc::string::String,
+    /// Last time when the config was updated.
+    #[prost(message, optional, tag = "4")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Immutable. The revision ID of the config.
+    /// A new revision is committed whenever the config is changed in any way.
+    /// The format is an 8-character hexadecimal string.
+    #[prost(string, tag = "5")]
+    pub revision_id: ::prost::alloc::string::String,
+    /// Allows clients to store small amounts of arbitrary data. Annotations must
+    /// follow the Kubernetes syntax.
+    /// The total size of all keys and values combined is limited to 256k.
+    /// Key can have 2 segments: prefix (optional) and name (required),
+    /// separated by a slash (/).
+    /// Prefix must be a DNS subdomain.
+    /// Name must be 63 characters or less, begin and end with alphanumerics,
+    /// with dashes (-), underscores (_), dots (.), and alphanumerics between.
+    #[prost(btree_map = "string, string", tag = "6")]
+    pub annotations: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost::alloc::string::String,
+    >,
+    /// A user-settable field to provide a human-readable name to be used in user
+    /// interfaces.
+    #[prost(string, tag = "7")]
+    pub display_name: ::prost::alloc::string::String,
+}
+/// A configuration to customize the generation of insights.
+/// Eg, customizing the lookback period considered when generating a
+/// insight.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct InsightTypeGenerationConfig {
+    /// Parameters for this InsightTypeGenerationConfig. These configs can be used
+    /// by or are applied to all subtypes.
+    #[prost(message, optional, tag = "1")]
+    pub params: ::core::option::Option<::prost_types::Struct>,
 }
 /// A recommendation along with a suggested action. E.g., a rightsizing
 /// recommendation for an underutilized VM, IAM role recommendations, etc
@@ -766,22 +766,22 @@ pub mod recommendation_state_info {
         }
     }
 }
-/// Configuration for an InsightType.
+/// Configuration for a Recommender.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InsightTypeConfig {
-    /// Name of insight type config.
+pub struct RecommenderConfig {
+    /// Name of recommender config.
     /// Eg,
-    /// projects/\[PROJECT_NUMBER]/locations/[LOCATION]/insightTypes/[INSIGHT_TYPE_ID\]/config
+    /// projects/\[PROJECT_NUMBER]/locations/[LOCATION]/recommenders/[RECOMMENDER_ID\]/config
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// InsightTypeGenerationConfig which configures the generation of
-    /// insights for this insight type.
+    /// RecommenderGenerationConfig which configures the Generation of
+    /// recommendations for this recommender.
     #[prost(message, optional, tag = "2")]
-    pub insight_type_generation_config: ::core::option::Option<
-        InsightTypeGenerationConfig,
+    pub recommender_generation_config: ::core::option::Option<
+        RecommenderGenerationConfig,
     >,
-    /// Fingerprint of the InsightTypeConfig. Provides optimistic locking when
+    /// Fingerprint of the RecommenderConfig. Provides optimistic locking when
     /// updating.
     #[prost(string, tag = "3")]
     pub etag: ::prost::alloc::string::String,
@@ -811,13 +811,13 @@ pub struct InsightTypeConfig {
     #[prost(string, tag = "7")]
     pub display_name: ::prost::alloc::string::String,
 }
-/// A configuration to customize the generation of insights.
+/// A Configuration to customize the generation of recommendations.
 /// Eg, customizing the lookback period considered when generating a
-/// insight.
+/// recommendation.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct InsightTypeGenerationConfig {
-    /// Parameters for this InsightTypeGenerationConfig. These configs can be used
+pub struct RecommenderGenerationConfig {
+    /// Parameters for this RecommenderGenerationConfig. These configs can be used
     /// by or are applied to all subtypes.
     #[prost(message, optional, tag = "1")]
     pub params: ::core::option::Option<::prost_types::Struct>,
@@ -1180,12 +1180,31 @@ pub mod recommender_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists insights for the specified Cloud Resource. Requires the
         /// recommender.*.list IAM permission for the specified insight type.
         pub async fn list_insights(
             &mut self,
             request: impl tonic::IntoRequest<super::ListInsightsRequest>,
-        ) -> Result<tonic::Response<super::ListInsightsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListInsightsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1199,14 +1218,22 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/ListInsights",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "ListInsights",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the requested insight. Requires the recommender.*.get IAM permission
         /// for the specified insight type.
         pub async fn get_insight(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInsightRequest>,
-        ) -> Result<tonic::Response<super::Insight>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Insight>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1220,7 +1247,15 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/GetInsight",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "GetInsight",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks the Insight State as Accepted. Users can use this method to
         /// indicate to the Recommender API that they have applied some action based
@@ -1231,7 +1266,7 @@ pub mod recommender_client {
         pub async fn mark_insight_accepted(
             &mut self,
             request: impl tonic::IntoRequest<super::MarkInsightAcceptedRequest>,
-        ) -> Result<tonic::Response<super::Insight>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Insight>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1245,14 +1280,25 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/MarkInsightAccepted",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "MarkInsightAccepted",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists recommendations for the specified Cloud Resource. Requires the
         /// recommender.*.list IAM permission for the specified recommender.
         pub async fn list_recommendations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRecommendationsRequest>,
-        ) -> Result<tonic::Response<super::ListRecommendationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListRecommendationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1266,14 +1312,22 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/ListRecommendations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "ListRecommendations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the requested recommendation. Requires the recommender.*.get
         /// IAM permission for the specified recommender.
         pub async fn get_recommendation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRecommendationRequest>,
-        ) -> Result<tonic::Response<super::Recommendation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Recommendation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1287,7 +1341,15 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/GetRecommendation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "GetRecommendation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks the Recommendation State as Claimed. Users can use this method to
         /// indicate to the Recommender API that they are starting to apply the
@@ -1302,7 +1364,7 @@ pub mod recommender_client {
         pub async fn mark_recommendation_claimed(
             &mut self,
             request: impl tonic::IntoRequest<super::MarkRecommendationClaimedRequest>,
-        ) -> Result<tonic::Response<super::Recommendation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Recommendation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1316,7 +1378,15 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/MarkRecommendationClaimed",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "MarkRecommendationClaimed",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks the Recommendation State as Succeeded. Users can use this method to
         /// indicate to the Recommender API that they have applied the recommendation
@@ -1332,7 +1402,7 @@ pub mod recommender_client {
         pub async fn mark_recommendation_succeeded(
             &mut self,
             request: impl tonic::IntoRequest<super::MarkRecommendationSucceededRequest>,
-        ) -> Result<tonic::Response<super::Recommendation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Recommendation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1346,7 +1416,15 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/MarkRecommendationSucceeded",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "MarkRecommendationSucceeded",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Marks the Recommendation State as Failed. Users can use this method to
         /// indicate to the Recommender API that they have applied the recommendation
@@ -1362,7 +1440,7 @@ pub mod recommender_client {
         pub async fn mark_recommendation_failed(
             &mut self,
             request: impl tonic::IntoRequest<super::MarkRecommendationFailedRequest>,
-        ) -> Result<tonic::Response<super::Recommendation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Recommendation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1376,14 +1454,25 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/MarkRecommendationFailed",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "MarkRecommendationFailed",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the requested Recommender Config. There is only one instance of the
         /// config for each Recommender.
         pub async fn get_recommender_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRecommenderConfigRequest>,
-        ) -> Result<tonic::Response<super::RecommenderConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::RecommenderConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1397,14 +1486,25 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/GetRecommenderConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "GetRecommenderConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a Recommender Config. This will create a new revision of the
         /// config.
         pub async fn update_recommender_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateRecommenderConfigRequest>,
-        ) -> Result<tonic::Response<super::RecommenderConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::RecommenderConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1418,14 +1518,25 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/UpdateRecommenderConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "UpdateRecommenderConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the requested InsightTypeConfig. There is only one instance of the
         /// config for each InsightType.
         pub async fn get_insight_type_config(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInsightTypeConfigRequest>,
-        ) -> Result<tonic::Response<super::InsightTypeConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::InsightTypeConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1439,14 +1550,25 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/GetInsightTypeConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "GetInsightTypeConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an InsightTypeConfig change. This will create a new revision of the
         /// config.
         pub async fn update_insight_type_config(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateInsightTypeConfigRequest>,
-        ) -> Result<tonic::Response<super::InsightTypeConfig>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::InsightTypeConfig>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1460,7 +1582,15 @@ pub mod recommender_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recommender.v1beta1.Recommender/UpdateInsightTypeConfig",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recommender.v1beta1.Recommender",
+                        "UpdateInsightTypeConfig",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

@@ -1267,6 +1267,22 @@ pub mod domains_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Searches for available domain names similar to the provided query.
         ///
         /// Availability results from this method are approximate; call
@@ -1275,7 +1291,10 @@ pub mod domains_client {
         pub async fn search_domains(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchDomainsRequest>,
-        ) -> Result<tonic::Response<super::SearchDomainsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchDomainsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1289,14 +1308,19 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/SearchDomains",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.domains.v1.Domains", "SearchDomains"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets parameters needed to register a new domain name, including price and
         /// up-to-date availability. Use the returned values to call `RegisterDomain`.
         pub async fn retrieve_register_parameters(
             &mut self,
             request: impl tonic::IntoRequest<super::RetrieveRegisterParametersRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::RetrieveRegisterParametersResponse>,
             tonic::Status,
         > {
@@ -1313,7 +1337,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/RetrieveRegisterParameters",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "RetrieveRegisterParameters",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Registers a new domain name and creates a corresponding `Registration`
         /// resource.
@@ -1331,7 +1363,7 @@ pub mod domains_client {
         pub async fn register_domain(
             &mut self,
             request: impl tonic::IntoRequest<super::RegisterDomainRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1348,7 +1380,12 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/RegisterDomain",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.domains.v1.Domains", "RegisterDomain"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets parameters needed to transfer a domain name from another registrar to
         /// Cloud Domains. For domains managed by Google Domains, transferring to Cloud
@@ -1359,7 +1396,7 @@ pub mod domains_client {
         pub async fn retrieve_transfer_parameters(
             &mut self,
             request: impl tonic::IntoRequest<super::RetrieveTransferParametersRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::RetrieveTransferParametersResponse>,
             tonic::Status,
         > {
@@ -1376,7 +1413,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/RetrieveTransferParameters",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "RetrieveTransferParameters",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Transfers a domain name from another registrar to Cloud Domains.  For
         /// domains managed by Google Domains, transferring to Cloud Domains is not
@@ -1402,7 +1447,7 @@ pub mod domains_client {
         pub async fn transfer_domain(
             &mut self,
             request: impl tonic::IntoRequest<super::TransferDomainRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1419,13 +1464,21 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/TransferDomain",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.domains.v1.Domains", "TransferDomain"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the `Registration` resources in a project.
         pub async fn list_registrations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRegistrationsRequest>,
-        ) -> Result<tonic::Response<super::ListRegistrationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListRegistrationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1439,13 +1492,21 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/ListRegistrations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "ListRegistrations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the details of a `Registration` resource.
         pub async fn get_registration(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRegistrationRequest>,
-        ) -> Result<tonic::Response<super::Registration>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Registration>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1459,7 +1520,12 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/GetRegistration",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.domains.v1.Domains", "GetRegistration"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates select fields of a `Registration` resource, notably `labels`. To
         /// update other fields, use the appropriate custom update method:
@@ -1470,7 +1536,7 @@ pub mod domains_client {
         pub async fn update_registration(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateRegistrationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1487,13 +1553,21 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/UpdateRegistration",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "UpdateRegistration",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a `Registration`'s management settings.
         pub async fn configure_management_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::ConfigureManagementSettingsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1510,13 +1584,21 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/ConfigureManagementSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "ConfigureManagementSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a `Registration`'s DNS settings.
         pub async fn configure_dns_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::ConfigureDnsSettingsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1533,14 +1615,22 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/ConfigureDnsSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "ConfigureDnsSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a `Registration`'s contact settings. Some changes require
         /// confirmation by the domain's registrant contact .
         pub async fn configure_contact_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::ConfigureContactSettingsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1557,7 +1647,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/ConfigureContactSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "ConfigureContactSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports a `Registration` resource, such that it is no longer managed by
         /// Cloud Domains.
@@ -1571,7 +1669,7 @@ pub mod domains_client {
         pub async fn export_registration(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportRegistrationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1588,7 +1686,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/ExportRegistration",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "ExportRegistration",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `Registration` resource.
         ///
@@ -1612,7 +1718,7 @@ pub mod domains_client {
         pub async fn delete_registration(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteRegistrationRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1629,7 +1735,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/DeleteRegistration",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "DeleteRegistration",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the authorization code of the `Registration` for the purpose of
         /// transferring the domain to another registrar.
@@ -1639,7 +1753,10 @@ pub mod domains_client {
         pub async fn retrieve_authorization_code(
             &mut self,
             request: impl tonic::IntoRequest<super::RetrieveAuthorizationCodeRequest>,
-        ) -> Result<tonic::Response<super::AuthorizationCode>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AuthorizationCode>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1653,7 +1770,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/RetrieveAuthorizationCode",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "RetrieveAuthorizationCode",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resets the authorization code of the `Registration` to a new random string.
         ///
@@ -1662,7 +1787,10 @@ pub mod domains_client {
         pub async fn reset_authorization_code(
             &mut self,
             request: impl tonic::IntoRequest<super::ResetAuthorizationCodeRequest>,
-        ) -> Result<tonic::Response<super::AuthorizationCode>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AuthorizationCode>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1676,7 +1804,15 @@ pub mod domains_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.domains.v1.Domains/ResetAuthorizationCode",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.domains.v1.Domains",
+                        "ResetAuthorizationCode",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

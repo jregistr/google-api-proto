@@ -256,6 +256,323 @@ pub mod label_lock {
         }
     }
 }
+/// Normalized internal-only message that identifies the exact exception that
+/// caused the error on the server.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ExceptionDetail {
+    /// The type of exception that occurred.
+    /// required
+    #[prost(enumeration = "ExceptionType", tag = "1")]
+    pub error_type: i32,
+}
+/// Every ExceptionType maps to one and only one Exception class. This allows
+/// internal clients to identify the exact server exception that caused the
+/// error for debugging and logging purposes.
+/// Add new ExceptionTypes to EXCEPTION_TYPE_TO_ERROR_CODE_MAP in
+/// j/c/g/apps/boq/metadata/model/service/exceptions/CategoryExceptionHelper
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ExceptionType {
+    /// Unknown ExceptionType.
+    Unspecified = 0,
+    /// The required field is missing.
+    FieldRequired = 1,
+    /// Unable to create a metamodel with the given ID because it already exists.
+    MetamodelAlreadyExists = 2,
+    /// Metamodel was not found
+    MetamodelNotFound = 3,
+    /// Metamodel state transition isn't allowed.
+    IllegalMetamodelStateTransition = 4,
+    /// Metamodel deprecation policy is invalid.
+    InvalidMetamodelDeprecationPolicy = 5,
+    /// Cannot delete a metamodel due to the pending deprecation policy.
+    MetamodelDeletionDeniedUntil = 6,
+    /// A Field value is invalid.
+    InvalidField = 7,
+    /// Precondition failed when updating a metamodel
+    MetamodelPreconditionFailed = 8,
+    /// Multiple fields had the same key.
+    DuplicateFieldKey = 9,
+    /// Removing a field from a Metamodel (e.g. a published Metamodel) is not
+    /// permitted.
+    IllegalFieldRemoval = 10,
+    /// Cannot specify field options for a different field type.
+    IllegalFieldOptionsForField = 11,
+    /// Some changes are not supported
+    UnsupportedChangeToPublishedMetamodel = 12,
+    /// Cannot change the metamodel state in an update
+    IllegalMetamodelStateTransitionInUpdate = 13,
+    /// The page token is expired
+    PageTokenExpired = 14,
+    /// The user is not authorized to make the request.
+    NotAuthorized = 15,
+    /// Illegal field state transition
+    IllegalFieldStateTransition = 16,
+    /// Illegal choice set option state transition
+    IllegalChoiceSetOptionStateTransition = 17,
+    /// Invalid choice set options
+    InvalidChoiceSetOptions = 18,
+    /// Invalid field key
+    InvalidFieldKey = 19,
+    /// A specified property on a field is outside the allowed range.
+    InvalidFieldPropertyRange = 20,
+    /// A localized string wasn't valid. This may be because the locale is invalid,
+    /// its missing a default value, or the translation is empty for a set locale.
+    InvalidLocalizedString = 21,
+    /// cannot change a property on a published field
+    IllegalChangeToPublishedField = 22,
+    /// A field update is not inclusive of the previous value
+    InvalidFieldUpdateNotInclusive = 23,
+    /// A field update is not inclusive of the previous value
+    InvalidChoiceSetState = 24,
+    /// An unknown error occurred
+    InternalServerError = 500,
+}
+impl ExceptionType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ExceptionType::Unspecified => "EXCEPTION_TYPE_UNSPECIFIED",
+            ExceptionType::FieldRequired => "FIELD_REQUIRED",
+            ExceptionType::MetamodelAlreadyExists => "METAMODEL_ALREADY_EXISTS",
+            ExceptionType::MetamodelNotFound => "METAMODEL_NOT_FOUND",
+            ExceptionType::IllegalMetamodelStateTransition => {
+                "ILLEGAL_METAMODEL_STATE_TRANSITION"
+            }
+            ExceptionType::InvalidMetamodelDeprecationPolicy => {
+                "INVALID_METAMODEL_DEPRECATION_POLICY"
+            }
+            ExceptionType::MetamodelDeletionDeniedUntil => {
+                "METAMODEL_DELETION_DENIED_UNTIL"
+            }
+            ExceptionType::InvalidField => "INVALID_FIELD",
+            ExceptionType::MetamodelPreconditionFailed => "METAMODEL_PRECONDITION_FAILED",
+            ExceptionType::DuplicateFieldKey => "DUPLICATE_FIELD_KEY",
+            ExceptionType::IllegalFieldRemoval => "ILLEGAL_FIELD_REMOVAL",
+            ExceptionType::IllegalFieldOptionsForField => {
+                "ILLEGAL_FIELD_OPTIONS_FOR_FIELD"
+            }
+            ExceptionType::UnsupportedChangeToPublishedMetamodel => {
+                "UNSUPPORTED_CHANGE_TO_PUBLISHED_METAMODEL"
+            }
+            ExceptionType::IllegalMetamodelStateTransitionInUpdate => {
+                "ILLEGAL_METAMODEL_STATE_TRANSITION_IN_UPDATE"
+            }
+            ExceptionType::PageTokenExpired => "PAGE_TOKEN_EXPIRED",
+            ExceptionType::NotAuthorized => "NOT_AUTHORIZED",
+            ExceptionType::IllegalFieldStateTransition => {
+                "ILLEGAL_FIELD_STATE_TRANSITION"
+            }
+            ExceptionType::IllegalChoiceSetOptionStateTransition => {
+                "ILLEGAL_CHOICE_SET_OPTION_STATE_TRANSITION"
+            }
+            ExceptionType::InvalidChoiceSetOptions => "INVALID_CHOICE_SET_OPTIONS",
+            ExceptionType::InvalidFieldKey => "INVALID_FIELD_KEY",
+            ExceptionType::InvalidFieldPropertyRange => "INVALID_FIELD_PROPERTY_RANGE",
+            ExceptionType::InvalidLocalizedString => "INVALID_LOCALIZED_STRING",
+            ExceptionType::IllegalChangeToPublishedField => {
+                "ILLEGAL_CHANGE_TO_PUBLISHED_FIELD"
+            }
+            ExceptionType::InvalidFieldUpdateNotInclusive => {
+                "INVALID_FIELD_UPDATE_NOT_INCLUSIVE"
+            }
+            ExceptionType::InvalidChoiceSetState => "INVALID_CHOICE_SET_STATE",
+            ExceptionType::InternalServerError => "INTERNAL_SERVER_ERROR",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "EXCEPTION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "FIELD_REQUIRED" => Some(Self::FieldRequired),
+            "METAMODEL_ALREADY_EXISTS" => Some(Self::MetamodelAlreadyExists),
+            "METAMODEL_NOT_FOUND" => Some(Self::MetamodelNotFound),
+            "ILLEGAL_METAMODEL_STATE_TRANSITION" => {
+                Some(Self::IllegalMetamodelStateTransition)
+            }
+            "INVALID_METAMODEL_DEPRECATION_POLICY" => {
+                Some(Self::InvalidMetamodelDeprecationPolicy)
+            }
+            "METAMODEL_DELETION_DENIED_UNTIL" => Some(Self::MetamodelDeletionDeniedUntil),
+            "INVALID_FIELD" => Some(Self::InvalidField),
+            "METAMODEL_PRECONDITION_FAILED" => Some(Self::MetamodelPreconditionFailed),
+            "DUPLICATE_FIELD_KEY" => Some(Self::DuplicateFieldKey),
+            "ILLEGAL_FIELD_REMOVAL" => Some(Self::IllegalFieldRemoval),
+            "ILLEGAL_FIELD_OPTIONS_FOR_FIELD" => Some(Self::IllegalFieldOptionsForField),
+            "UNSUPPORTED_CHANGE_TO_PUBLISHED_METAMODEL" => {
+                Some(Self::UnsupportedChangeToPublishedMetamodel)
+            }
+            "ILLEGAL_METAMODEL_STATE_TRANSITION_IN_UPDATE" => {
+                Some(Self::IllegalMetamodelStateTransitionInUpdate)
+            }
+            "PAGE_TOKEN_EXPIRED" => Some(Self::PageTokenExpired),
+            "NOT_AUTHORIZED" => Some(Self::NotAuthorized),
+            "ILLEGAL_FIELD_STATE_TRANSITION" => Some(Self::IllegalFieldStateTransition),
+            "ILLEGAL_CHOICE_SET_OPTION_STATE_TRANSITION" => {
+                Some(Self::IllegalChoiceSetOptionStateTransition)
+            }
+            "INVALID_CHOICE_SET_OPTIONS" => Some(Self::InvalidChoiceSetOptions),
+            "INVALID_FIELD_KEY" => Some(Self::InvalidFieldKey),
+            "INVALID_FIELD_PROPERTY_RANGE" => Some(Self::InvalidFieldPropertyRange),
+            "INVALID_LOCALIZED_STRING" => Some(Self::InvalidLocalizedString),
+            "ILLEGAL_CHANGE_TO_PUBLISHED_FIELD" => {
+                Some(Self::IllegalChangeToPublishedField)
+            }
+            "INVALID_FIELD_UPDATE_NOT_INCLUSIVE" => {
+                Some(Self::InvalidFieldUpdateNotInclusive)
+            }
+            "INVALID_CHOICE_SET_STATE" => Some(Self::InvalidChoiceSetState),
+            "INTERNAL_SERVER_ERROR" => Some(Self::InternalServerError),
+            _ => None,
+        }
+    }
+}
+/// Label constraints governing the structure of a Label; such as, the maximum
+/// number of Fields allowed and maximum length of the label title.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LabelLimits {
+    /// Resource name.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The maximum number of characters allowed for the title.
+    #[prost(int32, tag = "2")]
+    pub max_title_length: i32,
+    /// The maximum number of characters allowed for the description.
+    #[prost(int32, tag = "3")]
+    pub max_description_length: i32,
+    /// The maximum number of Fields allowed within the label.
+    #[prost(int32, tag = "4")]
+    pub max_fields: i32,
+    /// The maximum number of published Fields that can be deleted.
+    #[prost(int32, tag = "5")]
+    pub max_deleted_fields: i32,
+    /// The maximum number of draft revisions that will be kept before deleting
+    /// old drafts.
+    #[prost(int32, tag = "6")]
+    pub max_draft_revisions: i32,
+    /// The limits for Fields.
+    #[prost(message, optional, tag = "7")]
+    pub field_limits: ::core::option::Option<FieldLimits>,
+}
+/// Field constants governing the structure of a Field; such as, the maximum
+/// title length, minimum and maximum field values or length, etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FieldLimits {
+    /// Max length for the id.
+    #[prost(int32, tag = "1")]
+    pub max_id_length: i32,
+    /// Limits for Field title.
+    #[prost(int32, tag = "2")]
+    pub max_display_name_length: i32,
+    /// Limits for Field description, also called help text.
+    #[prost(int32, tag = "3")]
+    pub max_description_length: i32,
+    /// The relevant limits for the specified Field.Type.
+    /// Text Field limits.
+    #[prost(message, optional, tag = "4")]
+    pub text_limits: ::core::option::Option<TextLimits>,
+    /// Long text Field limits.
+    #[prost(message, optional, tag = "5")]
+    pub long_text_limits: ::core::option::Option<LongTextLimits>,
+    /// Integer Field limits.
+    #[prost(message, optional, tag = "6")]
+    pub integer_limits: ::core::option::Option<IntegerLimits>,
+    /// Date Field limits.
+    #[prost(message, optional, tag = "7")]
+    pub date_limits: ::core::option::Option<DateLimits>,
+    /// User Field limits.
+    #[prost(message, optional, tag = "8")]
+    pub user_limits: ::core::option::Option<UserLimits>,
+    /// Selection Field limits.
+    #[prost(message, optional, tag = "9")]
+    pub selection_limits: ::core::option::Option<SelectionLimits>,
+}
+/// Limits for list-variant of a Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ListLimits {
+    /// Maximum number of values allowed for the Field type.
+    #[prost(int32, tag = "1")]
+    pub max_entries: i32,
+}
+/// Limits for text Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TextLimits {
+    /// Minimum length allowed for a text Field type.
+    #[prost(int32, tag = "1")]
+    pub min_length: i32,
+    /// Maximum length allowed for a text Field type.
+    #[prost(int32, tag = "2")]
+    pub max_length: i32,
+}
+/// Limits for long text Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct LongTextLimits {
+    /// Minimum length allowed for a long text Field type.
+    #[prost(int32, tag = "1")]
+    pub min_length: i32,
+    /// Maximum length allowed for a long text Field type.
+    #[prost(int32, tag = "2")]
+    pub max_length: i32,
+}
+/// Limits for integer Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct IntegerLimits {
+    /// Minimum value for an integer Field type.
+    #[prost(int64, tag = "1")]
+    pub min_value: i64,
+    /// Maximum value for an integer Field type.
+    #[prost(int64, tag = "2")]
+    pub max_value: i64,
+}
+/// Limits for date Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DateLimits {
+    /// Minimum value for the date Field type.
+    #[prost(message, optional, tag = "1")]
+    pub min_value: ::core::option::Option<super::super::super::super::r#type::Date>,
+    /// Maximum value for the date Field type.
+    #[prost(message, optional, tag = "2")]
+    pub max_value: ::core::option::Option<super::super::super::super::r#type::Date>,
+}
+/// Limits for selection Field type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SelectionLimits {
+    /// Limits for list-variant of a Field type.
+    #[prost(message, optional, tag = "1")]
+    pub list_limits: ::core::option::Option<ListLimits>,
+    /// Maximum ID length for a selection options.
+    #[prost(int32, tag = "2")]
+    pub max_id_length: i32,
+    /// Maximum length for display name.
+    #[prost(int32, tag = "3")]
+    pub max_display_name_length: i32,
+    /// The max number of choices.
+    #[prost(int32, tag = "4")]
+    pub max_choices: i32,
+    /// Maximum number of deleted choices.
+    #[prost(int32, tag = "5")]
+    pub max_deleted_choices: i32,
+}
+/// Limits for Field.Type.USER.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserLimits {
+    /// Limits for list-variant of a Field type.
+    #[prost(message, optional, tag = "1")]
+    pub list_limits: ::core::option::Option<ListLimits>,
+}
 /// Defines a field that has a display name, data type, and other
 /// configuration options. This field defines the kind of metadata that may be
 /// set on a Drive item.
@@ -961,148 +1278,6 @@ pub mod label {
         }
     }
 }
-/// Label constraints governing the structure of a Label; such as, the maximum
-/// number of Fields allowed and maximum length of the label title.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LabelLimits {
-    /// Resource name.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The maximum number of characters allowed for the title.
-    #[prost(int32, tag = "2")]
-    pub max_title_length: i32,
-    /// The maximum number of characters allowed for the description.
-    #[prost(int32, tag = "3")]
-    pub max_description_length: i32,
-    /// The maximum number of Fields allowed within the label.
-    #[prost(int32, tag = "4")]
-    pub max_fields: i32,
-    /// The maximum number of published Fields that can be deleted.
-    #[prost(int32, tag = "5")]
-    pub max_deleted_fields: i32,
-    /// The maximum number of draft revisions that will be kept before deleting
-    /// old drafts.
-    #[prost(int32, tag = "6")]
-    pub max_draft_revisions: i32,
-    /// The limits for Fields.
-    #[prost(message, optional, tag = "7")]
-    pub field_limits: ::core::option::Option<FieldLimits>,
-}
-/// Field constants governing the structure of a Field; such as, the maximum
-/// title length, minimum and maximum field values or length, etc.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct FieldLimits {
-    /// Max length for the id.
-    #[prost(int32, tag = "1")]
-    pub max_id_length: i32,
-    /// Limits for Field title.
-    #[prost(int32, tag = "2")]
-    pub max_display_name_length: i32,
-    /// Limits for Field description, also called help text.
-    #[prost(int32, tag = "3")]
-    pub max_description_length: i32,
-    /// The relevant limits for the specified Field.Type.
-    /// Text Field limits.
-    #[prost(message, optional, tag = "4")]
-    pub text_limits: ::core::option::Option<TextLimits>,
-    /// Long text Field limits.
-    #[prost(message, optional, tag = "5")]
-    pub long_text_limits: ::core::option::Option<LongTextLimits>,
-    /// Integer Field limits.
-    #[prost(message, optional, tag = "6")]
-    pub integer_limits: ::core::option::Option<IntegerLimits>,
-    /// Date Field limits.
-    #[prost(message, optional, tag = "7")]
-    pub date_limits: ::core::option::Option<DateLimits>,
-    /// User Field limits.
-    #[prost(message, optional, tag = "8")]
-    pub user_limits: ::core::option::Option<UserLimits>,
-    /// Selection Field limits.
-    #[prost(message, optional, tag = "9")]
-    pub selection_limits: ::core::option::Option<SelectionLimits>,
-}
-/// Limits for list-variant of a Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ListLimits {
-    /// Maximum number of values allowed for the Field type.
-    #[prost(int32, tag = "1")]
-    pub max_entries: i32,
-}
-/// Limits for text Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TextLimits {
-    /// Minimum length allowed for a text Field type.
-    #[prost(int32, tag = "1")]
-    pub min_length: i32,
-    /// Maximum length allowed for a text Field type.
-    #[prost(int32, tag = "2")]
-    pub max_length: i32,
-}
-/// Limits for long text Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct LongTextLimits {
-    /// Minimum length allowed for a long text Field type.
-    #[prost(int32, tag = "1")]
-    pub min_length: i32,
-    /// Maximum length allowed for a long text Field type.
-    #[prost(int32, tag = "2")]
-    pub max_length: i32,
-}
-/// Limits for integer Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct IntegerLimits {
-    /// Minimum value for an integer Field type.
-    #[prost(int64, tag = "1")]
-    pub min_value: i64,
-    /// Maximum value for an integer Field type.
-    #[prost(int64, tag = "2")]
-    pub max_value: i64,
-}
-/// Limits for date Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DateLimits {
-    /// Minimum value for the date Field type.
-    #[prost(message, optional, tag = "1")]
-    pub min_value: ::core::option::Option<super::super::super::super::r#type::Date>,
-    /// Maximum value for the date Field type.
-    #[prost(message, optional, tag = "2")]
-    pub max_value: ::core::option::Option<super::super::super::super::r#type::Date>,
-}
-/// Limits for selection Field type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct SelectionLimits {
-    /// Limits for list-variant of a Field type.
-    #[prost(message, optional, tag = "1")]
-    pub list_limits: ::core::option::Option<ListLimits>,
-    /// Maximum ID length for a selection options.
-    #[prost(int32, tag = "2")]
-    pub max_id_length: i32,
-    /// Maximum length for display name.
-    #[prost(int32, tag = "3")]
-    pub max_display_name_length: i32,
-    /// The max number of choices.
-    #[prost(int32, tag = "4")]
-    pub max_choices: i32,
-    /// Maximum number of deleted choices.
-    #[prost(int32, tag = "5")]
-    pub max_deleted_choices: i32,
-}
-/// Limits for Field.Type.USER.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserLimits {
-    /// Limits for list-variant of a Field type.
-    #[prost(message, optional, tag = "1")]
-    pub list_limits: ::core::option::Option<ListLimits>,
-}
 /// The permission that applies to a principal (user, group, audience) on a
 /// label.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1207,6 +1382,27 @@ pub mod label_permission {
         #[prost(string, tag = "5")]
         Audience(::prost::alloc::string::String),
     }
+}
+/// The capabilities of a user.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UserCapabilities {
+    /// Output only. Resource name for the user capabilities.
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Output only. Whether the user is allowed access to the label manager.
+    #[prost(bool, tag = "2")]
+    pub can_access_label_manager: bool,
+    /// Output only. Whether the user is an administrator for the shared labels
+    /// feature.
+    #[prost(bool, tag = "3")]
+    pub can_administrate_labels: bool,
+    /// Output only. Whether the user is allowed to create new shared labels.
+    #[prost(bool, tag = "4")]
+    pub can_create_shared_labels: bool,
+    /// Output only. Whether the user is allowed to create new admin labels.
+    #[prost(bool, tag = "5")]
+    pub can_create_admin_labels: bool,
 }
 /// Provides control over how write requests are executed. When not specified,
 /// the last write wins.
@@ -2067,27 +2263,6 @@ impl LabelView {
         }
     }
 }
-/// The capabilities of a user.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct UserCapabilities {
-    /// Output only. Resource name for the user capabilities.
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Output only. Whether the user is allowed access to the label manager.
-    #[prost(bool, tag = "2")]
-    pub can_access_label_manager: bool,
-    /// Output only. Whether the user is an administrator for the shared labels
-    /// feature.
-    #[prost(bool, tag = "3")]
-    pub can_administrate_labels: bool,
-    /// Output only. Whether the user is allowed to create new shared labels.
-    #[prost(bool, tag = "4")]
-    pub can_create_shared_labels: bool,
-    /// Output only. Whether the user is allowed to create new admin labels.
-    #[prost(bool, tag = "5")]
-    pub can_create_admin_labels: bool,
-}
 /// Generated client implementations.
 pub mod label_service_client {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
@@ -2148,11 +2323,30 @@ pub mod label_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Gets the user capabilities.
         pub async fn get_user_capabilities(
             &mut self,
             request: impl tonic::IntoRequest<super::GetUserCapabilitiesRequest>,
-        ) -> Result<tonic::Response<super::UserCapabilities>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::UserCapabilities>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2166,13 +2360,24 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/GetUserCapabilities",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "GetUserCapabilities",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List labels.
         pub async fn list_labels(
             &mut self,
             request: impl tonic::IntoRequest<super::ListLabelsRequest>,
-        ) -> Result<tonic::Response<super::ListLabelsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListLabelsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2186,7 +2391,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/ListLabels",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "ListLabels",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get a label by its resource name.
         /// Resource name may be any of:
@@ -2200,7 +2413,7 @@ pub mod label_service_client {
         pub async fn get_label(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Label>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2214,14 +2427,22 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/GetLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "GetLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get the constraints on the structure of a Label; such as, the maximum
         /// number of Fields allowed and maximum length of the label title.
         pub async fn get_label_limits(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLabelLimitsRequest>,
-        ) -> Result<tonic::Response<super::LabelLimits>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::LabelLimits>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2235,13 +2456,21 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/GetLabelLimits",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "GetLabelLimits",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Label.
         pub async fn create_label(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Label>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2255,7 +2484,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/CreateLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "CreateLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a single Label by applying a set of update requests resulting in a
         /// new draft revision. The batch update is all-or-nothing: If any of the
@@ -2264,7 +2501,10 @@ pub mod label_service_client {
         pub async fn delta_update_label(
             &mut self,
             request: impl tonic::IntoRequest<super::DeltaUpdateLabelRequest>,
-        ) -> Result<tonic::Response<super::DeltaUpdateLabelResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DeltaUpdateLabelResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2278,14 +2518,22 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/DeltaUpdateLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "DeltaUpdateLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a Label's `CopyMode`. Changes to this policy are not revisioned, do
         /// not require publishing, and take effect immediately.
         pub async fn update_label_copy_mode(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateLabelCopyModeRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Label>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2299,7 +2547,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/UpdateLabelCopyMode",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "UpdateLabelCopyMode",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Publish all draft changes to the Label. Once published, the Label may not
         /// return to its draft state. See
@@ -2322,7 +2578,7 @@ pub mod label_service_client {
         pub async fn publish_label(
             &mut self,
             request: impl tonic::IntoRequest<super::PublishLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Label>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2336,7 +2592,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/PublishLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "PublishLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Disable a published Label.
         /// Disabling a Label will result in a new disabled published revision based on
@@ -2348,7 +2612,7 @@ pub mod label_service_client {
         pub async fn disable_label(
             &mut self,
             request: impl tonic::IntoRequest<super::DisableLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Label>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2362,7 +2626,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/DisableLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "DisableLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Enable a disabled Label and restore it to its published state.
         /// This will result in a new published revision based on the current disabled
@@ -2371,7 +2643,7 @@ pub mod label_service_client {
         pub async fn enable_label(
             &mut self,
             request: impl tonic::IntoRequest<super::EnableLabelRequest>,
-        ) -> Result<tonic::Response<super::Label>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Label>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2385,7 +2657,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/EnableLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "EnableLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Permanently deletes a Label and related metadata on Drive Items.
         ///
@@ -2394,7 +2674,7 @@ pub mod label_service_client {
         pub async fn delete_label(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteLabelRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2408,13 +2688,21 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/DeleteLabel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "DeleteLabel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists a Label's permissions.
         pub async fn list_label_permissions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListLabelPermissionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListLabelPermissionsResponse>,
             tonic::Status,
         > {
@@ -2431,7 +2719,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/ListLabelPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "ListLabelPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a Label's permissions. If a permission for the indicated principal
         /// doesn't exist, a new Label Permission is created, otherwise the existing
@@ -2440,7 +2736,10 @@ pub mod label_service_client {
         pub async fn create_label_permission(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateLabelPermissionRequest>,
-        ) -> Result<tonic::Response<super::LabelPermission>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::LabelPermission>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2454,7 +2753,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/CreateLabelPermission",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "CreateLabelPermission",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a Label's permissions. If a permission for the indicated principal
         /// doesn't exist, a new Label Permission is created, otherwise the existing
@@ -2463,7 +2770,10 @@ pub mod label_service_client {
         pub async fn update_label_permission(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateLabelPermissionRequest>,
-        ) -> Result<tonic::Response<super::LabelPermission>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::LabelPermission>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2477,14 +2787,22 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/UpdateLabelPermission",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "UpdateLabelPermission",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a Label's permission. Permissions affect the Label resource as a
         /// whole, are not revisioned, and do not require publishing.
         pub async fn delete_label_permission(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteLabelPermissionRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2498,7 +2816,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/DeleteLabelPermission",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "DeleteLabelPermission",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates Label permissions. If a permission for the
         /// indicated principal doesn't exist, a new Label Permission is created,
@@ -2507,7 +2833,7 @@ pub mod label_service_client {
         pub async fn batch_update_label_permissions(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchUpdateLabelPermissionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::BatchUpdateLabelPermissionsResponse>,
             tonic::Status,
         > {
@@ -2524,14 +2850,22 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/BatchUpdateLabelPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "BatchUpdateLabelPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes Label permissions. Permissions affect the Label resource as a
         /// whole, are not revisioned, and do not require publishing.
         pub async fn batch_delete_label_permissions(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchDeleteLabelPermissionsRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2545,13 +2879,24 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/BatchDeleteLabelPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "BatchDeleteLabelPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the LabelLocks on a Label.
         pub async fn list_label_locks(
             &mut self,
             request: impl tonic::IntoRequest<super::ListLabelLocksRequest>,
-        ) -> Result<tonic::Response<super::ListLabelLocksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListLabelLocksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2565,182 +2910,15 @@ pub mod label_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.apps.drive.labels.v2beta.LabelService/ListLabelLocks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
-        }
-    }
-}
-/// Normalized internal-only message that identifies the exact exception that
-/// caused the error on the server.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ExceptionDetail {
-    /// The type of exception that occurred.
-    /// required
-    #[prost(enumeration = "ExceptionType", tag = "1")]
-    pub error_type: i32,
-}
-/// Every ExceptionType maps to one and only one Exception class. This allows
-/// internal clients to identify the exact server exception that caused the
-/// error for debugging and logging purposes.
-/// Add new ExceptionTypes to EXCEPTION_TYPE_TO_ERROR_CODE_MAP in
-/// j/c/g/apps/boq/metadata/model/service/exceptions/CategoryExceptionHelper
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ExceptionType {
-    /// Unknown ExceptionType.
-    Unspecified = 0,
-    /// The required field is missing.
-    FieldRequired = 1,
-    /// Unable to create a metamodel with the given ID because it already exists.
-    MetamodelAlreadyExists = 2,
-    /// Metamodel was not found
-    MetamodelNotFound = 3,
-    /// Metamodel state transition isn't allowed.
-    IllegalMetamodelStateTransition = 4,
-    /// Metamodel deprecation policy is invalid.
-    InvalidMetamodelDeprecationPolicy = 5,
-    /// Cannot delete a metamodel due to the pending deprecation policy.
-    MetamodelDeletionDeniedUntil = 6,
-    /// A Field value is invalid.
-    InvalidField = 7,
-    /// Precondition failed when updating a metamodel
-    MetamodelPreconditionFailed = 8,
-    /// Multiple fields had the same key.
-    DuplicateFieldKey = 9,
-    /// Removing a field from a Metamodel (e.g. a published Metamodel) is not
-    /// permitted.
-    IllegalFieldRemoval = 10,
-    /// Cannot specify field options for a different field type.
-    IllegalFieldOptionsForField = 11,
-    /// Some changes are not supported
-    UnsupportedChangeToPublishedMetamodel = 12,
-    /// Cannot change the metamodel state in an update
-    IllegalMetamodelStateTransitionInUpdate = 13,
-    /// The page token is expired
-    PageTokenExpired = 14,
-    /// The user is not authorized to make the request.
-    NotAuthorized = 15,
-    /// Illegal field state transition
-    IllegalFieldStateTransition = 16,
-    /// Illegal choice set option state transition
-    IllegalChoiceSetOptionStateTransition = 17,
-    /// Invalid choice set options
-    InvalidChoiceSetOptions = 18,
-    /// Invalid field key
-    InvalidFieldKey = 19,
-    /// A specified property on a field is outside the allowed range.
-    InvalidFieldPropertyRange = 20,
-    /// A localized string wasn't valid. This may be because the locale is invalid,
-    /// its missing a default value, or the translation is empty for a set locale.
-    InvalidLocalizedString = 21,
-    /// cannot change a property on a published field
-    IllegalChangeToPublishedField = 22,
-    /// A field update is not inclusive of the previous value
-    InvalidFieldUpdateNotInclusive = 23,
-    /// A field update is not inclusive of the previous value
-    InvalidChoiceSetState = 24,
-    /// An unknown error occurred
-    InternalServerError = 500,
-}
-impl ExceptionType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            ExceptionType::Unspecified => "EXCEPTION_TYPE_UNSPECIFIED",
-            ExceptionType::FieldRequired => "FIELD_REQUIRED",
-            ExceptionType::MetamodelAlreadyExists => "METAMODEL_ALREADY_EXISTS",
-            ExceptionType::MetamodelNotFound => "METAMODEL_NOT_FOUND",
-            ExceptionType::IllegalMetamodelStateTransition => {
-                "ILLEGAL_METAMODEL_STATE_TRANSITION"
-            }
-            ExceptionType::InvalidMetamodelDeprecationPolicy => {
-                "INVALID_METAMODEL_DEPRECATION_POLICY"
-            }
-            ExceptionType::MetamodelDeletionDeniedUntil => {
-                "METAMODEL_DELETION_DENIED_UNTIL"
-            }
-            ExceptionType::InvalidField => "INVALID_FIELD",
-            ExceptionType::MetamodelPreconditionFailed => "METAMODEL_PRECONDITION_FAILED",
-            ExceptionType::DuplicateFieldKey => "DUPLICATE_FIELD_KEY",
-            ExceptionType::IllegalFieldRemoval => "ILLEGAL_FIELD_REMOVAL",
-            ExceptionType::IllegalFieldOptionsForField => {
-                "ILLEGAL_FIELD_OPTIONS_FOR_FIELD"
-            }
-            ExceptionType::UnsupportedChangeToPublishedMetamodel => {
-                "UNSUPPORTED_CHANGE_TO_PUBLISHED_METAMODEL"
-            }
-            ExceptionType::IllegalMetamodelStateTransitionInUpdate => {
-                "ILLEGAL_METAMODEL_STATE_TRANSITION_IN_UPDATE"
-            }
-            ExceptionType::PageTokenExpired => "PAGE_TOKEN_EXPIRED",
-            ExceptionType::NotAuthorized => "NOT_AUTHORIZED",
-            ExceptionType::IllegalFieldStateTransition => {
-                "ILLEGAL_FIELD_STATE_TRANSITION"
-            }
-            ExceptionType::IllegalChoiceSetOptionStateTransition => {
-                "ILLEGAL_CHOICE_SET_OPTION_STATE_TRANSITION"
-            }
-            ExceptionType::InvalidChoiceSetOptions => "INVALID_CHOICE_SET_OPTIONS",
-            ExceptionType::InvalidFieldKey => "INVALID_FIELD_KEY",
-            ExceptionType::InvalidFieldPropertyRange => "INVALID_FIELD_PROPERTY_RANGE",
-            ExceptionType::InvalidLocalizedString => "INVALID_LOCALIZED_STRING",
-            ExceptionType::IllegalChangeToPublishedField => {
-                "ILLEGAL_CHANGE_TO_PUBLISHED_FIELD"
-            }
-            ExceptionType::InvalidFieldUpdateNotInclusive => {
-                "INVALID_FIELD_UPDATE_NOT_INCLUSIVE"
-            }
-            ExceptionType::InvalidChoiceSetState => "INVALID_CHOICE_SET_STATE",
-            ExceptionType::InternalServerError => "INTERNAL_SERVER_ERROR",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "EXCEPTION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "FIELD_REQUIRED" => Some(Self::FieldRequired),
-            "METAMODEL_ALREADY_EXISTS" => Some(Self::MetamodelAlreadyExists),
-            "METAMODEL_NOT_FOUND" => Some(Self::MetamodelNotFound),
-            "ILLEGAL_METAMODEL_STATE_TRANSITION" => {
-                Some(Self::IllegalMetamodelStateTransition)
-            }
-            "INVALID_METAMODEL_DEPRECATION_POLICY" => {
-                Some(Self::InvalidMetamodelDeprecationPolicy)
-            }
-            "METAMODEL_DELETION_DENIED_UNTIL" => Some(Self::MetamodelDeletionDeniedUntil),
-            "INVALID_FIELD" => Some(Self::InvalidField),
-            "METAMODEL_PRECONDITION_FAILED" => Some(Self::MetamodelPreconditionFailed),
-            "DUPLICATE_FIELD_KEY" => Some(Self::DuplicateFieldKey),
-            "ILLEGAL_FIELD_REMOVAL" => Some(Self::IllegalFieldRemoval),
-            "ILLEGAL_FIELD_OPTIONS_FOR_FIELD" => Some(Self::IllegalFieldOptionsForField),
-            "UNSUPPORTED_CHANGE_TO_PUBLISHED_METAMODEL" => {
-                Some(Self::UnsupportedChangeToPublishedMetamodel)
-            }
-            "ILLEGAL_METAMODEL_STATE_TRANSITION_IN_UPDATE" => {
-                Some(Self::IllegalMetamodelStateTransitionInUpdate)
-            }
-            "PAGE_TOKEN_EXPIRED" => Some(Self::PageTokenExpired),
-            "NOT_AUTHORIZED" => Some(Self::NotAuthorized),
-            "ILLEGAL_FIELD_STATE_TRANSITION" => Some(Self::IllegalFieldStateTransition),
-            "ILLEGAL_CHOICE_SET_OPTION_STATE_TRANSITION" => {
-                Some(Self::IllegalChoiceSetOptionStateTransition)
-            }
-            "INVALID_CHOICE_SET_OPTIONS" => Some(Self::InvalidChoiceSetOptions),
-            "INVALID_FIELD_KEY" => Some(Self::InvalidFieldKey),
-            "INVALID_FIELD_PROPERTY_RANGE" => Some(Self::InvalidFieldPropertyRange),
-            "INVALID_LOCALIZED_STRING" => Some(Self::InvalidLocalizedString),
-            "ILLEGAL_CHANGE_TO_PUBLISHED_FIELD" => {
-                Some(Self::IllegalChangeToPublishedField)
-            }
-            "INVALID_FIELD_UPDATE_NOT_INCLUSIVE" => {
-                Some(Self::InvalidFieldUpdateNotInclusive)
-            }
-            "INVALID_CHOICE_SET_STATE" => Some(Self::InvalidChoiceSetState),
-            "INTERNAL_SERVER_ERROR" => Some(Self::InternalServerError),
-            _ => None,
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.apps.drive.labels.v2beta.LabelService",
+                        "ListLabelLocks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

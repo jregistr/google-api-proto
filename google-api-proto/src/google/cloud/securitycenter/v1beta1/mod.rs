@@ -1,65 +1,3 @@
-/// Response of asset discovery run
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RunAssetDiscoveryResponse {
-    /// The state of an asset discovery run.
-    #[prost(enumeration = "run_asset_discovery_response::State", tag = "1")]
-    pub state: i32,
-    /// The duration between asset discovery run start and end
-    #[prost(message, optional, tag = "2")]
-    pub duration: ::core::option::Option<::prost_types::Duration>,
-}
-/// Nested message and enum types in `RunAssetDiscoveryResponse`.
-pub mod run_asset_discovery_response {
-    /// The state of an asset discovery run.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum State {
-        /// Asset discovery run state was unspecified.
-        Unspecified = 0,
-        /// Asset discovery run completed successfully.
-        Completed = 1,
-        /// Asset discovery run was cancelled with tasks still pending, as another
-        /// run for the same organization was started with a higher priority.
-        Superseded = 2,
-        /// Asset discovery run was killed and terminated.
-        Terminated = 3,
-    }
-    impl State {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                State::Unspecified => "STATE_UNSPECIFIED",
-                State::Completed => "COMPLETED",
-                State::Superseded => "SUPERSEDED",
-                State::Terminated => "TERMINATED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "COMPLETED" => Some(Self::Completed),
-                "SUPERSEDED" => Some(Self::Superseded),
-                "TERMINATED" => Some(Self::Terminated),
-                _ => None,
-            }
-        }
-    }
-}
 /// User specified security marks that are attached to the parent Security
 /// Command Center resource. Security marks are scoped within a Security Command
 /// Center organization -- they can be modified and viewed by all users who have
@@ -87,78 +25,6 @@ pub struct SecurityMarks {
         ::prost::alloc::string::String,
         ::prost::alloc::string::String,
     >,
-}
-/// Security Command Center representation of a Google Cloud
-/// resource.
-///
-/// The Asset is a Security Command Center resource that captures information
-/// about a single Google Cloud resource. All modifications to an Asset are only
-/// within the context of Security Command Center and don't affect the referenced
-/// Google Cloud resource.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Asset {
-    /// The relative resource name of this asset. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/assets/{asset_id}".
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[prost(message, optional, tag = "2")]
-    pub security_center_properties: ::core::option::Option<
-        asset::SecurityCenterProperties,
-    >,
-    /// Resource managed properties. These properties are managed and defined by
-    /// the Google Cloud resource and cannot be modified by the user.
-    #[prost(btree_map = "string, message", tag = "7")]
-    pub resource_properties: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        ::prost_types::Value,
-    >,
-    /// User specified security marks. These marks are entirely managed by the user
-    /// and come from the SecurityMarks resource that belongs to the asset.
-    #[prost(message, optional, tag = "8")]
-    pub security_marks: ::core::option::Option<SecurityMarks>,
-    /// The time at which the asset was created in Security Command Center.
-    #[prost(message, optional, tag = "9")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// The time at which the asset was last updated, added, or deleted in Security
-    /// Command Center.
-    #[prost(message, optional, tag = "10")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-}
-/// Nested message and enum types in `Asset`.
-pub mod asset {
-    /// Security Command Center managed properties. These properties are managed by
-    /// Security Command Center and cannot be modified by the user.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct SecurityCenterProperties {
-        /// Immutable. The full resource name of the Google Cloud resource this asset
-        /// represents. This field is immutable after create time. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "1")]
-        pub resource_name: ::prost::alloc::string::String,
-        /// The type of the Google Cloud resource. Examples include: APPLICATION,
-        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
-        /// Security Command Center and/or the producer of the resource and is
-        /// immutable after create time.
-        #[prost(string, tag = "2")]
-        pub resource_type: ::prost::alloc::string::String,
-        /// The full resource name of the immediate parent of the resource. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "3")]
-        pub resource_parent: ::prost::alloc::string::String,
-        /// The full resource name of the project the resource belongs to. See:
-        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
-        #[prost(string, tag = "4")]
-        pub resource_project: ::prost::alloc::string::String,
-        /// Owners of the Google Cloud resource.
-        #[prost(string, repeated, tag = "5")]
-        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
 }
 /// Security Command Center finding.
 ///
@@ -276,6 +142,107 @@ pub mod finding {
         }
     }
 }
+/// Security Command Center representation of a Google Cloud
+/// resource.
+///
+/// The Asset is a Security Command Center resource that captures information
+/// about a single Google Cloud resource. All modifications to an Asset are only
+/// within the context of Security Command Center and don't affect the referenced
+/// Google Cloud resource.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Asset {
+    /// The relative resource name of this asset. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/assets/{asset_id}".
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[prost(message, optional, tag = "2")]
+    pub security_center_properties: ::core::option::Option<
+        asset::SecurityCenterProperties,
+    >,
+    /// Resource managed properties. These properties are managed and defined by
+    /// the Google Cloud resource and cannot be modified by the user.
+    #[prost(btree_map = "string, message", tag = "7")]
+    pub resource_properties: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        ::prost_types::Value,
+    >,
+    /// User specified security marks. These marks are entirely managed by the user
+    /// and come from the SecurityMarks resource that belongs to the asset.
+    #[prost(message, optional, tag = "8")]
+    pub security_marks: ::core::option::Option<SecurityMarks>,
+    /// The time at which the asset was created in Security Command Center.
+    #[prost(message, optional, tag = "9")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// The time at which the asset was last updated, added, or deleted in Security
+    /// Command Center.
+    #[prost(message, optional, tag = "10")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+}
+/// Nested message and enum types in `Asset`.
+pub mod asset {
+    /// Security Command Center managed properties. These properties are managed by
+    /// Security Command Center and cannot be modified by the user.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct SecurityCenterProperties {
+        /// Immutable. The full resource name of the Google Cloud resource this asset
+        /// represents. This field is immutable after create time. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "1")]
+        pub resource_name: ::prost::alloc::string::String,
+        /// The type of the Google Cloud resource. Examples include: APPLICATION,
+        /// PROJECT, and ORGANIZATION. This is a case insensitive field defined by
+        /// Security Command Center and/or the producer of the resource and is
+        /// immutable after create time.
+        #[prost(string, tag = "2")]
+        pub resource_type: ::prost::alloc::string::String,
+        /// The full resource name of the immediate parent of the resource. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "3")]
+        pub resource_parent: ::prost::alloc::string::String,
+        /// The full resource name of the project the resource belongs to. See:
+        /// <https://cloud.google.com/apis/design/resource_names#full_resource_name>
+        #[prost(string, tag = "4")]
+        pub resource_project: ::prost::alloc::string::String,
+        /// Owners of the Google Cloud resource.
+        #[prost(string, repeated, tag = "5")]
+        pub resource_owners: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
+/// Security Command Center finding source. A finding source
+/// is an entity or a mechanism that can produce a finding. A source is like a
+/// container of findings that come from the same scanner, logger, monitor, etc.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Source {
+    /// The relative resource name of this source. See:
+    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
+    /// Example:
+    /// "organizations/{organization_id}/sources/{source_id}"
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The source's display name.
+    /// A source's display name must be unique amongst its siblings, for example,
+    /// two sources with the same parent can't share the same display name.
+    /// The display name must have a length between 1 and 64 characters
+    /// (inclusive).
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// The description of the source (max of 1024 characters).
+    /// Example:
+    /// "Web Security Scanner is a web security scanner for common
+    /// vulnerabilities in App Engine applications. It can automatically
+    /// scan and detect four common vulnerabilities, including cross-site-scripting
+    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
+    /// outdated/insecure libraries."
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+}
 /// User specified settings that are attached to the Security Command
 /// Center organization.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -368,35 +335,6 @@ pub mod organization_settings {
             }
         }
     }
-}
-/// Security Command Center finding source. A finding source
-/// is an entity or a mechanism that can produce a finding. A source is like a
-/// container of findings that come from the same scanner, logger, monitor, etc.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Source {
-    /// The relative resource name of this source. See:
-    /// <https://cloud.google.com/apis/design/resource_names#relative_resource_name>
-    /// Example:
-    /// "organizations/{organization_id}/sources/{source_id}"
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The source's display name.
-    /// A source's display name must be unique amongst its siblings, for example,
-    /// two sources with the same parent can't share the same display name.
-    /// The display name must have a length between 1 and 64 characters
-    /// (inclusive).
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// The description of the source (max of 1024 characters).
-    /// Example:
-    /// "Web Security Scanner is a web security scanner for common
-    /// vulnerabilities in App Engine applications. It can automatically
-    /// scan and detect four common vulnerabilities, including cross-site-scripting
-    /// (XSS), Flash injection, mixed content (HTTP in HTTPS), and
-    /// outdated/insecure libraries."
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
 }
 /// Request message for creating a finding.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1092,11 +1030,27 @@ pub mod security_center_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a source.
         pub async fn create_source(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateSourceRequest>,
-        ) -> Result<tonic::Response<super::Source>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Source>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1110,14 +1064,22 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/CreateSource",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "CreateSource",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a finding. The corresponding source must exist for finding creation
         /// to succeed.
         pub async fn create_finding(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateFindingRequest>,
-        ) -> Result<tonic::Response<super::Finding>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Finding>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1131,7 +1093,15 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/CreateFinding",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "CreateFinding",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the access control policy on the specified Source.
         pub async fn get_iam_policy(
@@ -1139,7 +1109,7 @@ pub mod security_center_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::GetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -1156,13 +1126,24 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/GetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "GetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the settings for an organization.
         pub async fn get_organization_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrganizationSettingsRequest>,
-        ) -> Result<tonic::Response<super::OrganizationSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::OrganizationSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1176,13 +1157,21 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/GetOrganizationSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "GetOrganizationSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a source.
         pub async fn get_source(
             &mut self,
             request: impl tonic::IntoRequest<super::GetSourceRequest>,
-        ) -> Result<tonic::Response<super::Source>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Source>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1196,14 +1185,25 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/GetSource",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "GetSource",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Filters an organization's assets and  groups them by their specified
         /// properties.
         pub async fn group_assets(
             &mut self,
             request: impl tonic::IntoRequest<super::GroupAssetsRequest>,
-        ) -> Result<tonic::Response<super::GroupAssetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GroupAssetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1217,7 +1217,15 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/GroupAssets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "GroupAssets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Filters an organization or source's findings and  groups them by their
         /// specified properties.
@@ -1227,7 +1235,10 @@ pub mod security_center_client {
         pub async fn group_findings(
             &mut self,
             request: impl tonic::IntoRequest<super::GroupFindingsRequest>,
-        ) -> Result<tonic::Response<super::GroupFindingsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::GroupFindingsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1241,13 +1252,24 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/GroupFindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "GroupFindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists an organization's assets.
         pub async fn list_assets(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAssetsRequest>,
-        ) -> Result<tonic::Response<super::ListAssetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAssetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1261,7 +1283,15 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/ListAssets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "ListAssets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists an organization or source's findings.
         ///
@@ -1270,7 +1300,10 @@ pub mod security_center_client {
         pub async fn list_findings(
             &mut self,
             request: impl tonic::IntoRequest<super::ListFindingsRequest>,
-        ) -> Result<tonic::Response<super::ListFindingsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListFindingsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1284,13 +1317,24 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/ListFindings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "ListFindings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all sources belonging to an organization.
         pub async fn list_sources(
             &mut self,
             request: impl tonic::IntoRequest<super::ListSourcesRequest>,
-        ) -> Result<tonic::Response<super::ListSourcesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListSourcesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1304,7 +1348,15 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/ListSources",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "ListSources",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Runs asset discovery. The discovery is tracked with a long-running
         /// operation.
@@ -1315,7 +1367,7 @@ pub mod security_center_client {
         pub async fn run_asset_discovery(
             &mut self,
             request: impl tonic::IntoRequest<super::RunAssetDiscoveryRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1332,13 +1384,21 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/RunAssetDiscovery",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "RunAssetDiscovery",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the state of a finding.
         pub async fn set_finding_state(
             &mut self,
             request: impl tonic::IntoRequest<super::SetFindingStateRequest>,
-        ) -> Result<tonic::Response<super::Finding>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Finding>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1352,7 +1412,15 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/SetFindingState",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "SetFindingState",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Sets the access control policy on the specified Source.
         pub async fn set_iam_policy(
@@ -1360,7 +1428,7 @@ pub mod security_center_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::SetIamPolicyRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::iam::v1::Policy>,
             tonic::Status,
         > {
@@ -1377,7 +1445,15 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/SetIamPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "SetIamPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the permissions that a caller has on the specified source.
         pub async fn test_iam_permissions(
@@ -1385,7 +1461,7 @@ pub mod security_center_client {
             request: impl tonic::IntoRequest<
                 super::super::super::super::iam::v1::TestIamPermissionsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::iam::v1::TestIamPermissionsResponse,
             >,
@@ -1404,14 +1480,22 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/TestIamPermissions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "TestIamPermissions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates or updates a finding. The corresponding source must exist for a
         /// finding creation to succeed.
         pub async fn update_finding(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateFindingRequest>,
-        ) -> Result<tonic::Response<super::Finding>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Finding>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1425,13 +1509,24 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/UpdateFinding",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "UpdateFinding",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an organization's settings.
         pub async fn update_organization_settings(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateOrganizationSettingsRequest>,
-        ) -> Result<tonic::Response<super::OrganizationSettings>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::OrganizationSettings>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1445,13 +1540,21 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/UpdateOrganizationSettings",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "UpdateOrganizationSettings",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a source.
         pub async fn update_source(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateSourceRequest>,
-        ) -> Result<tonic::Response<super::Source>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Source>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1465,13 +1568,21 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/UpdateSource",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "UpdateSource",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates security marks.
         pub async fn update_security_marks(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateSecurityMarksRequest>,
-        ) -> Result<tonic::Response<super::SecurityMarks>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::SecurityMarks>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1485,7 +1596,77 @@ pub mod security_center_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.securitycenter.v1beta1.SecurityCenter/UpdateSecurityMarks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.securitycenter.v1beta1.SecurityCenter",
+                        "UpdateSecurityMarks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
+        }
+    }
+}
+/// Response of asset discovery run
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RunAssetDiscoveryResponse {
+    /// The state of an asset discovery run.
+    #[prost(enumeration = "run_asset_discovery_response::State", tag = "1")]
+    pub state: i32,
+    /// The duration between asset discovery run start and end
+    #[prost(message, optional, tag = "2")]
+    pub duration: ::core::option::Option<::prost_types::Duration>,
+}
+/// Nested message and enum types in `RunAssetDiscoveryResponse`.
+pub mod run_asset_discovery_response {
+    /// The state of an asset discovery run.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum State {
+        /// Asset discovery run state was unspecified.
+        Unspecified = 0,
+        /// Asset discovery run completed successfully.
+        Completed = 1,
+        /// Asset discovery run was cancelled with tasks still pending, as another
+        /// run for the same organization was started with a higher priority.
+        Superseded = 2,
+        /// Asset discovery run was killed and terminated.
+        Terminated = 3,
+    }
+    impl State {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                State::Unspecified => "STATE_UNSPECIFIED",
+                State::Completed => "COMPLETED",
+                State::Superseded => "SUPERSEDED",
+                State::Terminated => "TERMINATED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "COMPLETED" => Some(Self::Completed),
+                "SUPERSEDED" => Some(Self::Superseded),
+                "TERMINATED" => Some(Self::Terminated),
+                _ => None,
+            }
         }
     }
 }

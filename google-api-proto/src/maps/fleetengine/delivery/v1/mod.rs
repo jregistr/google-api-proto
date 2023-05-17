@@ -1,3 +1,150 @@
+/// A RequestHeader contains fields common to all Delivery RPC requests.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DeliveryRequestHeader {
+    /// The BCP-47 language code, such as en-US or sr-Latn. For more information,
+    /// see <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> If none
+    /// is specified, the response may be in any language, with a preference for
+    /// English if such a name exists. Field value example: `en-US`.
+    #[prost(string, tag = "1")]
+    pub language_code: ::prost::alloc::string::String,
+    /// Required. CLDR region code of the region where the request originates.
+    /// Field value example: `US`.
+    #[prost(string, tag = "2")]
+    pub region_code: ::prost::alloc::string::String,
+    /// Version of the calling SDK, if applicable.
+    /// The version format is "major.minor.patch", example: `1.1.2`.
+    #[prost(string, tag = "3")]
+    pub sdk_version: ::prost::alloc::string::String,
+    /// Version of the operating system on which the calling SDK is running.
+    /// Field value examples: `4.4.1`, `12.1`.
+    #[prost(string, tag = "4")]
+    pub os_version: ::prost::alloc::string::String,
+    /// Model of the device on which the calling SDK is running.
+    /// Field value examples: `iPhone12,1`, `SM-G920F`.
+    #[prost(string, tag = "5")]
+    pub device_model: ::prost::alloc::string::String,
+    /// The type of SDK sending the request.
+    #[prost(enumeration = "delivery_request_header::SdkType", tag = "6")]
+    pub sdk_type: i32,
+    /// Version of the MapSDK which the calling SDK depends on, if applicable.
+    /// The version format is "major.minor.patch", example: `5.2.1`.
+    #[prost(string, tag = "7")]
+    pub maps_sdk_version: ::prost::alloc::string::String,
+    /// Version of the NavSDK which the calling SDK depends on, if applicable.
+    /// The version format is "major.minor.patch", example: `2.1.0`.
+    #[prost(string, tag = "8")]
+    pub nav_sdk_version: ::prost::alloc::string::String,
+    /// Platform of the calling SDK.
+    #[prost(enumeration = "delivery_request_header::Platform", tag = "9")]
+    pub platform: i32,
+    /// Manufacturer of the Android device from the calling SDK, only applicable
+    /// for the Android SDKs.
+    /// Field value example: `Samsung`.
+    #[prost(string, tag = "10")]
+    pub manufacturer: ::prost::alloc::string::String,
+    /// Android API level of the calling SDK, only applicable for the Android SDKs.
+    /// Field value example: `23`.
+    #[prost(int32, tag = "11")]
+    pub android_api_level: i32,
+}
+/// Nested message and enum types in `DeliveryRequestHeader`.
+pub mod delivery_request_header {
+    /// Possible types of SDK.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum SdkType {
+        /// The default value. This value is used if the `sdk_type` is omitted.
+        Unspecified = 0,
+        /// The calling SDK is Consumer.
+        Consumer = 1,
+        /// The calling SDK is Driver.
+        Driver = 2,
+        /// The calling SDK is JavaScript.
+        Javascript = 3,
+    }
+    impl SdkType {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                SdkType::Unspecified => "SDK_TYPE_UNSPECIFIED",
+                SdkType::Consumer => "CONSUMER",
+                SdkType::Driver => "DRIVER",
+                SdkType::Javascript => "JAVASCRIPT",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "SDK_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                "CONSUMER" => Some(Self::Consumer),
+                "DRIVER" => Some(Self::Driver),
+                "JAVASCRIPT" => Some(Self::Javascript),
+                _ => None,
+            }
+        }
+    }
+    /// The platform of the calling SDK.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum Platform {
+        /// The default value. This value is used if the platform is omitted.
+        Unspecified = 0,
+        /// The request is coming from Android.
+        Android = 1,
+        /// The request is coming from iOS.
+        Ios = 2,
+        /// The request is coming from the web.
+        Web = 3,
+    }
+    impl Platform {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
+                Platform::Android => "ANDROID",
+                Platform::Ios => "IOS",
+                Platform::Web => "WEB",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "PLATFORM_UNSPECIFIED" => Some(Self::Unspecified),
+                "ANDROID" => Some(Self::Android),
+                "IOS" => Some(Self::Ios),
+                "WEB" => Some(Self::Web),
+                _ => None,
+            }
+        }
+    }
+}
 /// Describes a vehicle attribute as a key-value pair. The "key:value" string
 /// length cannot exceed 256 characters.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -487,153 +634,6 @@ pub mod vehicle_stop {
                 "NEW" => Some(Self::New),
                 "ENROUTE" => Some(Self::Enroute),
                 "ARRIVED" => Some(Self::Arrived),
-                _ => None,
-            }
-        }
-    }
-}
-/// A RequestHeader contains fields common to all Delivery RPC requests.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DeliveryRequestHeader {
-    /// The BCP-47 language code, such as en-US or sr-Latn. For more information,
-    /// see <http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.> If none
-    /// is specified, the response may be in any language, with a preference for
-    /// English if such a name exists. Field value example: `en-US`.
-    #[prost(string, tag = "1")]
-    pub language_code: ::prost::alloc::string::String,
-    /// Required. CLDR region code of the region where the request originates.
-    /// Field value example: `US`.
-    #[prost(string, tag = "2")]
-    pub region_code: ::prost::alloc::string::String,
-    /// Version of the calling SDK, if applicable.
-    /// The version format is "major.minor.patch", example: `1.1.2`.
-    #[prost(string, tag = "3")]
-    pub sdk_version: ::prost::alloc::string::String,
-    /// Version of the operating system on which the calling SDK is running.
-    /// Field value examples: `4.4.1`, `12.1`.
-    #[prost(string, tag = "4")]
-    pub os_version: ::prost::alloc::string::String,
-    /// Model of the device on which the calling SDK is running.
-    /// Field value examples: `iPhone12,1`, `SM-G920F`.
-    #[prost(string, tag = "5")]
-    pub device_model: ::prost::alloc::string::String,
-    /// The type of SDK sending the request.
-    #[prost(enumeration = "delivery_request_header::SdkType", tag = "6")]
-    pub sdk_type: i32,
-    /// Version of the MapSDK which the calling SDK depends on, if applicable.
-    /// The version format is "major.minor.patch", example: `5.2.1`.
-    #[prost(string, tag = "7")]
-    pub maps_sdk_version: ::prost::alloc::string::String,
-    /// Version of the NavSDK which the calling SDK depends on, if applicable.
-    /// The version format is "major.minor.patch", example: `2.1.0`.
-    #[prost(string, tag = "8")]
-    pub nav_sdk_version: ::prost::alloc::string::String,
-    /// Platform of the calling SDK.
-    #[prost(enumeration = "delivery_request_header::Platform", tag = "9")]
-    pub platform: i32,
-    /// Manufacturer of the Android device from the calling SDK, only applicable
-    /// for the Android SDKs.
-    /// Field value example: `Samsung`.
-    #[prost(string, tag = "10")]
-    pub manufacturer: ::prost::alloc::string::String,
-    /// Android API level of the calling SDK, only applicable for the Android SDKs.
-    /// Field value example: `23`.
-    #[prost(int32, tag = "11")]
-    pub android_api_level: i32,
-}
-/// Nested message and enum types in `DeliveryRequestHeader`.
-pub mod delivery_request_header {
-    /// Possible types of SDK.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum SdkType {
-        /// The default value. This value is used if the `sdk_type` is omitted.
-        Unspecified = 0,
-        /// The calling SDK is Consumer.
-        Consumer = 1,
-        /// The calling SDK is Driver.
-        Driver = 2,
-        /// The calling SDK is JavaScript.
-        Javascript = 3,
-    }
-    impl SdkType {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                SdkType::Unspecified => "SDK_TYPE_UNSPECIFIED",
-                SdkType::Consumer => "CONSUMER",
-                SdkType::Driver => "DRIVER",
-                SdkType::Javascript => "JAVASCRIPT",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "SDK_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                "CONSUMER" => Some(Self::Consumer),
-                "DRIVER" => Some(Self::Driver),
-                "JAVASCRIPT" => Some(Self::Javascript),
-                _ => None,
-            }
-        }
-    }
-    /// The platform of the calling SDK.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum Platform {
-        /// The default value. This value is used if the platform is omitted.
-        Unspecified = 0,
-        /// The request is coming from Android.
-        Android = 1,
-        /// The request is coming from iOS.
-        Ios = 2,
-        /// The request is coming from the web.
-        Web = 3,
-    }
-    impl Platform {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                Platform::Unspecified => "PLATFORM_UNSPECIFIED",
-                Platform::Android => "ANDROID",
-                Platform::Ios => "IOS",
-                Platform::Web => "WEB",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "PLATFORM_UNSPECIFIED" => Some(Self::Unspecified),
-                "ANDROID" => Some(Self::Android),
-                "IOS" => Some(Self::Ios),
-                "WEB" => Some(Self::Web),
                 _ => None,
             }
         }
@@ -1444,11 +1444,30 @@ pub mod delivery_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates and returns a new `DeliveryVehicle`.
         pub async fn create_delivery_vehicle(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDeliveryVehicleRequest>,
-        ) -> Result<tonic::Response<super::DeliveryVehicle>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DeliveryVehicle>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1462,13 +1481,24 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/CreateDeliveryVehicle",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "CreateDeliveryVehicle",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the specified `DeliveryVehicle` instance.
         pub async fn get_delivery_vehicle(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDeliveryVehicleRequest>,
-        ) -> Result<tonic::Response<super::DeliveryVehicle>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DeliveryVehicle>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1482,7 +1512,15 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/GetDeliveryVehicle",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "GetDeliveryVehicle",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Writes updated `DeliveryVehicle` data to Fleet Engine, and assigns
         /// `Tasks` to the `DeliveryVehicle`. You cannot update the name of the
@@ -1494,7 +1532,10 @@ pub mod delivery_service_client {
         pub async fn update_delivery_vehicle(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDeliveryVehicleRequest>,
-        ) -> Result<tonic::Response<super::DeliveryVehicle>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::DeliveryVehicle>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1508,13 +1549,24 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/UpdateDeliveryVehicle",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "UpdateDeliveryVehicle",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates and returns a batch of new `Task` objects.
         pub async fn batch_create_tasks(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchCreateTasksRequest>,
-        ) -> Result<tonic::Response<super::BatchCreateTasksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::BatchCreateTasksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1528,13 +1580,21 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/BatchCreateTasks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "BatchCreateTasks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates and returns a new `Task` object.
         pub async fn create_task(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTaskRequest>,
-        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Task>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1548,13 +1608,21 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/CreateTask",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "CreateTask",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a `Task`.
         pub async fn get_task(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTaskRequest>,
-        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Task>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1568,13 +1636,24 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/GetTask",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "GetTask",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets all `Task`s with a particular `tracking_id`.
         pub async fn search_tasks(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchTasksRequest>,
-        ) -> Result<tonic::Response<super::SearchTasksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchTasksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1588,13 +1667,21 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/SearchTasks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "SearchTasks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates `Task` data.
         pub async fn update_task(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTaskRequest>,
-        ) -> Result<tonic::Response<super::Task>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Task>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1608,13 +1695,24 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/UpdateTask",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "UpdateTask",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets all `Task`s that meet the specified filtering criteria.
         pub async fn list_tasks(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTasksRequest>,
-        ) -> Result<tonic::Response<super::ListTasksResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTasksResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1628,13 +1726,24 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/ListTasks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "ListTasks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the specified `TaskTrackingInfo` instance.
         pub async fn get_task_tracking_info(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTaskTrackingInfoRequest>,
-        ) -> Result<tonic::Response<super::TaskTrackingInfo>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::TaskTrackingInfo>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1648,13 +1757,21 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/GetTaskTrackingInfo",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "GetTaskTrackingInfo",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets all `DeliveryVehicle`s that meet the specified filtering criteria.
         pub async fn list_delivery_vehicles(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDeliveryVehiclesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListDeliveryVehiclesResponse>,
             tonic::Status,
         > {
@@ -1671,7 +1788,15 @@ pub mod delivery_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/maps.fleetengine.delivery.v1.DeliveryService/ListDeliveryVehicles",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "maps.fleetengine.delivery.v1.DeliveryService",
+                        "ListDeliveryVehicles",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

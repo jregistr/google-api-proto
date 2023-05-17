@@ -628,11 +628,27 @@ pub mod metastore_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new catalog.
         pub async fn create_catalog(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCatalogRequest>,
-        ) -> Result<tonic::Response<super::Catalog>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Catalog>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -646,13 +662,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/CreateCatalog",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "CreateCatalog",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing catalog specified by the catalog ID.
         pub async fn delete_catalog(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCatalogRequest>,
-        ) -> Result<tonic::Response<super::Catalog>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Catalog>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -666,13 +690,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/DeleteCatalog",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "DeleteCatalog",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the catalog specified by the resource name.
         pub async fn get_catalog(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCatalogRequest>,
-        ) -> Result<tonic::Response<super::Catalog>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Catalog>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -686,13 +718,24 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/GetCatalog",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "GetCatalog",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List all catalogs in a specified project.
         pub async fn list_catalogs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCatalogsRequest>,
-        ) -> Result<tonic::Response<super::ListCatalogsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListCatalogsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -706,13 +749,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/ListCatalogs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "ListCatalogs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new database.
         pub async fn create_database(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDatabaseRequest>,
-        ) -> Result<tonic::Response<super::Database>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Database>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -726,13 +777,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/CreateDatabase",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "CreateDatabase",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing database specified by the database ID.
         pub async fn delete_database(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDatabaseRequest>,
-        ) -> Result<tonic::Response<super::Database>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Database>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -746,13 +805,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/DeleteDatabase",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "DeleteDatabase",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing database specified by the database ID.
         pub async fn update_database(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDatabaseRequest>,
-        ) -> Result<tonic::Response<super::Database>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Database>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -766,13 +833,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/UpdateDatabase",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "UpdateDatabase",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the database specified by the resource name.
         pub async fn get_database(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDatabaseRequest>,
-        ) -> Result<tonic::Response<super::Database>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Database>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -786,13 +861,24 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/GetDatabase",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "GetDatabase",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List all databases in a specified catalog.
         pub async fn list_databases(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDatabasesRequest>,
-        ) -> Result<tonic::Response<super::ListDatabasesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDatabasesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -806,13 +892,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/ListDatabases",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "ListDatabases",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new table.
         pub async fn create_table(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateTableRequest>,
-        ) -> Result<tonic::Response<super::Table>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Table>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -826,13 +920,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/CreateTable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "CreateTable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes an existing table specified by the table ID.
         pub async fn delete_table(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteTableRequest>,
-        ) -> Result<tonic::Response<super::Table>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Table>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -846,13 +948,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/DeleteTable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "DeleteTable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing table specified by the table ID.
         pub async fn update_table(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTableRequest>,
-        ) -> Result<tonic::Response<super::Table>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Table>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -866,13 +976,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/UpdateTable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "UpdateTable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Renames an existing table specified by the table ID.
         pub async fn rename_table(
             &mut self,
             request: impl tonic::IntoRequest<super::RenameTableRequest>,
-        ) -> Result<tonic::Response<super::Table>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Table>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -886,13 +1004,21 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/RenameTable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "RenameTable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the table specified by the resource name.
         pub async fn get_table(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTableRequest>,
-        ) -> Result<tonic::Response<super::Table>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Table>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -906,13 +1032,24 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/GetTable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "GetTable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List all tables in a specified database.
         pub async fn list_tables(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTablesRequest>,
-        ) -> Result<tonic::Response<super::ListTablesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTablesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -926,7 +1063,15 @@ pub mod metastore_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.biglake.v1.MetastoreService/ListTables",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.biglake.v1.MetastoreService",
+                        "ListTables",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

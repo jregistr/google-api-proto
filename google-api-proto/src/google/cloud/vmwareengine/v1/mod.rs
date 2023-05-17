@@ -2169,11 +2169,30 @@ pub mod vmware_engine_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists `PrivateCloud` resources in a given project and location.
         pub async fn list_private_clouds(
             &mut self,
             request: impl tonic::IntoRequest<super::ListPrivateCloudsRequest>,
-        ) -> Result<tonic::Response<super::ListPrivateCloudsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListPrivateCloudsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2187,13 +2206,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListPrivateClouds",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListPrivateClouds",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a `PrivateCloud` resource by its resource name.
         pub async fn get_private_cloud(
             &mut self,
             request: impl tonic::IntoRequest<super::GetPrivateCloudRequest>,
-        ) -> Result<tonic::Response<super::PrivateCloud>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::PrivateCloud>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2207,7 +2234,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/GetPrivateCloud",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "GetPrivateCloud",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new `PrivateCloud` resource in a given project and location.
         /// Private clouds can only be created in zones, regional private clouds are
@@ -2219,7 +2254,7 @@ pub mod vmware_engine_client {
         pub async fn create_private_cloud(
             &mut self,
             request: impl tonic::IntoRequest<super::CreatePrivateCloudRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2236,7 +2271,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/CreatePrivateCloud",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "CreatePrivateCloud",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Modifies a `PrivateCloud` resource. Only the following fields can be
         /// updated: `description`.
@@ -2249,7 +2292,7 @@ pub mod vmware_engine_client {
         pub async fn update_private_cloud(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdatePrivateCloudRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2266,7 +2309,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/UpdatePrivateCloud",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "UpdatePrivateCloud",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Schedules a `PrivateCloud` resource for deletion.
         ///
@@ -2286,7 +2337,7 @@ pub mod vmware_engine_client {
         pub async fn delete_private_cloud(
             &mut self,
             request: impl tonic::IntoRequest<super::DeletePrivateCloudRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2303,7 +2354,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/DeletePrivateCloud",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "DeletePrivateCloud",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Restores a private cloud that was previously scheduled for deletion by
         /// `DeletePrivateCloud`. A `PrivateCloud` resource scheduled for deletion has
@@ -2312,7 +2371,7 @@ pub mod vmware_engine_client {
         pub async fn undelete_private_cloud(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeletePrivateCloudRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2329,13 +2388,24 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/UndeletePrivateCloud",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "UndeletePrivateCloud",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists `Cluster` resources in a given private cloud.
         pub async fn list_clusters(
             &mut self,
             request: impl tonic::IntoRequest<super::ListClustersRequest>,
-        ) -> Result<tonic::Response<super::ListClustersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListClustersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2349,13 +2419,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListClusters",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListClusters",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a `Cluster` resource by its resource name.
         pub async fn get_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::GetClusterRequest>,
-        ) -> Result<tonic::Response<super::Cluster>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Cluster>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2369,7 +2447,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/GetCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "GetCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new cluster in a given private cloud.
         /// Creating a new cluster provides additional nodes for
@@ -2378,7 +2464,7 @@ pub mod vmware_engine_client {
         pub async fn create_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2395,7 +2481,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/CreateCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "CreateCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Modifies a `Cluster` resource. Only the following fields can be updated:
         /// `node_type_configs.*.node_count`. Only fields specified in `updateMask` are
@@ -2408,7 +2502,7 @@ pub mod vmware_engine_client {
         pub async fn update_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2425,7 +2519,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/UpdateCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "UpdateCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `Cluster` resource. To avoid unintended data loss, migrate or
         /// gracefully shut down any workloads running on the cluster before deletion.
@@ -2434,7 +2536,7 @@ pub mod vmware_engine_client {
         pub async fn delete_cluster(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteClusterRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2451,13 +2553,24 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/DeleteCluster",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "DeleteCluster",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists subnets in a given private cloud.
         pub async fn list_subnets(
             &mut self,
             request: impl tonic::IntoRequest<super::ListSubnetsRequest>,
-        ) -> Result<tonic::Response<super::ListSubnetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListSubnetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2471,13 +2584,24 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListSubnets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListSubnets",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists node types
         pub async fn list_node_types(
             &mut self,
             request: impl tonic::IntoRequest<super::ListNodeTypesRequest>,
-        ) -> Result<tonic::Response<super::ListNodeTypesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListNodeTypesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2491,13 +2615,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListNodeTypes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListNodeTypes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single `NodeType`.
         pub async fn get_node_type(
             &mut self,
             request: impl tonic::IntoRequest<super::GetNodeTypeRequest>,
-        ) -> Result<tonic::Response<super::NodeType>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::NodeType>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2511,13 +2643,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/GetNodeType",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "GetNodeType",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of credentials for NSX appliance.
         pub async fn show_nsx_credentials(
             &mut self,
             request: impl tonic::IntoRequest<super::ShowNsxCredentialsRequest>,
-        ) -> Result<tonic::Response<super::Credentials>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Credentials>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2531,13 +2671,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ShowNsxCredentials",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ShowNsxCredentials",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of credentials for Vcenter appliance.
         pub async fn show_vcenter_credentials(
             &mut self,
             request: impl tonic::IntoRequest<super::ShowVcenterCredentialsRequest>,
-        ) -> Result<tonic::Response<super::Credentials>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Credentials>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2551,13 +2699,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ShowVcenterCredentials",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ShowVcenterCredentials",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resets credentials of the NSX appliance.
         pub async fn reset_nsx_credentials(
             &mut self,
             request: impl tonic::IntoRequest<super::ResetNsxCredentialsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2574,13 +2730,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ResetNsxCredentials",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ResetNsxCredentials",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resets credentials of the Vcenter appliance.
         pub async fn reset_vcenter_credentials(
             &mut self,
             request: impl tonic::IntoRequest<super::ResetVcenterCredentialsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2597,13 +2761,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ResetVcenterCredentials",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ResetVcenterCredentials",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new HCX activation key in a given private cloud.
         pub async fn create_hcx_activation_key(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateHcxActivationKeyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2620,13 +2792,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/CreateHcxActivationKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "CreateHcxActivationKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists `HcxActivationKey` resources in a given private cloud.
         pub async fn list_hcx_activation_keys(
             &mut self,
             request: impl tonic::IntoRequest<super::ListHcxActivationKeysRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListHcxActivationKeysResponse>,
             tonic::Status,
         > {
@@ -2643,13 +2823,24 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListHcxActivationKeys",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListHcxActivationKeys",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a `HcxActivationKey` resource by its resource name.
         pub async fn get_hcx_activation_key(
             &mut self,
             request: impl tonic::IntoRequest<super::GetHcxActivationKeyRequest>,
-        ) -> Result<tonic::Response<super::HcxActivationKey>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::HcxActivationKey>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2663,13 +2854,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/GetHcxActivationKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "GetHcxActivationKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a `NetworkPolicy` resource by its resource name.
         pub async fn get_network_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::GetNetworkPolicyRequest>,
-        ) -> Result<tonic::Response<super::NetworkPolicy>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::NetworkPolicy>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2683,13 +2882,24 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/GetNetworkPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "GetNetworkPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists `NetworkPolicy` resources in a specified project and location.
         pub async fn list_network_policies(
             &mut self,
             request: impl tonic::IntoRequest<super::ListNetworkPoliciesRequest>,
-        ) -> Result<tonic::Response<super::ListNetworkPoliciesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListNetworkPoliciesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2703,7 +2913,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListNetworkPolicies",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListNetworkPolicies",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new network policy in a given VMware Engine network of a
         /// project and location (region). A new network policy cannot be created if
@@ -2711,7 +2929,7 @@ pub mod vmware_engine_client {
         pub async fn create_network_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateNetworkPolicyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2728,7 +2946,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/CreateNetworkPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "CreateNetworkPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Modifies a `NetworkPolicy` resource. Only the following fields can be
         /// updated: `internet_access`, `external_ip`, `edge_services_cidr`.
@@ -2745,7 +2971,7 @@ pub mod vmware_engine_client {
         pub async fn update_network_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateNetworkPolicyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2762,7 +2988,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/UpdateNetworkPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "UpdateNetworkPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `NetworkPolicy` resource. A network policy cannot be deleted
         /// when `NetworkService.state` is set to `RECONCILING` for either its external
@@ -2770,7 +3004,7 @@ pub mod vmware_engine_client {
         pub async fn delete_network_policy(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteNetworkPolicyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2787,13 +3021,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/DeleteNetworkPolicy",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "DeleteNetworkPolicy",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new VMware Engine network that can be used by a private cloud.
         pub async fn create_vmware_engine_network(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateVmwareEngineNetworkRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2810,7 +3052,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/CreateVmwareEngineNetwork",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "CreateVmwareEngineNetwork",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Modifies a VMware Engine network resource. Only the following fields can be
         /// updated: `description`. Only fields specified in `updateMask` are
@@ -2818,7 +3068,7 @@ pub mod vmware_engine_client {
         pub async fn update_vmware_engine_network(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateVmwareEngineNetworkRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2835,7 +3085,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/UpdateVmwareEngineNetwork",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "UpdateVmwareEngineNetwork",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a `VmwareEngineNetwork` resource. You can only delete a VMware
         /// Engine network after all resources that refer to it are deleted. For
@@ -2844,7 +3102,7 @@ pub mod vmware_engine_client {
         pub async fn delete_vmware_engine_network(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteVmwareEngineNetworkRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2861,7 +3119,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/DeleteVmwareEngineNetwork",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "DeleteVmwareEngineNetwork",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a `VmwareEngineNetwork` resource by its resource name. The
         /// resource contains details of the VMware Engine network, such as its VMware
@@ -2870,7 +3136,10 @@ pub mod vmware_engine_client {
         pub async fn get_vmware_engine_network(
             &mut self,
             request: impl tonic::IntoRequest<super::GetVmwareEngineNetworkRequest>,
-        ) -> Result<tonic::Response<super::VmwareEngineNetwork>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::VmwareEngineNetwork>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2884,13 +3153,21 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/GetVmwareEngineNetwork",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "GetVmwareEngineNetwork",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists `VmwareEngineNetwork` resources in a given project and location.
         pub async fn list_vmware_engine_networks(
             &mut self,
             request: impl tonic::IntoRequest<super::ListVmwareEngineNetworksRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListVmwareEngineNetworksResponse>,
             tonic::Status,
         > {
@@ -2907,7 +3184,15 @@ pub mod vmware_engine_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.vmwareengine.v1.VmwareEngine/ListVmwareEngineNetworks",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.vmwareengine.v1.VmwareEngine",
+                        "ListVmwareEngineNetworks",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

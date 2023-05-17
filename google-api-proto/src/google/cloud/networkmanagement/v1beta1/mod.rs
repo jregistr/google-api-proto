@@ -2211,11 +2211,27 @@ pub mod reachability_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists all Connectivity Tests owned by a project.
         pub async fn list_connectivity_tests(
             &mut self,
             request: impl tonic::IntoRequest<super::ListConnectivityTestsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListConnectivityTestsResponse>,
             tonic::Status,
         > {
@@ -2232,13 +2248,24 @@ pub mod reachability_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.networkmanagement.v1beta1.ReachabilityService/ListConnectivityTests",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.networkmanagement.v1beta1.ReachabilityService",
+                        "ListConnectivityTests",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets the details of a specific Connectivity Test.
         pub async fn get_connectivity_test(
             &mut self,
             request: impl tonic::IntoRequest<super::GetConnectivityTestRequest>,
-        ) -> Result<tonic::Response<super::ConnectivityTest>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ConnectivityTest>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -2252,7 +2279,15 @@ pub mod reachability_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.networkmanagement.v1beta1.ReachabilityService/GetConnectivityTest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.networkmanagement.v1beta1.ReachabilityService",
+                        "GetConnectivityTest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Connectivity Test.
         /// After you create a test, the reachability analysis is performed as part
@@ -2270,7 +2305,7 @@ pub mod reachability_service_client {
         pub async fn create_connectivity_test(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateConnectivityTestRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2287,7 +2322,15 @@ pub mod reachability_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.networkmanagement.v1beta1.ReachabilityService/CreateConnectivityTest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.networkmanagement.v1beta1.ReachabilityService",
+                        "CreateConnectivityTest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the configuration of an existing `ConnectivityTest`.
         /// After you update a test, the reachability analysis is performed as part
@@ -2306,7 +2349,7 @@ pub mod reachability_service_client {
         pub async fn update_connectivity_test(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateConnectivityTestRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2323,7 +2366,15 @@ pub mod reachability_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.networkmanagement.v1beta1.ReachabilityService/UpdateConnectivityTest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.networkmanagement.v1beta1.ReachabilityService",
+                        "UpdateConnectivityTest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Rerun an existing `ConnectivityTest`.
         /// After the user triggers the rerun, the reachability analysis is performed
@@ -2340,7 +2391,7 @@ pub mod reachability_service_client {
         pub async fn rerun_connectivity_test(
             &mut self,
             request: impl tonic::IntoRequest<super::RerunConnectivityTestRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2357,13 +2408,21 @@ pub mod reachability_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.networkmanagement.v1beta1.ReachabilityService/RerunConnectivityTest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.networkmanagement.v1beta1.ReachabilityService",
+                        "RerunConnectivityTest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a specific `ConnectivityTest`.
         pub async fn delete_connectivity_test(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteConnectivityTestRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -2380,7 +2439,15 @@ pub mod reachability_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.networkmanagement.v1beta1.ReachabilityService/DeleteConnectivityTest",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.networkmanagement.v1beta1.ReachabilityService",
+                        "DeleteConnectivityTest",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

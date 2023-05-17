@@ -291,6 +291,22 @@ pub mod speech_translation_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Performs bidirectional streaming speech translation: receive results while
         /// sending audio. This method is only available via the gRPC API (not REST).
         pub async fn streaming_translate_speech(
@@ -298,7 +314,7 @@ pub mod speech_translation_service_client {
             request: impl tonic::IntoStreamingRequest<
                 Message = super::StreamingTranslateSpeechRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 tonic::codec::Streaming<super::StreamingTranslateSpeechResponse>,
             >,
@@ -317,7 +333,15 @@ pub mod speech_translation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.mediatranslation.v1beta1.SpeechTranslationService/StreamingTranslateSpeech",
             );
-            self.inner.streaming(request.into_streaming_request(), path, codec).await
+            let mut req = request.into_streaming_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.mediatranslation.v1beta1.SpeechTranslationService",
+                        "StreamingTranslateSpeech",
+                    ),
+                );
+            self.inner.streaming(req, path, codec).await
         }
     }
 }

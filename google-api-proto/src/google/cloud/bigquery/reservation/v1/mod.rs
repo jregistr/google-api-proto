@@ -979,11 +979,27 @@ pub mod reservation_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new reservation resource.
         pub async fn create_reservation(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateReservationRequest>,
-        ) -> Result<tonic::Response<super::Reservation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Reservation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -997,13 +1013,24 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/CreateReservation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "CreateReservation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all the reservations for the project in the specified location.
         pub async fn list_reservations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListReservationsRequest>,
-        ) -> Result<tonic::Response<super::ListReservationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListReservationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1017,13 +1044,21 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/ListReservations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "ListReservations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns information about the reservation.
         pub async fn get_reservation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetReservationRequest>,
-        ) -> Result<tonic::Response<super::Reservation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Reservation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1037,7 +1072,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/GetReservation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "GetReservation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a reservation.
         /// Returns `google.rpc.Code.FAILED_PRECONDITION` when reservation has
@@ -1045,7 +1088,7 @@ pub mod reservation_service_client {
         pub async fn delete_reservation(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteReservationRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1059,13 +1102,21 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/DeleteReservation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "DeleteReservation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing reservation resource.
         pub async fn update_reservation(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateReservationRequest>,
-        ) -> Result<tonic::Response<super::Reservation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Reservation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1079,13 +1130,24 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/UpdateReservation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "UpdateReservation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new capacity commitment resource.
         pub async fn create_capacity_commitment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateCapacityCommitmentRequest>,
-        ) -> Result<tonic::Response<super::CapacityCommitment>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CapacityCommitment>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1099,13 +1161,21 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/CreateCapacityCommitment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "CreateCapacityCommitment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all the capacity commitments for the admin project.
         pub async fn list_capacity_commitments(
             &mut self,
             request: impl tonic::IntoRequest<super::ListCapacityCommitmentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListCapacityCommitmentsResponse>,
             tonic::Status,
         > {
@@ -1122,13 +1192,24 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/ListCapacityCommitments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "ListCapacityCommitments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns information about the capacity commitment.
         pub async fn get_capacity_commitment(
             &mut self,
             request: impl tonic::IntoRequest<super::GetCapacityCommitmentRequest>,
-        ) -> Result<tonic::Response<super::CapacityCommitment>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CapacityCommitment>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1142,7 +1223,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/GetCapacityCommitment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "GetCapacityCommitment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a capacity commitment. Attempting to delete capacity commitment
         /// before its commitment_end_time will fail with the error code
@@ -1150,7 +1239,7 @@ pub mod reservation_service_client {
         pub async fn delete_capacity_commitment(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteCapacityCommitmentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1164,7 +1253,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/DeleteCapacityCommitment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "DeleteCapacityCommitment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing capacity commitment.
         ///
@@ -1176,7 +1273,10 @@ pub mod reservation_service_client {
         pub async fn update_capacity_commitment(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateCapacityCommitmentRequest>,
-        ) -> Result<tonic::Response<super::CapacityCommitment>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CapacityCommitment>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1190,7 +1290,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/UpdateCapacityCommitment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "UpdateCapacityCommitment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Splits capacity commitment to two commitments of the same plan and
         /// `commitment_end_time`.
@@ -1203,7 +1311,7 @@ pub mod reservation_service_client {
         pub async fn split_capacity_commitment(
             &mut self,
             request: impl tonic::IntoRequest<super::SplitCapacityCommitmentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SplitCapacityCommitmentResponse>,
             tonic::Status,
         > {
@@ -1220,7 +1328,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/SplitCapacityCommitment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "SplitCapacityCommitment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Merges capacity commitments of the same plan into a single commitment.
         ///
@@ -1232,7 +1348,10 @@ pub mod reservation_service_client {
         pub async fn merge_capacity_commitments(
             &mut self,
             request: impl tonic::IntoRequest<super::MergeCapacityCommitmentsRequest>,
-        ) -> Result<tonic::Response<super::CapacityCommitment>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::CapacityCommitment>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1246,7 +1365,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/MergeCapacityCommitments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "MergeCapacityCommitments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates an assignment object which allows the given project to submit jobs
         /// of a certain type using slots from the specified reservation.
@@ -1286,7 +1413,7 @@ pub mod reservation_service_client {
         pub async fn create_assignment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAssignmentRequest>,
-        ) -> Result<tonic::Response<super::Assignment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Assignment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1300,7 +1427,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/CreateAssignment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "CreateAssignment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists assignments.
         ///
@@ -1326,7 +1461,10 @@ pub mod reservation_service_client {
         pub async fn list_assignments(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAssignmentsRequest>,
-        ) -> Result<tonic::Response<super::ListAssignmentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAssignmentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1340,7 +1478,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/ListAssignments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "ListAssignments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a assignment. No expansion will happen.
         ///
@@ -1360,7 +1506,7 @@ pub mod reservation_service_client {
         pub async fn delete_assignment(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAssignmentRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1374,7 +1520,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/DeleteAssignment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "DeleteAssignment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deprecated: Looks up assignments for a specified resource for a particular
         /// region. If the request is about a project:
@@ -1402,7 +1556,10 @@ pub mod reservation_service_client {
         pub async fn search_assignments(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchAssignmentsRequest>,
-        ) -> Result<tonic::Response<super::SearchAssignmentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::SearchAssignmentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1416,7 +1573,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/SearchAssignments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "SearchAssignments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Looks up assignments for a specified resource for a particular region.
         /// If the request is about a project:
@@ -1441,7 +1606,7 @@ pub mod reservation_service_client {
         pub async fn search_all_assignments(
             &mut self,
             request: impl tonic::IntoRequest<super::SearchAllAssignmentsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SearchAllAssignmentsResponse>,
             tonic::Status,
         > {
@@ -1458,7 +1623,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/SearchAllAssignments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "SearchAllAssignments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Moves an assignment under a new reservation.
         ///
@@ -1468,7 +1641,7 @@ pub mod reservation_service_client {
         pub async fn move_assignment(
             &mut self,
             request: impl tonic::IntoRequest<super::MoveAssignmentRequest>,
-        ) -> Result<tonic::Response<super::Assignment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Assignment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1482,7 +1655,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/MoveAssignment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "MoveAssignment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates an existing assignment.
         ///
@@ -1490,7 +1671,7 @@ pub mod reservation_service_client {
         pub async fn update_assignment(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateAssignmentRequest>,
-        ) -> Result<tonic::Response<super::Assignment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Assignment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1504,13 +1685,21 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/UpdateAssignment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "UpdateAssignment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a BI reservation.
         pub async fn get_bi_reservation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetBiReservationRequest>,
-        ) -> Result<tonic::Response<super::BiReservation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::BiReservation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1524,7 +1713,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/GetBiReservation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "GetBiReservation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a BI reservation.
         ///
@@ -1537,7 +1734,7 @@ pub mod reservation_service_client {
         pub async fn update_bi_reservation(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateBiReservationRequest>,
-        ) -> Result<tonic::Response<super::BiReservation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::BiReservation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1551,7 +1748,15 @@ pub mod reservation_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.bigquery.reservation.v1.ReservationService/UpdateBiReservation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.bigquery.reservation.v1.ReservationService",
+                        "UpdateBiReservation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

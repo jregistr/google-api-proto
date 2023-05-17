@@ -474,6 +474,22 @@ pub mod consumer_procurement_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a new [Order][google.cloud.commerce.consumer.procurement.v1alpha1.Order].
         ///
         /// The returned long-running operation is in-progress until the backend
@@ -483,7 +499,7 @@ pub mod consumer_procurement_service_client {
         pub async fn place_order(
             &mut self,
             request: impl tonic::IntoRequest<super::PlaceOrderRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<
                 super::super::super::super::super::super::longrunning::Operation,
             >,
@@ -502,13 +518,21 @@ pub mod consumer_procurement_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService/PlaceOrder",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService",
+                        "PlaceOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the requested [Order][google.cloud.commerce.consumer.procurement.v1alpha1.Order] resource.
         pub async fn get_order(
             &mut self,
             request: impl tonic::IntoRequest<super::GetOrderRequest>,
-        ) -> Result<tonic::Response<super::Order>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Order>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -522,14 +546,25 @@ pub mod consumer_procurement_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService/GetOrder",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService",
+                        "GetOrder",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists [Order][google.cloud.commerce.consumer.procurement.v1alpha1.Order] resources that the user has access to, within the
         /// scope of the parent resource.
         pub async fn list_orders(
             &mut self,
             request: impl tonic::IntoRequest<super::ListOrdersRequest>,
-        ) -> Result<tonic::Response<super::ListOrdersResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListOrdersResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -543,7 +578,15 @@ pub mod consumer_procurement_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService/ListOrders",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.commerce.consumer.procurement.v1alpha1.ConsumerProcurementService",
+                        "ListOrders",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

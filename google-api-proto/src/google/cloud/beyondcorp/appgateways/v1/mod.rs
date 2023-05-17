@@ -418,11 +418,30 @@ pub mod app_gateways_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists AppGateways in a given project and location.
         pub async fn list_app_gateways(
             &mut self,
             request: impl tonic::IntoRequest<super::ListAppGatewaysRequest>,
-        ) -> Result<tonic::Response<super::ListAppGatewaysResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListAppGatewaysResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -436,13 +455,21 @@ pub mod app_gateways_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.beyondcorp.appgateways.v1.AppGatewaysService/ListAppGateways",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.beyondcorp.appgateways.v1.AppGatewaysService",
+                        "ListAppGateways",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single AppGateway.
         pub async fn get_app_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAppGatewayRequest>,
-        ) -> Result<tonic::Response<super::AppGateway>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AppGateway>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -456,13 +483,21 @@ pub mod app_gateways_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.beyondcorp.appgateways.v1.AppGatewaysService/GetAppGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.beyondcorp.appgateways.v1.AppGatewaysService",
+                        "GetAppGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new AppGateway in a given project and location.
         pub async fn create_app_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAppGatewayRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -479,13 +514,21 @@ pub mod app_gateways_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.beyondcorp.appgateways.v1.AppGatewaysService/CreateAppGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.beyondcorp.appgateways.v1.AppGatewaysService",
+                        "CreateAppGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single AppGateway.
         pub async fn delete_app_gateway(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteAppGatewayRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -502,7 +545,15 @@ pub mod app_gateways_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.beyondcorp.appgateways.v1.AppGatewaysService/DeleteAppGateway",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.beyondcorp.appgateways.v1.AppGatewaysService",
+                        "DeleteAppGateway",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

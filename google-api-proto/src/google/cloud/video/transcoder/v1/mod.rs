@@ -1721,11 +1721,27 @@ pub mod transcoder_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a job in the specified region.
         pub async fn create_job(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Job>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1739,13 +1755,24 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/CreateJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "CreateJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists jobs in the specified region.
         pub async fn list_jobs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListJobsRequest>,
-        ) -> Result<tonic::Response<super::ListJobsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListJobsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1759,13 +1786,21 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/ListJobs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "ListJobs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the job data.
         pub async fn get_job(
             &mut self,
             request: impl tonic::IntoRequest<super::GetJobRequest>,
-        ) -> Result<tonic::Response<super::Job>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Job>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1779,13 +1814,21 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/GetJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "GetJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a job.
         pub async fn delete_job(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteJobRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1799,13 +1842,21 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/DeleteJob",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "DeleteJob",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a job template in the specified region.
         pub async fn create_job_template(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateJobTemplateRequest>,
-        ) -> Result<tonic::Response<super::JobTemplate>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::JobTemplate>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1819,13 +1870,24 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/CreateJobTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "CreateJobTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists job templates in the specified region.
         pub async fn list_job_templates(
             &mut self,
             request: impl tonic::IntoRequest<super::ListJobTemplatesRequest>,
-        ) -> Result<tonic::Response<super::ListJobTemplatesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListJobTemplatesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1839,13 +1901,21 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/ListJobTemplates",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "ListJobTemplates",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the job template data.
         pub async fn get_job_template(
             &mut self,
             request: impl tonic::IntoRequest<super::GetJobTemplateRequest>,
-        ) -> Result<tonic::Response<super::JobTemplate>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::JobTemplate>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1859,13 +1929,21 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/GetJobTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "GetJobTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a job template.
         pub async fn delete_job_template(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteJobTemplateRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1879,7 +1957,15 @@ pub mod transcoder_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.video.transcoder.v1.TranscoderService/DeleteJobTemplate",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.video.transcoder.v1.TranscoderService",
+                        "DeleteJobTemplate",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

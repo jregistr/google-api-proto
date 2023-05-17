@@ -123,11 +123,30 @@ pub mod locations_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists information about the supported locations for this service.
         pub async fn list_locations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListLocationsRequest>,
-        ) -> Result<tonic::Response<super::ListLocationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListLocationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -141,13 +160,18 @@ pub mod locations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.location.Locations/ListLocations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.location.Locations", "ListLocations"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets information about a location.
         pub async fn get_location(
             &mut self,
             request: impl tonic::IntoRequest<super::GetLocationRequest>,
-        ) -> Result<tonic::Response<super::Location>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Location>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -161,7 +185,12 @@ pub mod locations_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.location.Locations/GetLocation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.location.Locations", "GetLocation"),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

@@ -1,387 +1,3 @@
-/// Indicated the type of data that can be stored in a structured data entity
-/// (e.g. a table).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DataType {
-    /// Required. The \[TypeCode][google.cloud.automl.v1beta1.TypeCode\] for this type.
-    #[prost(enumeration = "TypeCode", tag = "1")]
-    pub type_code: i32,
-    /// If true, this DataType can also be `NULL`. In .CSV files `NULL` value is
-    /// expressed as an empty string.
-    #[prost(bool, tag = "4")]
-    pub nullable: bool,
-    /// Details of DataType-s that need additional specification.
-    #[prost(oneof = "data_type::Details", tags = "2, 3, 5")]
-    pub details: ::core::option::Option<data_type::Details>,
-}
-/// Nested message and enum types in `DataType`.
-pub mod data_type {
-    /// Details of DataType-s that need additional specification.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Details {
-        /// If \[type_code][google.cloud.automl.v1beta1.DataType.type_code\] == \[ARRAY][google.cloud.automl.v1beta1.TypeCode.ARRAY\],
-        /// then `list_element_type` is the type of the elements.
-        #[prost(message, tag = "2")]
-        ListElementType(::prost::alloc::boxed::Box<super::DataType>),
-        /// If \[type_code][google.cloud.automl.v1beta1.DataType.type_code\] == \[STRUCT][google.cloud.automl.v1beta1.TypeCode.STRUCT\], then `struct_type`
-        /// provides type information for the struct's fields.
-        #[prost(message, tag = "3")]
-        StructType(super::StructType),
-        /// If \[type_code][google.cloud.automl.v1beta1.DataType.type_code\] == \[TIMESTAMP][google.cloud.automl.v1beta1.TypeCode.TIMESTAMP\]
-        /// then `time_format` provides the format in which that time field is
-        /// expressed. The time_format must either be one of:
-        /// * `UNIX_SECONDS`
-        /// * `UNIX_MILLISECONDS`
-        /// * `UNIX_MICROSECONDS`
-        /// * `UNIX_NANOSECONDS`
-        /// (for respectively number of seconds, milliseconds, microseconds and
-        /// nanoseconds since start of the Unix epoch);
-        /// or be written in `strftime` syntax. If time_format is not set, then the
-        /// default format as described on the type_code is used.
-        #[prost(string, tag = "5")]
-        TimeFormat(::prost::alloc::string::String),
-    }
-}
-/// `StructType` defines the DataType-s of a \[STRUCT][google.cloud.automl.v1beta1.TypeCode.STRUCT\] type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct StructType {
-    /// Unordered map of struct field names to their data types.
-    /// Fields cannot be added or removed via Update. Their names and
-    /// data types are still mutable.
-    #[prost(btree_map = "string, message", tag = "1")]
-    pub fields: ::prost::alloc::collections::BTreeMap<
-        ::prost::alloc::string::String,
-        DataType,
-    >,
-}
-/// `TypeCode` is used as a part of
-/// \[DataType][google.cloud.automl.v1beta1.DataType\].
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum TypeCode {
-    /// Not specified. Should not be used.
-    Unspecified = 0,
-    /// Encoded as `number`, or the strings `"NaN"`, `"Infinity"`, or
-    /// `"-Infinity"`.
-    Float64 = 3,
-    /// Must be between 0AD and 9999AD. Encoded as `string` according to
-    /// \[time_format][google.cloud.automl.v1beta1.DataType.time_format\], or, if
-    /// that format is not set, then in RFC 3339 `date-time` format, where
-    /// `time-offset` = `"Z"` (e.g. 1985-04-12T23:20:50.52Z).
-    Timestamp = 4,
-    /// Encoded as `string`.
-    String = 6,
-    /// Encoded as `list`, where the list elements are represented according to
-    ///
-    /// \[list_element_type][google.cloud.automl.v1beta1.DataType.list_element_type\].
-    Array = 8,
-    /// Encoded as `struct`, where field values are represented according to
-    /// \[struct_type][google.cloud.automl.v1beta1.DataType.struct_type\].
-    Struct = 9,
-    /// Values of this type are not further understood by AutoML,
-    /// e.g. AutoML is unable to tell the order of values (as it could with
-    /// FLOAT64), or is unable to say if one value contains another (as it
-    /// could with STRING).
-    /// Encoded as `string` (bytes should be base64-encoded, as described in RFC
-    /// 4648, section 4).
-    Category = 10,
-}
-impl TypeCode {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            TypeCode::Unspecified => "TYPE_CODE_UNSPECIFIED",
-            TypeCode::Float64 => "FLOAT64",
-            TypeCode::Timestamp => "TIMESTAMP",
-            TypeCode::String => "STRING",
-            TypeCode::Array => "ARRAY",
-            TypeCode::Struct => "STRUCT",
-            TypeCode::Category => "CATEGORY",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "TYPE_CODE_UNSPECIFIED" => Some(Self::Unspecified),
-            "FLOAT64" => Some(Self::Float64),
-            "TIMESTAMP" => Some(Self::Timestamp),
-            "STRING" => Some(Self::String),
-            "ARRAY" => Some(Self::Array),
-            "STRUCT" => Some(Self::Struct),
-            "CATEGORY" => Some(Self::Category),
-            _ => None,
-        }
-    }
-}
-/// A time period inside of an example that has a time dimension (e.g. video).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TimeSegment {
-    /// Start of the time segment (inclusive), represented as the duration since
-    /// the example start.
-    #[prost(message, optional, tag = "1")]
-    pub start_time_offset: ::core::option::Option<::prost_types::Duration>,
-    /// End of the time segment (exclusive), represented as the duration since the
-    /// example start.
-    #[prost(message, optional, tag = "2")]
-    pub end_time_offset: ::core::option::Option<::prost_types::Duration>,
-}
-/// Contains annotation details specific to classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassificationAnnotation {
-    /// Output only. A confidence estimate between 0.0 and 1.0. A higher value
-    /// means greater confidence that the annotation is positive. If a user
-    /// approves an annotation as negative or positive, the score value remains
-    /// unchanged. If a user creates an annotation, the score is 0 for negative or
-    /// 1 for positive.
-    #[prost(float, tag = "1")]
-    pub score: f32,
-}
-/// Contains annotation details specific to video classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoClassificationAnnotation {
-    /// Output only. Expresses the type of video classification. Possible values:
-    ///
-    /// *  `segment` - Classification done on a specified by user
-    ///         time segment of a video. AnnotationSpec is answered to be present
-    ///         in that time segment, if it is present in any part of it. The video
-    ///         ML model evaluations are done only for this type of classification.
-    ///
-    /// *  `shot`- Shot-level classification.
-    ///         AutoML Video Intelligence determines the boundaries
-    ///         for each camera shot in the entire segment of the video that user
-    ///         specified in the request configuration. AutoML Video Intelligence
-    ///         then returns labels and their confidence scores for each detected
-    ///         shot, along with the start and end time of the shot.
-    ///         WARNING: Model evaluation is not done for this classification type,
-    ///         the quality of it depends on training data, but there are no
-    ///         metrics provided to describe that quality.
-    ///
-    /// *  `1s_interval` - AutoML Video Intelligence returns labels and their
-    ///         confidence scores for each second of the entire segment of the video
-    ///         that user specified in the request configuration.
-    ///         WARNING: Model evaluation is not done for this classification type,
-    ///         the quality of it depends on training data, but there are no
-    ///         metrics provided to describe that quality.
-    #[prost(string, tag = "1")]
-    pub r#type: ::prost::alloc::string::String,
-    /// Output only . The classification details of this annotation.
-    #[prost(message, optional, tag = "2")]
-    pub classification_annotation: ::core::option::Option<ClassificationAnnotation>,
-    /// Output only . The time segment of the video to which the
-    /// annotation applies.
-    #[prost(message, optional, tag = "3")]
-    pub time_segment: ::core::option::Option<TimeSegment>,
-}
-/// Model evaluation metrics for classification problems.
-/// Note: For Video Classification this metrics only describe quality of the
-/// Video Classification predictions of "segment_classification" type.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ClassificationEvaluationMetrics {
-    /// Output only. The Area Under Precision-Recall Curve metric. Micro-averaged
-    /// for the overall evaluation.
-    #[prost(float, tag = "1")]
-    pub au_prc: f32,
-    /// Output only. The Area Under Precision-Recall Curve metric based on priors.
-    /// Micro-averaged for the overall evaluation.
-    /// Deprecated.
-    #[deprecated]
-    #[prost(float, tag = "2")]
-    pub base_au_prc: f32,
-    /// Output only. The Area Under Receiver Operating Characteristic curve metric.
-    /// Micro-averaged for the overall evaluation.
-    #[prost(float, tag = "6")]
-    pub au_roc: f32,
-    /// Output only. The Log Loss metric.
-    #[prost(float, tag = "7")]
-    pub log_loss: f32,
-    /// Output only. Metrics for each confidence_threshold in
-    /// 0.00,0.05,0.10,...,0.95,0.96,0.97,0.98,0.99 and
-    /// position_threshold = INT32_MAX_VALUE.
-    /// ROC and precision-recall curves, and other aggregated metrics are derived
-    /// from them. The confidence metrics entries may also be supplied for
-    /// additional values of position_threshold, but from these no aggregated
-    /// metrics are computed.
-    #[prost(message, repeated, tag = "3")]
-    pub confidence_metrics_entry: ::prost::alloc::vec::Vec<
-        classification_evaluation_metrics::ConfidenceMetricsEntry,
-    >,
-    /// Output only. Confusion matrix of the evaluation.
-    /// Only set for MULTICLASS classification problems where number
-    /// of labels is no more than 10.
-    /// Only set for model level evaluation, not for evaluation per label.
-    #[prost(message, optional, tag = "4")]
-    pub confusion_matrix: ::core::option::Option<
-        classification_evaluation_metrics::ConfusionMatrix,
-    >,
-    /// Output only. The annotation spec ids used for this evaluation.
-    #[prost(string, repeated, tag = "5")]
-    pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `ClassificationEvaluationMetrics`.
-pub mod classification_evaluation_metrics {
-    /// Metrics for a single confidence threshold.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfidenceMetricsEntry {
-        /// Output only. Metrics are computed with an assumption that the model
-        /// never returns predictions with score lower than this value.
-        #[prost(float, tag = "1")]
-        pub confidence_threshold: f32,
-        /// Output only. Metrics are computed with an assumption that the model
-        /// always returns at most this many predictions (ordered by their score,
-        /// descendingly), but they all still need to meet the confidence_threshold.
-        #[prost(int32, tag = "14")]
-        pub position_threshold: i32,
-        /// Output only. Recall (True Positive Rate) for the given confidence
-        /// threshold.
-        #[prost(float, tag = "2")]
-        pub recall: f32,
-        /// Output only. Precision for the given confidence threshold.
-        #[prost(float, tag = "3")]
-        pub precision: f32,
-        /// Output only. False Positive Rate for the given confidence threshold.
-        #[prost(float, tag = "8")]
-        pub false_positive_rate: f32,
-        /// Output only. The harmonic mean of recall and precision.
-        #[prost(float, tag = "4")]
-        pub f1_score: f32,
-        /// Output only. The Recall (True Positive Rate) when only considering the
-        /// label that has the highest prediction score and not below the confidence
-        /// threshold for each example.
-        #[prost(float, tag = "5")]
-        pub recall_at1: f32,
-        /// Output only. The precision when only considering the label that has the
-        /// highest prediction score and not below the confidence threshold for each
-        /// example.
-        #[prost(float, tag = "6")]
-        pub precision_at1: f32,
-        /// Output only. The False Positive Rate when only considering the label that
-        /// has the highest prediction score and not below the confidence threshold
-        /// for each example.
-        #[prost(float, tag = "9")]
-        pub false_positive_rate_at1: f32,
-        /// Output only. The harmonic mean of \[recall_at1][google.cloud.automl.v1beta1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.recall_at1\] and \[precision_at1][google.cloud.automl.v1beta1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.precision_at1\].
-        #[prost(float, tag = "7")]
-        pub f1_score_at1: f32,
-        /// Output only. The number of model created labels that match a ground truth
-        /// label.
-        #[prost(int64, tag = "10")]
-        pub true_positive_count: i64,
-        /// Output only. The number of model created labels that do not match a
-        /// ground truth label.
-        #[prost(int64, tag = "11")]
-        pub false_positive_count: i64,
-        /// Output only. The number of ground truth labels that are not matched
-        /// by a model created label.
-        #[prost(int64, tag = "12")]
-        pub false_negative_count: i64,
-        /// Output only. The number of labels that were not created by the model,
-        /// but if they would, they would not match a ground truth label.
-        #[prost(int64, tag = "13")]
-        pub true_negative_count: i64,
-    }
-    /// Confusion matrix of the model running the classification.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct ConfusionMatrix {
-        /// Output only. IDs of the annotation specs used in the confusion matrix.
-        /// For Tables CLASSIFICATION
-        ///
-        /// \[prediction_type][google.cloud.automl.v1beta1.TablesModelMetadata.prediction_type\]
-        /// only list of \[annotation_spec_display_name-s][\] is populated.
-        #[prost(string, repeated, tag = "1")]
-        pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Output only. Display name of the annotation specs used in the confusion
-        /// matrix, as they were at the moment of the evaluation. For Tables
-        /// CLASSIFICATION
-        ///
-        /// \[prediction_type-s][google.cloud.automl.v1beta1.TablesModelMetadata.prediction_type\],
-        /// distinct values of the target column at the moment of the model
-        /// evaluation are populated here.
-        #[prost(string, repeated, tag = "3")]
-        pub display_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Output only. Rows in the confusion matrix. The number of rows is equal to
-        /// the size of `annotation_spec_id`.
-        /// `row\[i].example_count[j\]` is the number of examples that have ground
-        /// truth of the `annotation_spec_id\[i\]` and are predicted as
-        /// `annotation_spec_id\[j\]` by the model being evaluated.
-        #[prost(message, repeated, tag = "2")]
-        pub row: ::prost::alloc::vec::Vec<confusion_matrix::Row>,
-    }
-    /// Nested message and enum types in `ConfusionMatrix`.
-    pub mod confusion_matrix {
-        /// Output only. A row in the confusion matrix.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Row {
-            /// Output only. Value of the specific cell in the confusion matrix.
-            /// The number of values each row has (i.e. the length of the row) is equal
-            /// to the length of the `annotation_spec_id` field or, if that one is not
-            /// populated, length of the \[display_name][google.cloud.automl.v1beta1.ClassificationEvaluationMetrics.ConfusionMatrix.display_name\] field.
-            #[prost(int32, repeated, tag = "1")]
-            pub example_count: ::prost::alloc::vec::Vec<i32>,
-        }
-    }
-}
-/// Type of the classification problem.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
-#[repr(i32)]
-pub enum ClassificationType {
-    /// An un-set value of this enum.
-    Unspecified = 0,
-    /// At most one label is allowed per example.
-    Multiclass = 1,
-    /// Multiple labels are allowed for one example.
-    Multilabel = 2,
-}
-impl ClassificationType {
-    /// String value of the enum field names used in the ProtoBuf definition.
-    ///
-    /// The values are not transformed in any way and thus are considered stable
-    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-    pub fn as_str_name(&self) -> &'static str {
-        match self {
-            ClassificationType::Unspecified => "CLASSIFICATION_TYPE_UNSPECIFIED",
-            ClassificationType::Multiclass => "MULTICLASS",
-            ClassificationType::Multilabel => "MULTILABEL",
-        }
-    }
-    /// Creates an enum from field names used in the ProtoBuf definition.
-    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-        match value {
-            "CLASSIFICATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-            "MULTICLASS" => Some(Self::Multiclass),
-            "MULTILABEL" => Some(Self::Multilabel),
-            _ => None,
-        }
-    }
-}
-/// Dataset metadata specific to video classification.
-/// All Video Classification datasets are treated as multi label.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoClassificationDatasetMetadata {}
-/// Dataset metadata specific to video object tracking.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoObjectTrackingDatasetMetadata {}
-/// Model metadata specific to video classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoClassificationModelMetadata {}
-/// Model metadata specific to video object tracking.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VideoObjectTrackingModelMetadata {}
 /// Input configuration for ImportData Action.
 ///
 /// The format of input depends on dataset_metadata the Dataset into which
@@ -1595,53 +1211,443 @@ pub struct GcrDestination {
     #[prost(string, tag = "1")]
     pub output_uri: ::prost::alloc::string::String,
 }
-/// A specification of a relational table.
-/// The table's schema is represented via its child column specs. It is
-/// pre-populated as part of ImportData by schema inference algorithm, the
-/// version of which is a required parameter of ImportData InputConfig.
-/// Note: While working with a table, at times the schema may be
-/// inconsistent with the data in the table (e.g. string in a FLOAT64 column).
-/// The consistency validation is done upon creation of a model.
-/// Used by:
-///    *   Tables
+/// A definition of an annotation spec.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct TableSpec {
-    /// Output only. The resource name of the table spec.
+pub struct AnnotationSpec {
+    /// Output only. Resource name of the annotation spec.
     /// Form:
     ///
-    /// `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/tableSpecs/{table_spec_id}`
+    /// 'projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/annotationSpecs/{annotation_spec_id}'
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// column_spec_id of the time column. Only used if the parent dataset's
-    /// ml_use_column_spec_id is not set. Used to split rows into TRAIN, VALIDATE
-    /// and TEST sets such that oldest rows go to TRAIN set, newest to TEST, and
-    /// those in between to VALIDATE.
-    /// Required type: TIMESTAMP.
-    /// If both this column and ml_use_column are not set, then ML use of all rows
-    /// will be assigned by AutoML. NOTE: Updates of this field will instantly
-    /// affect any other users concurrently working with the dataset.
+    /// Required. The name of the annotation spec to show in the interface. The name can be
+    /// up to 32 characters long and must match the regexp `\[a-zA-Z0-9_\]+`.
     #[prost(string, tag = "2")]
-    pub time_column_spec_id: ::prost::alloc::string::String,
-    /// Output only. The number of rows (i.e. examples) in the table.
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only. The number of examples in the parent dataset
+    /// labeled by the annotation spec.
+    #[prost(int32, tag = "9")]
+    pub example_count: i32,
+}
+/// A time period inside of an example that has a time dimension (e.g. video).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct TimeSegment {
+    /// Start of the time segment (inclusive), represented as the duration since
+    /// the example start.
+    #[prost(message, optional, tag = "1")]
+    pub start_time_offset: ::core::option::Option<::prost_types::Duration>,
+    /// End of the time segment (exclusive), represented as the duration since the
+    /// example start.
+    #[prost(message, optional, tag = "2")]
+    pub end_time_offset: ::core::option::Option<::prost_types::Duration>,
+}
+/// Contains annotation details specific to classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassificationAnnotation {
+    /// Output only. A confidence estimate between 0.0 and 1.0. A higher value
+    /// means greater confidence that the annotation is positive. If a user
+    /// approves an annotation as negative or positive, the score value remains
+    /// unchanged. If a user creates an annotation, the score is 0 for negative or
+    /// 1 for positive.
+    #[prost(float, tag = "1")]
+    pub score: f32,
+}
+/// Contains annotation details specific to video classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoClassificationAnnotation {
+    /// Output only. Expresses the type of video classification. Possible values:
+    ///
+    /// *  `segment` - Classification done on a specified by user
+    ///         time segment of a video. AnnotationSpec is answered to be present
+    ///         in that time segment, if it is present in any part of it. The video
+    ///         ML model evaluations are done only for this type of classification.
+    ///
+    /// *  `shot`- Shot-level classification.
+    ///         AutoML Video Intelligence determines the boundaries
+    ///         for each camera shot in the entire segment of the video that user
+    ///         specified in the request configuration. AutoML Video Intelligence
+    ///         then returns labels and their confidence scores for each detected
+    ///         shot, along with the start and end time of the shot.
+    ///         WARNING: Model evaluation is not done for this classification type,
+    ///         the quality of it depends on training data, but there are no
+    ///         metrics provided to describe that quality.
+    ///
+    /// *  `1s_interval` - AutoML Video Intelligence returns labels and their
+    ///         confidence scores for each second of the entire segment of the video
+    ///         that user specified in the request configuration.
+    ///         WARNING: Model evaluation is not done for this classification type,
+    ///         the quality of it depends on training data, but there are no
+    ///         metrics provided to describe that quality.
+    #[prost(string, tag = "1")]
+    pub r#type: ::prost::alloc::string::String,
+    /// Output only . The classification details of this annotation.
+    #[prost(message, optional, tag = "2")]
+    pub classification_annotation: ::core::option::Option<ClassificationAnnotation>,
+    /// Output only . The time segment of the video to which the
+    /// annotation applies.
+    #[prost(message, optional, tag = "3")]
+    pub time_segment: ::core::option::Option<TimeSegment>,
+}
+/// Model evaluation metrics for classification problems.
+/// Note: For Video Classification this metrics only describe quality of the
+/// Video Classification predictions of "segment_classification" type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ClassificationEvaluationMetrics {
+    /// Output only. The Area Under Precision-Recall Curve metric. Micro-averaged
+    /// for the overall evaluation.
+    #[prost(float, tag = "1")]
+    pub au_prc: f32,
+    /// Output only. The Area Under Precision-Recall Curve metric based on priors.
+    /// Micro-averaged for the overall evaluation.
+    /// Deprecated.
+    #[deprecated]
+    #[prost(float, tag = "2")]
+    pub base_au_prc: f32,
+    /// Output only. The Area Under Receiver Operating Characteristic curve metric.
+    /// Micro-averaged for the overall evaluation.
+    #[prost(float, tag = "6")]
+    pub au_roc: f32,
+    /// Output only. The Log Loss metric.
+    #[prost(float, tag = "7")]
+    pub log_loss: f32,
+    /// Output only. Metrics for each confidence_threshold in
+    /// 0.00,0.05,0.10,...,0.95,0.96,0.97,0.98,0.99 and
+    /// position_threshold = INT32_MAX_VALUE.
+    /// ROC and precision-recall curves, and other aggregated metrics are derived
+    /// from them. The confidence metrics entries may also be supplied for
+    /// additional values of position_threshold, but from these no aggregated
+    /// metrics are computed.
+    #[prost(message, repeated, tag = "3")]
+    pub confidence_metrics_entry: ::prost::alloc::vec::Vec<
+        classification_evaluation_metrics::ConfidenceMetricsEntry,
+    >,
+    /// Output only. Confusion matrix of the evaluation.
+    /// Only set for MULTICLASS classification problems where number
+    /// of labels is no more than 10.
+    /// Only set for model level evaluation, not for evaluation per label.
+    #[prost(message, optional, tag = "4")]
+    pub confusion_matrix: ::core::option::Option<
+        classification_evaluation_metrics::ConfusionMatrix,
+    >,
+    /// Output only. The annotation spec ids used for this evaluation.
+    #[prost(string, repeated, tag = "5")]
+    pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `ClassificationEvaluationMetrics`.
+pub mod classification_evaluation_metrics {
+    /// Metrics for a single confidence threshold.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfidenceMetricsEntry {
+        /// Output only. Metrics are computed with an assumption that the model
+        /// never returns predictions with score lower than this value.
+        #[prost(float, tag = "1")]
+        pub confidence_threshold: f32,
+        /// Output only. Metrics are computed with an assumption that the model
+        /// always returns at most this many predictions (ordered by their score,
+        /// descendingly), but they all still need to meet the confidence_threshold.
+        #[prost(int32, tag = "14")]
+        pub position_threshold: i32,
+        /// Output only. Recall (True Positive Rate) for the given confidence
+        /// threshold.
+        #[prost(float, tag = "2")]
+        pub recall: f32,
+        /// Output only. Precision for the given confidence threshold.
+        #[prost(float, tag = "3")]
+        pub precision: f32,
+        /// Output only. False Positive Rate for the given confidence threshold.
+        #[prost(float, tag = "8")]
+        pub false_positive_rate: f32,
+        /// Output only. The harmonic mean of recall and precision.
+        #[prost(float, tag = "4")]
+        pub f1_score: f32,
+        /// Output only. The Recall (True Positive Rate) when only considering the
+        /// label that has the highest prediction score and not below the confidence
+        /// threshold for each example.
+        #[prost(float, tag = "5")]
+        pub recall_at1: f32,
+        /// Output only. The precision when only considering the label that has the
+        /// highest prediction score and not below the confidence threshold for each
+        /// example.
+        #[prost(float, tag = "6")]
+        pub precision_at1: f32,
+        /// Output only. The False Positive Rate when only considering the label that
+        /// has the highest prediction score and not below the confidence threshold
+        /// for each example.
+        #[prost(float, tag = "9")]
+        pub false_positive_rate_at1: f32,
+        /// Output only. The harmonic mean of \[recall_at1][google.cloud.automl.v1beta1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.recall_at1\] and \[precision_at1][google.cloud.automl.v1beta1.ClassificationEvaluationMetrics.ConfidenceMetricsEntry.precision_at1\].
+        #[prost(float, tag = "7")]
+        pub f1_score_at1: f32,
+        /// Output only. The number of model created labels that match a ground truth
+        /// label.
+        #[prost(int64, tag = "10")]
+        pub true_positive_count: i64,
+        /// Output only. The number of model created labels that do not match a
+        /// ground truth label.
+        #[prost(int64, tag = "11")]
+        pub false_positive_count: i64,
+        /// Output only. The number of ground truth labels that are not matched
+        /// by a model created label.
+        #[prost(int64, tag = "12")]
+        pub false_negative_count: i64,
+        /// Output only. The number of labels that were not created by the model,
+        /// but if they would, they would not match a ground truth label.
+        #[prost(int64, tag = "13")]
+        pub true_negative_count: i64,
+    }
+    /// Confusion matrix of the model running the classification.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct ConfusionMatrix {
+        /// Output only. IDs of the annotation specs used in the confusion matrix.
+        /// For Tables CLASSIFICATION
+        ///
+        /// \[prediction_type][google.cloud.automl.v1beta1.TablesModelMetadata.prediction_type\]
+        /// only list of \[annotation_spec_display_name-s][\] is populated.
+        #[prost(string, repeated, tag = "1")]
+        pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Output only. Display name of the annotation specs used in the confusion
+        /// matrix, as they were at the moment of the evaluation. For Tables
+        /// CLASSIFICATION
+        ///
+        /// \[prediction_type-s][google.cloud.automl.v1beta1.TablesModelMetadata.prediction_type\],
+        /// distinct values of the target column at the moment of the model
+        /// evaluation are populated here.
+        #[prost(string, repeated, tag = "3")]
+        pub display_name: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Output only. Rows in the confusion matrix. The number of rows is equal to
+        /// the size of `annotation_spec_id`.
+        /// `row\[i].example_count[j\]` is the number of examples that have ground
+        /// truth of the `annotation_spec_id\[i\]` and are predicted as
+        /// `annotation_spec_id\[j\]` by the model being evaluated.
+        #[prost(message, repeated, tag = "2")]
+        pub row: ::prost::alloc::vec::Vec<confusion_matrix::Row>,
+    }
+    /// Nested message and enum types in `ConfusionMatrix`.
+    pub mod confusion_matrix {
+        /// Output only. A row in the confusion matrix.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Row {
+            /// Output only. Value of the specific cell in the confusion matrix.
+            /// The number of values each row has (i.e. the length of the row) is equal
+            /// to the length of the `annotation_spec_id` field or, if that one is not
+            /// populated, length of the \[display_name][google.cloud.automl.v1beta1.ClassificationEvaluationMetrics.ConfusionMatrix.display_name\] field.
+            #[prost(int32, repeated, tag = "1")]
+            pub example_count: ::prost::alloc::vec::Vec<i32>,
+        }
+    }
+}
+/// Type of the classification problem.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum ClassificationType {
+    /// An un-set value of this enum.
+    Unspecified = 0,
+    /// At most one label is allowed per example.
+    Multiclass = 1,
+    /// Multiple labels are allowed for one example.
+    Multilabel = 2,
+}
+impl ClassificationType {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            ClassificationType::Unspecified => "CLASSIFICATION_TYPE_UNSPECIFIED",
+            ClassificationType::Multiclass => "MULTICLASS",
+            ClassificationType::Multilabel => "MULTILABEL",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "CLASSIFICATION_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+            "MULTICLASS" => Some(Self::Multiclass),
+            "MULTILABEL" => Some(Self::Multilabel),
+            _ => None,
+        }
+    }
+}
+/// Dataset metadata that is specific to image classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageClassificationDatasetMetadata {
+    /// Required. Type of the classification problem.
+    #[prost(enumeration = "ClassificationType", tag = "1")]
+    pub classification_type: i32,
+}
+/// Dataset metadata specific to image object detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionDatasetMetadata {}
+/// Model metadata for image classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageClassificationModelMetadata {
+    /// Optional. The ID of the `base` model. If it is specified, the new model
+    /// will be created based on the `base` model. Otherwise, the new model will be
+    /// created from scratch. The `base` model must be in the same
+    /// `project` and `location` as the new model to create, and have the same
+    /// `model_type`.
+    #[prost(string, tag = "1")]
+    pub base_model_id: ::prost::alloc::string::String,
+    /// Required. The train budget of creating this model, expressed in hours. The
+    /// actual `train_cost` will be equal or less than this value.
+    #[prost(int64, tag = "2")]
+    pub train_budget: i64,
+    /// Output only. The actual train cost of creating this model, expressed in
+    /// hours. If this model is created from a `base` model, the train cost used
+    /// to create the `base` model are not included.
     #[prost(int64, tag = "3")]
-    pub row_count: i64,
-    /// Output only. The number of valid rows (i.e. without values that don't match
-    /// DataType-s of their columns).
-    #[prost(int64, tag = "4")]
-    pub valid_row_count: i64,
-    /// Output only. The number of columns of the table. That is, the number of
-    /// child ColumnSpec-s.
+    pub train_cost: i64,
+    /// Output only. The reason that this create model operation stopped,
+    /// e.g. `BUDGET_REACHED`, `MODEL_CONVERGED`.
+    #[prost(string, tag = "5")]
+    pub stop_reason: ::prost::alloc::string::String,
+    /// Optional. Type of the model. The available values are:
+    /// *   `cloud` - Model to be used via prediction calls to AutoML API.
+    ///                This is the default value.
+    /// *   `mobile-low-latency-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
+    ///                with TensorFlow afterwards. Expected to have low latency, but
+    ///                may have lower prediction quality than other models.
+    /// *   `mobile-versatile-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
+    ///                with TensorFlow afterwards.
+    /// *   `mobile-high-accuracy-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
+    ///                with TensorFlow afterwards.  Expected to have a higher
+    ///                latency, but should also have a higher prediction quality
+    ///                than other models.
+    /// *   `mobile-core-ml-low-latency-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile device with Core
+    ///                ML afterwards. Expected to have low latency, but may have
+    ///                lower prediction quality than other models.
+    /// *   `mobile-core-ml-versatile-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile device with Core
+    ///                ML afterwards.
+    /// *   `mobile-core-ml-high-accuracy-1` - A model that, in addition to
+    ///                providing prediction via AutoML API, can also be exported
+    ///                (see \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile device with
+    ///                Core ML afterwards.  Expected to have a higher latency, but
+    ///                should also have a higher prediction quality than other
+    ///                models.
+    #[prost(string, tag = "7")]
+    pub model_type: ::prost::alloc::string::String,
+    /// Output only. An approximate number of online prediction QPS that can
+    /// be supported by this model per each node on which it is deployed.
+    #[prost(double, tag = "13")]
+    pub node_qps: f64,
+    /// Output only. The number of nodes this model is deployed on. A node is an
+    /// abstraction of a machine resource, which can handle online prediction QPS
+    /// as given in the node_qps field.
+    #[prost(int64, tag = "14")]
+    pub node_count: i64,
+}
+/// Model metadata specific to image object detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionModelMetadata {
+    /// Optional. Type of the model. The available values are:
+    /// *   `cloud-high-accuracy-1` - (default) A model to be used via prediction
+    ///                calls to AutoML API. Expected to have a higher latency, but
+    ///                should also have a higher prediction quality than other
+    ///                models.
+    /// *   `cloud-low-latency-1` -  A model to be used via prediction
+    ///                calls to AutoML API. Expected to have low latency, but may
+    ///                have lower prediction quality than other models.
+    /// *   `mobile-low-latency-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
+    ///                with TensorFlow afterwards. Expected to have low latency, but
+    ///                may have lower prediction quality than other models.
+    /// *   `mobile-versatile-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
+    ///                with TensorFlow afterwards.
+    /// *   `mobile-high-accuracy-1` - A model that, in addition to providing
+    ///                prediction via AutoML API, can also be exported (see
+    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
+    ///                with TensorFlow afterwards.  Expected to have a higher
+    ///                latency, but should also have a higher prediction quality
+    ///                than other models.
+    #[prost(string, tag = "1")]
+    pub model_type: ::prost::alloc::string::String,
+    /// Output only. The number of nodes this model is deployed on. A node is an
+    /// abstraction of a machine resource, which can handle online prediction QPS
+    /// as given in the qps_per_node field.
+    #[prost(int64, tag = "3")]
+    pub node_count: i64,
+    /// Output only. An approximate number of online prediction QPS that can
+    /// be supported by this model per each node on which it is deployed.
+    #[prost(double, tag = "4")]
+    pub node_qps: f64,
+    /// Output only. The reason that this create model operation stopped,
+    /// e.g. `BUDGET_REACHED`, `MODEL_CONVERGED`.
+    #[prost(string, tag = "5")]
+    pub stop_reason: ::prost::alloc::string::String,
+    /// The train budget of creating this model, expressed in milli node
+    /// hours i.e. 1,000 value in this field means 1 node hour. The actual
+    /// `train_cost` will be equal or less than this value. If further model
+    /// training ceases to provide any improvements, it will stop without using
+    /// full budget and the stop_reason will be `MODEL_CONVERGED`.
+    /// Note, node_hour  = actual_hour * number_of_nodes_invovled.
+    /// For model type `cloud-high-accuracy-1`(default) and `cloud-low-latency-1`,
+    /// the train budget must be between 20,000 and 900,000 milli node hours,
+    /// inclusive. The default value is 216, 000 which represents one day in
+    /// wall time.
+    /// For model type `mobile-low-latency-1`, `mobile-versatile-1`,
+    /// `mobile-high-accuracy-1`, `mobile-core-ml-low-latency-1`,
+    /// `mobile-core-ml-versatile-1`, `mobile-core-ml-high-accuracy-1`, the train
+    /// budget must be between 1,000 and 100,000 milli node hours, inclusive.
+    /// The default value is 24, 000 which represents one day in wall time.
+    #[prost(int64, tag = "6")]
+    pub train_budget_milli_node_hours: i64,
+    /// Output only. The actual train cost of creating this model, expressed in
+    /// milli node hours, i.e. 1,000 value in this field means 1 node hour.
+    /// Guaranteed to not exceed the train budget.
     #[prost(int64, tag = "7")]
-    pub column_count: i64,
-    /// Output only. Input configs via which data currently residing in the table
-    /// had been imported.
-    #[prost(message, repeated, tag = "5")]
-    pub input_configs: ::prost::alloc::vec::Vec<InputConfig>,
-    /// Used to perform consistent read-modify-write updates. If not set, a blind
-    /// "overwrite" update happens.
-    #[prost(string, tag = "6")]
-    pub etag: ::prost::alloc::string::String,
+    pub train_cost_milli_node_hours: i64,
+}
+/// Model deployment metadata specific to Image Classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageClassificationModelDeploymentMetadata {
+    /// Input only. The number of nodes to deploy the model on. A node is an
+    /// abstraction of a machine resource, which can handle online prediction QPS
+    /// as given in the model's
+    ///
+    /// \[node_qps][google.cloud.automl.v1beta1.ImageClassificationModelMetadata.node_qps\].
+    /// Must be between 1 and 100, inclusive on both ends.
+    #[prost(int64, tag = "1")]
+    pub node_count: i64,
+}
+/// Model deployment metadata specific to Image Object Detection.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ImageObjectDetectionModelDeploymentMetadata {
+    /// Input only. The number of nodes to deploy the model on. A node is an
+    /// abstraction of a machine resource, which can handle online prediction QPS
+    /// as given in the model's
+    ///
+    /// \[qps_per_node][google.cloud.automl.v1beta1.ImageObjectDetectionModelMetadata.qps_per_node\].
+    /// Must be between 1 and 100, inclusive on both ends.
+    #[prost(int64, tag = "1")]
+    pub node_count: i64,
 }
 /// The data statistics of a series of values that share the same DataType.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -1835,6 +1841,126 @@ pub struct CorrelationStats {
     /// The correlation value using the Cramer's V measure.
     #[prost(double, tag = "1")]
     pub cramers_v: f64,
+}
+/// Indicated the type of data that can be stored in a structured data entity
+/// (e.g. a table).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DataType {
+    /// Required. The \[TypeCode][google.cloud.automl.v1beta1.TypeCode\] for this type.
+    #[prost(enumeration = "TypeCode", tag = "1")]
+    pub type_code: i32,
+    /// If true, this DataType can also be `NULL`. In .CSV files `NULL` value is
+    /// expressed as an empty string.
+    #[prost(bool, tag = "4")]
+    pub nullable: bool,
+    /// Details of DataType-s that need additional specification.
+    #[prost(oneof = "data_type::Details", tags = "2, 3, 5")]
+    pub details: ::core::option::Option<data_type::Details>,
+}
+/// Nested message and enum types in `DataType`.
+pub mod data_type {
+    /// Details of DataType-s that need additional specification.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Details {
+        /// If \[type_code][google.cloud.automl.v1beta1.DataType.type_code\] == \[ARRAY][google.cloud.automl.v1beta1.TypeCode.ARRAY\],
+        /// then `list_element_type` is the type of the elements.
+        #[prost(message, tag = "2")]
+        ListElementType(::prost::alloc::boxed::Box<super::DataType>),
+        /// If \[type_code][google.cloud.automl.v1beta1.DataType.type_code\] == \[STRUCT][google.cloud.automl.v1beta1.TypeCode.STRUCT\], then `struct_type`
+        /// provides type information for the struct's fields.
+        #[prost(message, tag = "3")]
+        StructType(super::StructType),
+        /// If \[type_code][google.cloud.automl.v1beta1.DataType.type_code\] == \[TIMESTAMP][google.cloud.automl.v1beta1.TypeCode.TIMESTAMP\]
+        /// then `time_format` provides the format in which that time field is
+        /// expressed. The time_format must either be one of:
+        /// * `UNIX_SECONDS`
+        /// * `UNIX_MILLISECONDS`
+        /// * `UNIX_MICROSECONDS`
+        /// * `UNIX_NANOSECONDS`
+        /// (for respectively number of seconds, milliseconds, microseconds and
+        /// nanoseconds since start of the Unix epoch);
+        /// or be written in `strftime` syntax. If time_format is not set, then the
+        /// default format as described on the type_code is used.
+        #[prost(string, tag = "5")]
+        TimeFormat(::prost::alloc::string::String),
+    }
+}
+/// `StructType` defines the DataType-s of a \[STRUCT][google.cloud.automl.v1beta1.TypeCode.STRUCT\] type.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StructType {
+    /// Unordered map of struct field names to their data types.
+    /// Fields cannot be added or removed via Update. Their names and
+    /// data types are still mutable.
+    #[prost(btree_map = "string, message", tag = "1")]
+    pub fields: ::prost::alloc::collections::BTreeMap<
+        ::prost::alloc::string::String,
+        DataType,
+    >,
+}
+/// `TypeCode` is used as a part of
+/// \[DataType][google.cloud.automl.v1beta1.DataType\].
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum TypeCode {
+    /// Not specified. Should not be used.
+    Unspecified = 0,
+    /// Encoded as `number`, or the strings `"NaN"`, `"Infinity"`, or
+    /// `"-Infinity"`.
+    Float64 = 3,
+    /// Must be between 0AD and 9999AD. Encoded as `string` according to
+    /// \[time_format][google.cloud.automl.v1beta1.DataType.time_format\], or, if
+    /// that format is not set, then in RFC 3339 `date-time` format, where
+    /// `time-offset` = `"Z"` (e.g. 1985-04-12T23:20:50.52Z).
+    Timestamp = 4,
+    /// Encoded as `string`.
+    String = 6,
+    /// Encoded as `list`, where the list elements are represented according to
+    ///
+    /// \[list_element_type][google.cloud.automl.v1beta1.DataType.list_element_type\].
+    Array = 8,
+    /// Encoded as `struct`, where field values are represented according to
+    /// \[struct_type][google.cloud.automl.v1beta1.DataType.struct_type\].
+    Struct = 9,
+    /// Values of this type are not further understood by AutoML,
+    /// e.g. AutoML is unable to tell the order of values (as it could with
+    /// FLOAT64), or is unable to say if one value contains another (as it
+    /// could with STRING).
+    /// Encoded as `string` (bytes should be base64-encoded, as described in RFC
+    /// 4648, section 4).
+    Category = 10,
+}
+impl TypeCode {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            TypeCode::Unspecified => "TYPE_CODE_UNSPECIFIED",
+            TypeCode::Float64 => "FLOAT64",
+            TypeCode::Timestamp => "TIMESTAMP",
+            TypeCode::String => "STRING",
+            TypeCode::Array => "ARRAY",
+            TypeCode::Struct => "STRUCT",
+            TypeCode::Category => "CATEGORY",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "TYPE_CODE_UNSPECIFIED" => Some(Self::Unspecified),
+            "FLOAT64" => Some(Self::Float64),
+            "TIMESTAMP" => Some(Self::Timestamp),
+            "STRING" => Some(Self::String),
+            "ARRAY" => Some(Self::Array),
+            "STRUCT" => Some(Self::Struct),
+            "CATEGORY" => Some(Self::Category),
+            _ => None,
+        }
+    }
 }
 /// A representation of a column in a relational table. When listing them, column specs are returned in the same order in which they were
 /// given on import .
@@ -2648,6 +2774,137 @@ pub struct TranslationAnnotation {
     #[prost(message, optional, tag = "1")]
     pub translated_content: ::core::option::Option<TextSnippet>,
 }
+/// Dataset metadata specific to video classification.
+/// All Video Classification datasets are treated as multi label.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoClassificationDatasetMetadata {}
+/// Dataset metadata specific to video object tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoObjectTrackingDatasetMetadata {}
+/// Model metadata specific to video classification.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoClassificationModelMetadata {}
+/// Model metadata specific to video object tracking.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VideoObjectTrackingModelMetadata {}
+/// API proto representing a trained machine learning model.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Model {
+    /// Output only. Resource name of the model.
+    /// Format: `projects/{project_id}/locations/{location_id}/models/{model_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The name of the model to show in the interface. The name can be
+    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
+    /// and a-z, underscores
+    /// (_), and ASCII digits 0-9. It must start with a letter.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Required. The resource ID of the dataset used to create the model. The dataset must
+    /// come from the same ancestor project and location.
+    #[prost(string, tag = "3")]
+    pub dataset_id: ::prost::alloc::string::String,
+    /// Output only. Timestamp when the model training finished  and can be used for prediction.
+    #[prost(message, optional, tag = "7")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Timestamp when this model was last updated.
+    #[prost(message, optional, tag = "11")]
+    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Output only. Deployment state of the model. A model can only serve
+    /// prediction requests after it gets deployed.
+    #[prost(enumeration = "model::DeploymentState", tag = "8")]
+    pub deployment_state: i32,
+    /// Required.
+    /// The model metadata that is specific to the problem type.
+    /// Must match the metadata type of the dataset used to train the model.
+    #[prost(oneof = "model::ModelMetadata", tags = "15, 13, 14, 20, 23, 21, 19, 24, 22")]
+    pub model_metadata: ::core::option::Option<model::ModelMetadata>,
+}
+/// Nested message and enum types in `Model`.
+pub mod model {
+    /// Deployment state of the model.
+    #[derive(
+        Clone,
+        Copy,
+        Debug,
+        PartialEq,
+        Eq,
+        Hash,
+        PartialOrd,
+        Ord,
+        ::prost::Enumeration
+    )]
+    #[repr(i32)]
+    pub enum DeploymentState {
+        /// Should not be used, an un-set enum has this value by default.
+        Unspecified = 0,
+        /// Model is deployed.
+        Deployed = 1,
+        /// Model is not deployed.
+        Undeployed = 2,
+    }
+    impl DeploymentState {
+        /// String value of the enum field names used in the ProtoBuf definition.
+        ///
+        /// The values are not transformed in any way and thus are considered stable
+        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+        pub fn as_str_name(&self) -> &'static str {
+            match self {
+                DeploymentState::Unspecified => "DEPLOYMENT_STATE_UNSPECIFIED",
+                DeploymentState::Deployed => "DEPLOYED",
+                DeploymentState::Undeployed => "UNDEPLOYED",
+            }
+        }
+        /// Creates an enum from field names used in the ProtoBuf definition.
+        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+            match value {
+                "DEPLOYMENT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
+                "DEPLOYED" => Some(Self::Deployed),
+                "UNDEPLOYED" => Some(Self::Undeployed),
+                _ => None,
+            }
+        }
+    }
+    /// Required.
+    /// The model metadata that is specific to the problem type.
+    /// Must match the metadata type of the dataset used to train the model.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum ModelMetadata {
+        /// Metadata for translation models.
+        #[prost(message, tag = "15")]
+        TranslationModelMetadata(super::TranslationModelMetadata),
+        /// Metadata for image classification models.
+        #[prost(message, tag = "13")]
+        ImageClassificationModelMetadata(super::ImageClassificationModelMetadata),
+        /// Metadata for text classification models.
+        #[prost(message, tag = "14")]
+        TextClassificationModelMetadata(super::TextClassificationModelMetadata),
+        /// Metadata for image object detection models.
+        #[prost(message, tag = "20")]
+        ImageObjectDetectionModelMetadata(super::ImageObjectDetectionModelMetadata),
+        /// Metadata for video classification models.
+        #[prost(message, tag = "23")]
+        VideoClassificationModelMetadata(super::VideoClassificationModelMetadata),
+        /// Metadata for video object tracking models.
+        #[prost(message, tag = "21")]
+        VideoObjectTrackingModelMetadata(super::VideoObjectTrackingModelMetadata),
+        /// Metadata for text extraction models.
+        #[prost(message, tag = "19")]
+        TextExtractionModelMetadata(super::TextExtractionModelMetadata),
+        /// Metadata for Tables models.
+        #[prost(message, tag = "24")]
+        TablesModelMetadata(super::TablesModelMetadata),
+        /// Metadata for text sentiment models.
+        #[prost(message, tag = "22")]
+        TextSentimentModelMetadata(super::TextSentimentModelMetadata),
+    }
+}
 /// Annotation details for image object detection.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -2895,367 +3152,6 @@ pub struct TextSentimentEvaluationMetrics {
     #[deprecated]
     #[prost(string, repeated, tag = "9")]
     pub annotation_spec_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Contains annotation information that is relevant to AutoML.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnnotationPayload {
-    /// Output only . The resource ID of the annotation spec that
-    /// this annotation pertains to. The annotation spec comes from either an
-    /// ancestor dataset, or the dataset that was used to train the model in use.
-    #[prost(string, tag = "1")]
-    pub annotation_spec_id: ::prost::alloc::string::String,
-    /// Output only. The value of
-    /// \[display_name][google.cloud.automl.v1beta1.AnnotationSpec.display_name\]
-    /// when the model was trained. Because this field returns a value at model
-    /// training time, for different models trained using the same dataset, the
-    /// returned value could be different as model owner could update the
-    /// `display_name` between any two model training.
-    #[prost(string, tag = "5")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only . Additional information about the annotation
-    /// specific to the AutoML domain.
-    #[prost(oneof = "annotation_payload::Detail", tags = "2, 3, 4, 9, 8, 6, 7, 10")]
-    pub detail: ::core::option::Option<annotation_payload::Detail>,
-}
-/// Nested message and enum types in `AnnotationPayload`.
-pub mod annotation_payload {
-    /// Output only . Additional information about the annotation
-    /// specific to the AutoML domain.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Detail {
-        /// Annotation details for translation.
-        #[prost(message, tag = "2")]
-        Translation(super::TranslationAnnotation),
-        /// Annotation details for content or image classification.
-        #[prost(message, tag = "3")]
-        Classification(super::ClassificationAnnotation),
-        /// Annotation details for image object detection.
-        #[prost(message, tag = "4")]
-        ImageObjectDetection(super::ImageObjectDetectionAnnotation),
-        /// Annotation details for video classification.
-        /// Returned for Video Classification predictions.
-        #[prost(message, tag = "9")]
-        VideoClassification(super::VideoClassificationAnnotation),
-        /// Annotation details for video object tracking.
-        #[prost(message, tag = "8")]
-        VideoObjectTracking(super::VideoObjectTrackingAnnotation),
-        /// Annotation details for text extraction.
-        #[prost(message, tag = "6")]
-        TextExtraction(super::TextExtractionAnnotation),
-        /// Annotation details for text sentiment.
-        #[prost(message, tag = "7")]
-        TextSentiment(super::TextSentimentAnnotation),
-        /// Annotation details for Tables.
-        #[prost(message, tag = "10")]
-        Tables(super::TablesAnnotation),
-    }
-}
-/// A definition of an annotation spec.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct AnnotationSpec {
-    /// Output only. Resource name of the annotation spec.
-    /// Form:
-    ///
-    /// 'projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/annotationSpecs/{annotation_spec_id}'
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The name of the annotation spec to show in the interface. The name can be
-    /// up to 32 characters long and must match the regexp `\[a-zA-Z0-9_\]+`.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Output only. The number of examples in the parent dataset
-    /// labeled by the annotation spec.
-    #[prost(int32, tag = "9")]
-    pub example_count: i32,
-}
-/// Dataset metadata that is specific to image classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageClassificationDatasetMetadata {
-    /// Required. Type of the classification problem.
-    #[prost(enumeration = "ClassificationType", tag = "1")]
-    pub classification_type: i32,
-}
-/// Dataset metadata specific to image object detection.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionDatasetMetadata {}
-/// Model metadata for image classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageClassificationModelMetadata {
-    /// Optional. The ID of the `base` model. If it is specified, the new model
-    /// will be created based on the `base` model. Otherwise, the new model will be
-    /// created from scratch. The `base` model must be in the same
-    /// `project` and `location` as the new model to create, and have the same
-    /// `model_type`.
-    #[prost(string, tag = "1")]
-    pub base_model_id: ::prost::alloc::string::String,
-    /// Required. The train budget of creating this model, expressed in hours. The
-    /// actual `train_cost` will be equal or less than this value.
-    #[prost(int64, tag = "2")]
-    pub train_budget: i64,
-    /// Output only. The actual train cost of creating this model, expressed in
-    /// hours. If this model is created from a `base` model, the train cost used
-    /// to create the `base` model are not included.
-    #[prost(int64, tag = "3")]
-    pub train_cost: i64,
-    /// Output only. The reason that this create model operation stopped,
-    /// e.g. `BUDGET_REACHED`, `MODEL_CONVERGED`.
-    #[prost(string, tag = "5")]
-    pub stop_reason: ::prost::alloc::string::String,
-    /// Optional. Type of the model. The available values are:
-    /// *   `cloud` - Model to be used via prediction calls to AutoML API.
-    ///                This is the default value.
-    /// *   `mobile-low-latency-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
-    ///                with TensorFlow afterwards. Expected to have low latency, but
-    ///                may have lower prediction quality than other models.
-    /// *   `mobile-versatile-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
-    ///                with TensorFlow afterwards.
-    /// *   `mobile-high-accuracy-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
-    ///                with TensorFlow afterwards.  Expected to have a higher
-    ///                latency, but should also have a higher prediction quality
-    ///                than other models.
-    /// *   `mobile-core-ml-low-latency-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile device with Core
-    ///                ML afterwards. Expected to have low latency, but may have
-    ///                lower prediction quality than other models.
-    /// *   `mobile-core-ml-versatile-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile device with Core
-    ///                ML afterwards.
-    /// *   `mobile-core-ml-high-accuracy-1` - A model that, in addition to
-    ///                providing prediction via AutoML API, can also be exported
-    ///                (see \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile device with
-    ///                Core ML afterwards.  Expected to have a higher latency, but
-    ///                should also have a higher prediction quality than other
-    ///                models.
-    #[prost(string, tag = "7")]
-    pub model_type: ::prost::alloc::string::String,
-    /// Output only. An approximate number of online prediction QPS that can
-    /// be supported by this model per each node on which it is deployed.
-    #[prost(double, tag = "13")]
-    pub node_qps: f64,
-    /// Output only. The number of nodes this model is deployed on. A node is an
-    /// abstraction of a machine resource, which can handle online prediction QPS
-    /// as given in the node_qps field.
-    #[prost(int64, tag = "14")]
-    pub node_count: i64,
-}
-/// Model metadata specific to image object detection.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionModelMetadata {
-    /// Optional. Type of the model. The available values are:
-    /// *   `cloud-high-accuracy-1` - (default) A model to be used via prediction
-    ///                calls to AutoML API. Expected to have a higher latency, but
-    ///                should also have a higher prediction quality than other
-    ///                models.
-    /// *   `cloud-low-latency-1` -  A model to be used via prediction
-    ///                calls to AutoML API. Expected to have low latency, but may
-    ///                have lower prediction quality than other models.
-    /// *   `mobile-low-latency-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
-    ///                with TensorFlow afterwards. Expected to have low latency, but
-    ///                may have lower prediction quality than other models.
-    /// *   `mobile-versatile-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
-    ///                with TensorFlow afterwards.
-    /// *   `mobile-high-accuracy-1` - A model that, in addition to providing
-    ///                prediction via AutoML API, can also be exported (see
-    ///                \[AutoMl.ExportModel][google.cloud.automl.v1beta1.AutoMl.ExportModel\]) and used on a mobile or edge device
-    ///                with TensorFlow afterwards.  Expected to have a higher
-    ///                latency, but should also have a higher prediction quality
-    ///                than other models.
-    #[prost(string, tag = "1")]
-    pub model_type: ::prost::alloc::string::String,
-    /// Output only. The number of nodes this model is deployed on. A node is an
-    /// abstraction of a machine resource, which can handle online prediction QPS
-    /// as given in the qps_per_node field.
-    #[prost(int64, tag = "3")]
-    pub node_count: i64,
-    /// Output only. An approximate number of online prediction QPS that can
-    /// be supported by this model per each node on which it is deployed.
-    #[prost(double, tag = "4")]
-    pub node_qps: f64,
-    /// Output only. The reason that this create model operation stopped,
-    /// e.g. `BUDGET_REACHED`, `MODEL_CONVERGED`.
-    #[prost(string, tag = "5")]
-    pub stop_reason: ::prost::alloc::string::String,
-    /// The train budget of creating this model, expressed in milli node
-    /// hours i.e. 1,000 value in this field means 1 node hour. The actual
-    /// `train_cost` will be equal or less than this value. If further model
-    /// training ceases to provide any improvements, it will stop without using
-    /// full budget and the stop_reason will be `MODEL_CONVERGED`.
-    /// Note, node_hour  = actual_hour * number_of_nodes_invovled.
-    /// For model type `cloud-high-accuracy-1`(default) and `cloud-low-latency-1`,
-    /// the train budget must be between 20,000 and 900,000 milli node hours,
-    /// inclusive. The default value is 216, 000 which represents one day in
-    /// wall time.
-    /// For model type `mobile-low-latency-1`, `mobile-versatile-1`,
-    /// `mobile-high-accuracy-1`, `mobile-core-ml-low-latency-1`,
-    /// `mobile-core-ml-versatile-1`, `mobile-core-ml-high-accuracy-1`, the train
-    /// budget must be between 1,000 and 100,000 milli node hours, inclusive.
-    /// The default value is 24, 000 which represents one day in wall time.
-    #[prost(int64, tag = "6")]
-    pub train_budget_milli_node_hours: i64,
-    /// Output only. The actual train cost of creating this model, expressed in
-    /// milli node hours, i.e. 1,000 value in this field means 1 node hour.
-    /// Guaranteed to not exceed the train budget.
-    #[prost(int64, tag = "7")]
-    pub train_cost_milli_node_hours: i64,
-}
-/// Model deployment metadata specific to Image Classification.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageClassificationModelDeploymentMetadata {
-    /// Input only. The number of nodes to deploy the model on. A node is an
-    /// abstraction of a machine resource, which can handle online prediction QPS
-    /// as given in the model's
-    ///
-    /// \[node_qps][google.cloud.automl.v1beta1.ImageClassificationModelMetadata.node_qps\].
-    /// Must be between 1 and 100, inclusive on both ends.
-    #[prost(int64, tag = "1")]
-    pub node_count: i64,
-}
-/// Model deployment metadata specific to Image Object Detection.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ImageObjectDetectionModelDeploymentMetadata {
-    /// Input only. The number of nodes to deploy the model on. A node is an
-    /// abstraction of a machine resource, which can handle online prediction QPS
-    /// as given in the model's
-    ///
-    /// \[qps_per_node][google.cloud.automl.v1beta1.ImageObjectDetectionModelMetadata.qps_per_node\].
-    /// Must be between 1 and 100, inclusive on both ends.
-    #[prost(int64, tag = "1")]
-    pub node_count: i64,
-}
-/// API proto representing a trained machine learning model.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Model {
-    /// Output only. Resource name of the model.
-    /// Format: `projects/{project_id}/locations/{location_id}/models/{model_id}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// Required. The name of the model to show in the interface. The name can be
-    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
-    /// and a-z, underscores
-    /// (_), and ASCII digits 0-9. It must start with a letter.
-    #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Required. The resource ID of the dataset used to create the model. The dataset must
-    /// come from the same ancestor project and location.
-    #[prost(string, tag = "3")]
-    pub dataset_id: ::prost::alloc::string::String,
-    /// Output only. Timestamp when the model training finished  and can be used for prediction.
-    #[prost(message, optional, tag = "7")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Timestamp when this model was last updated.
-    #[prost(message, optional, tag = "11")]
-    pub update_time: ::core::option::Option<::prost_types::Timestamp>,
-    /// Output only. Deployment state of the model. A model can only serve
-    /// prediction requests after it gets deployed.
-    #[prost(enumeration = "model::DeploymentState", tag = "8")]
-    pub deployment_state: i32,
-    /// Required.
-    /// The model metadata that is specific to the problem type.
-    /// Must match the metadata type of the dataset used to train the model.
-    #[prost(oneof = "model::ModelMetadata", tags = "15, 13, 14, 20, 23, 21, 19, 24, 22")]
-    pub model_metadata: ::core::option::Option<model::ModelMetadata>,
-}
-/// Nested message and enum types in `Model`.
-pub mod model {
-    /// Deployment state of the model.
-    #[derive(
-        Clone,
-        Copy,
-        Debug,
-        PartialEq,
-        Eq,
-        Hash,
-        PartialOrd,
-        Ord,
-        ::prost::Enumeration
-    )]
-    #[repr(i32)]
-    pub enum DeploymentState {
-        /// Should not be used, an un-set enum has this value by default.
-        Unspecified = 0,
-        /// Model is deployed.
-        Deployed = 1,
-        /// Model is not deployed.
-        Undeployed = 2,
-    }
-    impl DeploymentState {
-        /// String value of the enum field names used in the ProtoBuf definition.
-        ///
-        /// The values are not transformed in any way and thus are considered stable
-        /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-        pub fn as_str_name(&self) -> &'static str {
-            match self {
-                DeploymentState::Unspecified => "DEPLOYMENT_STATE_UNSPECIFIED",
-                DeploymentState::Deployed => "DEPLOYED",
-                DeploymentState::Undeployed => "UNDEPLOYED",
-            }
-        }
-        /// Creates an enum from field names used in the ProtoBuf definition.
-        pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-            match value {
-                "DEPLOYMENT_STATE_UNSPECIFIED" => Some(Self::Unspecified),
-                "DEPLOYED" => Some(Self::Deployed),
-                "UNDEPLOYED" => Some(Self::Undeployed),
-                _ => None,
-            }
-        }
-    }
-    /// Required.
-    /// The model metadata that is specific to the problem type.
-    /// Must match the metadata type of the dataset used to train the model.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum ModelMetadata {
-        /// Metadata for translation models.
-        #[prost(message, tag = "15")]
-        TranslationModelMetadata(super::TranslationModelMetadata),
-        /// Metadata for image classification models.
-        #[prost(message, tag = "13")]
-        ImageClassificationModelMetadata(super::ImageClassificationModelMetadata),
-        /// Metadata for text classification models.
-        #[prost(message, tag = "14")]
-        TextClassificationModelMetadata(super::TextClassificationModelMetadata),
-        /// Metadata for image object detection models.
-        #[prost(message, tag = "20")]
-        ImageObjectDetectionModelMetadata(super::ImageObjectDetectionModelMetadata),
-        /// Metadata for video classification models.
-        #[prost(message, tag = "23")]
-        VideoClassificationModelMetadata(super::VideoClassificationModelMetadata),
-        /// Metadata for video object tracking models.
-        #[prost(message, tag = "21")]
-        VideoObjectTrackingModelMetadata(super::VideoObjectTrackingModelMetadata),
-        /// Metadata for text extraction models.
-        #[prost(message, tag = "19")]
-        TextExtractionModelMetadata(super::TextExtractionModelMetadata),
-        /// Metadata for Tables models.
-        #[prost(message, tag = "24")]
-        TablesModelMetadata(super::TablesModelMetadata),
-        /// Metadata for text sentiment models.
-        #[prost(message, tag = "22")]
-        TextSentimentModelMetadata(super::TextSentimentModelMetadata),
-    }
 }
 /// Evaluation results of a model.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -3571,6 +3467,135 @@ pub mod export_evaluated_examples_operation_metadata {
         pub bigquery_output_dataset: ::prost::alloc::string::String,
     }
 }
+/// A workspace for solving a single, particular machine learning (ML) problem.
+/// A workspace contains examples that may be annotated.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct Dataset {
+    /// Output only. The resource name of the dataset.
+    /// Form: `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// Required. The name of the dataset to show in the interface. The name can be
+    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
+    /// and a-z, underscores
+    /// (_), and ASCII digits 0-9.
+    #[prost(string, tag = "2")]
+    pub display_name: ::prost::alloc::string::String,
+    /// User-provided description of the dataset. The description can be up to
+    /// 25000 characters long.
+    #[prost(string, tag = "3")]
+    pub description: ::prost::alloc::string::String,
+    /// Output only. The number of examples in the dataset.
+    #[prost(int32, tag = "21")]
+    pub example_count: i32,
+    /// Output only. Timestamp when this dataset was created.
+    #[prost(message, optional, tag = "14")]
+    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    /// Used to perform consistent read-modify-write updates. If not set, a blind
+    /// "overwrite" update happens.
+    #[prost(string, tag = "17")]
+    pub etag: ::prost::alloc::string::String,
+    /// Required.
+    /// The dataset metadata that is specific to the problem type.
+    #[prost(
+        oneof = "dataset::DatasetMetadata",
+        tags = "23, 24, 25, 26, 31, 29, 28, 30, 33"
+    )]
+    pub dataset_metadata: ::core::option::Option<dataset::DatasetMetadata>,
+}
+/// Nested message and enum types in `Dataset`.
+pub mod dataset {
+    /// Required.
+    /// The dataset metadata that is specific to the problem type.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum DatasetMetadata {
+        /// Metadata for a dataset used for translation.
+        #[prost(message, tag = "23")]
+        TranslationDatasetMetadata(super::TranslationDatasetMetadata),
+        /// Metadata for a dataset used for image classification.
+        #[prost(message, tag = "24")]
+        ImageClassificationDatasetMetadata(super::ImageClassificationDatasetMetadata),
+        /// Metadata for a dataset used for text classification.
+        #[prost(message, tag = "25")]
+        TextClassificationDatasetMetadata(super::TextClassificationDatasetMetadata),
+        /// Metadata for a dataset used for image object detection.
+        #[prost(message, tag = "26")]
+        ImageObjectDetectionDatasetMetadata(super::ImageObjectDetectionDatasetMetadata),
+        /// Metadata for a dataset used for video classification.
+        #[prost(message, tag = "31")]
+        VideoClassificationDatasetMetadata(super::VideoClassificationDatasetMetadata),
+        /// Metadata for a dataset used for video object tracking.
+        #[prost(message, tag = "29")]
+        VideoObjectTrackingDatasetMetadata(super::VideoObjectTrackingDatasetMetadata),
+        /// Metadata for a dataset used for text extraction.
+        #[prost(message, tag = "28")]
+        TextExtractionDatasetMetadata(super::TextExtractionDatasetMetadata),
+        /// Metadata for a dataset used for text sentiment.
+        #[prost(message, tag = "30")]
+        TextSentimentDatasetMetadata(super::TextSentimentDatasetMetadata),
+        /// Metadata for a dataset used for Tables.
+        #[prost(message, tag = "33")]
+        TablesDatasetMetadata(super::TablesDatasetMetadata),
+    }
+}
+/// Contains annotation information that is relevant to AutoML.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct AnnotationPayload {
+    /// Output only . The resource ID of the annotation spec that
+    /// this annotation pertains to. The annotation spec comes from either an
+    /// ancestor dataset, or the dataset that was used to train the model in use.
+    #[prost(string, tag = "1")]
+    pub annotation_spec_id: ::prost::alloc::string::String,
+    /// Output only. The value of
+    /// \[display_name][google.cloud.automl.v1beta1.AnnotationSpec.display_name\]
+    /// when the model was trained. Because this field returns a value at model
+    /// training time, for different models trained using the same dataset, the
+    /// returned value could be different as model owner could update the
+    /// `display_name` between any two model training.
+    #[prost(string, tag = "5")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Output only . Additional information about the annotation
+    /// specific to the AutoML domain.
+    #[prost(oneof = "annotation_payload::Detail", tags = "2, 3, 4, 9, 8, 6, 7, 10")]
+    pub detail: ::core::option::Option<annotation_payload::Detail>,
+}
+/// Nested message and enum types in `AnnotationPayload`.
+pub mod annotation_payload {
+    /// Output only . Additional information about the annotation
+    /// specific to the AutoML domain.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Detail {
+        /// Annotation details for translation.
+        #[prost(message, tag = "2")]
+        Translation(super::TranslationAnnotation),
+        /// Annotation details for content or image classification.
+        #[prost(message, tag = "3")]
+        Classification(super::ClassificationAnnotation),
+        /// Annotation details for image object detection.
+        #[prost(message, tag = "4")]
+        ImageObjectDetection(super::ImageObjectDetectionAnnotation),
+        /// Annotation details for video classification.
+        /// Returned for Video Classification predictions.
+        #[prost(message, tag = "9")]
+        VideoClassification(super::VideoClassificationAnnotation),
+        /// Annotation details for video object tracking.
+        #[prost(message, tag = "8")]
+        VideoObjectTracking(super::VideoObjectTrackingAnnotation),
+        /// Annotation details for text extraction.
+        #[prost(message, tag = "6")]
+        TextExtraction(super::TextExtractionAnnotation),
+        /// Annotation details for text sentiment.
+        #[prost(message, tag = "7")]
+        TextSentiment(super::TextSentimentAnnotation),
+        /// Annotation details for Tables.
+        #[prost(message, tag = "10")]
+        Tables(super::TablesAnnotation),
+    }
+}
 /// Request message for \[PredictionService.Predict][google.cloud.automl.v1beta1.PredictionService.Predict\].
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -3817,6 +3842,22 @@ pub mod prediction_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Perform an online prediction. The prediction result will be directly
         /// returned in the response.
         /// Available for following ML problems, and their expected request payloads:
@@ -3839,7 +3880,10 @@ pub mod prediction_service_client {
         pub async fn predict(
             &mut self,
             request: impl tonic::IntoRequest<super::PredictRequest>,
-        ) -> Result<tonic::Response<super::PredictResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::PredictResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3853,7 +3897,15 @@ pub mod prediction_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.PredictionService/Predict",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.PredictionService",
+                        "Predict",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Perform a batch prediction. Unlike the online [Predict][google.cloud.automl.v1beta1.PredictionService.Predict], batch
         /// prediction result won't be immediately available in the response. Instead,
@@ -3870,7 +3922,7 @@ pub mod prediction_service_client {
         pub async fn batch_predict(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchPredictRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3887,82 +3939,65 @@ pub mod prediction_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.PredictionService/BatchPredict",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.PredictionService",
+                        "BatchPredict",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
-/// A workspace for solving a single, particular machine learning (ML) problem.
-/// A workspace contains examples that may be annotated.
+/// A specification of a relational table.
+/// The table's schema is represented via its child column specs. It is
+/// pre-populated as part of ImportData by schema inference algorithm, the
+/// version of which is a required parameter of ImportData InputConfig.
+/// Note: While working with a table, at times the schema may be
+/// inconsistent with the data in the table (e.g. string in a FLOAT64 column).
+/// The consistency validation is done upon creation of a model.
+/// Used by:
+///    *   Tables
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct Dataset {
-    /// Output only. The resource name of the dataset.
-    /// Form: `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
+pub struct TableSpec {
+    /// Output only. The resource name of the table spec.
+    /// Form:
+    ///
+    /// `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}/tableSpecs/{table_spec_id}`
     #[prost(string, tag = "1")]
     pub name: ::prost::alloc::string::String,
-    /// Required. The name of the dataset to show in the interface. The name can be
-    /// up to 32 characters long and can consist only of ASCII Latin letters A-Z
-    /// and a-z, underscores
-    /// (_), and ASCII digits 0-9.
+    /// column_spec_id of the time column. Only used if the parent dataset's
+    /// ml_use_column_spec_id is not set. Used to split rows into TRAIN, VALIDATE
+    /// and TEST sets such that oldest rows go to TRAIN set, newest to TEST, and
+    /// those in between to VALIDATE.
+    /// Required type: TIMESTAMP.
+    /// If both this column and ml_use_column are not set, then ML use of all rows
+    /// will be assigned by AutoML. NOTE: Updates of this field will instantly
+    /// affect any other users concurrently working with the dataset.
     #[prost(string, tag = "2")]
-    pub display_name: ::prost::alloc::string::String,
-    /// User-provided description of the dataset. The description can be up to
-    /// 25000 characters long.
-    #[prost(string, tag = "3")]
-    pub description: ::prost::alloc::string::String,
-    /// Output only. The number of examples in the dataset.
-    #[prost(int32, tag = "21")]
-    pub example_count: i32,
-    /// Output only. Timestamp when this dataset was created.
-    #[prost(message, optional, tag = "14")]
-    pub create_time: ::core::option::Option<::prost_types::Timestamp>,
+    pub time_column_spec_id: ::prost::alloc::string::String,
+    /// Output only. The number of rows (i.e. examples) in the table.
+    #[prost(int64, tag = "3")]
+    pub row_count: i64,
+    /// Output only. The number of valid rows (i.e. without values that don't match
+    /// DataType-s of their columns).
+    #[prost(int64, tag = "4")]
+    pub valid_row_count: i64,
+    /// Output only. The number of columns of the table. That is, the number of
+    /// child ColumnSpec-s.
+    #[prost(int64, tag = "7")]
+    pub column_count: i64,
+    /// Output only. Input configs via which data currently residing in the table
+    /// had been imported.
+    #[prost(message, repeated, tag = "5")]
+    pub input_configs: ::prost::alloc::vec::Vec<InputConfig>,
     /// Used to perform consistent read-modify-write updates. If not set, a blind
     /// "overwrite" update happens.
-    #[prost(string, tag = "17")]
+    #[prost(string, tag = "6")]
     pub etag: ::prost::alloc::string::String,
-    /// Required.
-    /// The dataset metadata that is specific to the problem type.
-    #[prost(
-        oneof = "dataset::DatasetMetadata",
-        tags = "23, 24, 25, 26, 31, 29, 28, 30, 33"
-    )]
-    pub dataset_metadata: ::core::option::Option<dataset::DatasetMetadata>,
-}
-/// Nested message and enum types in `Dataset`.
-pub mod dataset {
-    /// Required.
-    /// The dataset metadata that is specific to the problem type.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum DatasetMetadata {
-        /// Metadata for a dataset used for translation.
-        #[prost(message, tag = "23")]
-        TranslationDatasetMetadata(super::TranslationDatasetMetadata),
-        /// Metadata for a dataset used for image classification.
-        #[prost(message, tag = "24")]
-        ImageClassificationDatasetMetadata(super::ImageClassificationDatasetMetadata),
-        /// Metadata for a dataset used for text classification.
-        #[prost(message, tag = "25")]
-        TextClassificationDatasetMetadata(super::TextClassificationDatasetMetadata),
-        /// Metadata for a dataset used for image object detection.
-        #[prost(message, tag = "26")]
-        ImageObjectDetectionDatasetMetadata(super::ImageObjectDetectionDatasetMetadata),
-        /// Metadata for a dataset used for video classification.
-        #[prost(message, tag = "31")]
-        VideoClassificationDatasetMetadata(super::VideoClassificationDatasetMetadata),
-        /// Metadata for a dataset used for video object tracking.
-        #[prost(message, tag = "29")]
-        VideoObjectTrackingDatasetMetadata(super::VideoObjectTrackingDatasetMetadata),
-        /// Metadata for a dataset used for text extraction.
-        #[prost(message, tag = "28")]
-        TextExtractionDatasetMetadata(super::TextExtractionDatasetMetadata),
-        /// Metadata for a dataset used for text sentiment.
-        #[prost(message, tag = "30")]
-        TextSentimentDatasetMetadata(super::TextSentimentDatasetMetadata),
-        /// Metadata for a dataset used for Tables.
-        #[prost(message, tag = "33")]
-        TablesDatasetMetadata(super::TablesDatasetMetadata),
-    }
 }
 /// Request message for \[AutoMl.CreateDataset][google.cloud.automl.v1beta1.AutoMl.CreateDataset\].
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -4446,11 +4481,27 @@ pub mod auto_ml_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates a dataset.
         pub async fn create_dataset(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4464,13 +4515,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/CreateDataset",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "CreateDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a dataset.
         pub async fn get_dataset(
             &mut self,
             request: impl tonic::IntoRequest<super::GetDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4484,13 +4543,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/GetDataset",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "GetDataset"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists datasets in a project.
         pub async fn list_datasets(
             &mut self,
             request: impl tonic::IntoRequest<super::ListDatasetsRequest>,
-        ) -> Result<tonic::Response<super::ListDatasetsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListDatasetsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4504,13 +4571,18 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ListDatasets",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "ListDatasets"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a dataset.
         pub async fn update_dataset(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateDatasetRequest>,
-        ) -> Result<tonic::Response<super::Dataset>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Dataset>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4524,7 +4596,15 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/UpdateDataset",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "UpdateDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a dataset and all of its contents.
         /// Returns empty response in the
@@ -4534,7 +4614,7 @@ pub mod auto_ml_client {
         pub async fn delete_dataset(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteDatasetRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4551,7 +4631,15 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/DeleteDataset",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "DeleteDataset",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Imports data into a dataset.
         /// For Tables this method can only be called on an empty Dataset.
@@ -4565,7 +4653,7 @@ pub mod auto_ml_client {
         pub async fn import_data(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportDataRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4582,7 +4670,12 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ImportData",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "ImportData"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports dataset's data to the provided output location.
         /// Returns an empty response in the
@@ -4590,7 +4683,7 @@ pub mod auto_ml_client {
         pub async fn export_data(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportDataRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4607,13 +4700,18 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ExportData",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "ExportData"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets an annotation spec.
         pub async fn get_annotation_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::GetAnnotationSpecRequest>,
-        ) -> Result<tonic::Response<super::AnnotationSpec>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::AnnotationSpec>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4627,13 +4725,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/GetAnnotationSpec",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "GetAnnotationSpec",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a table spec.
         pub async fn get_table_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::GetTableSpecRequest>,
-        ) -> Result<tonic::Response<super::TableSpec>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TableSpec>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4647,13 +4753,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/GetTableSpec",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "GetTableSpec"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists table specs in a dataset.
         pub async fn list_table_specs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListTableSpecsRequest>,
-        ) -> Result<tonic::Response<super::ListTableSpecsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListTableSpecsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4667,13 +4781,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ListTableSpecs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "ListTableSpecs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a table spec.
         pub async fn update_table_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateTableSpecRequest>,
-        ) -> Result<tonic::Response<super::TableSpec>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::TableSpec>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4687,13 +4809,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/UpdateTableSpec",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "UpdateTableSpec",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a column spec.
         pub async fn get_column_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::GetColumnSpecRequest>,
-        ) -> Result<tonic::Response<super::ColumnSpec>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ColumnSpec>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4707,13 +4837,24 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/GetColumnSpec",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "GetColumnSpec",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists column specs in a table spec.
         pub async fn list_column_specs(
             &mut self,
             request: impl tonic::IntoRequest<super::ListColumnSpecsRequest>,
-        ) -> Result<tonic::Response<super::ListColumnSpecsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListColumnSpecsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4727,13 +4868,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ListColumnSpecs",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "ListColumnSpecs",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates a column spec.
         pub async fn update_column_spec(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateColumnSpecRequest>,
-        ) -> Result<tonic::Response<super::ColumnSpec>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ColumnSpec>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4747,7 +4896,15 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/UpdateColumnSpec",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "UpdateColumnSpec",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a model.
         /// Returns a Model in the [response][google.longrunning.Operation.response]
@@ -4757,7 +4914,7 @@ pub mod auto_ml_client {
         pub async fn create_model(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4774,13 +4931,18 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/CreateModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "CreateModel"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a model.
         pub async fn get_model(
             &mut self,
             request: impl tonic::IntoRequest<super::GetModelRequest>,
-        ) -> Result<tonic::Response<super::Model>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Model>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -4794,13 +4956,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/GetModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "GetModel"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists models.
         pub async fn list_models(
             &mut self,
             request: impl tonic::IntoRequest<super::ListModelsRequest>,
-        ) -> Result<tonic::Response<super::ListModelsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListModelsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4814,7 +4984,12 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ListModels",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "ListModels"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a model.
         /// Returns `google.protobuf.Empty` in the
@@ -4824,7 +4999,7 @@ pub mod auto_ml_client {
         pub async fn delete_model(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4841,7 +5016,12 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/DeleteModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "DeleteModel"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deploys a model. If a model is already deployed, deploying it with the
         /// same parameters has no effect. Deploying with different parametrs
@@ -4858,7 +5038,7 @@ pub mod auto_ml_client {
         pub async fn deploy_model(
             &mut self,
             request: impl tonic::IntoRequest<super::DeployModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4875,7 +5055,12 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/DeployModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "DeployModel"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Undeploys a model. If the model is not deployed this method has no effect.
         ///
@@ -4887,7 +5072,7 @@ pub mod auto_ml_client {
         pub async fn undeploy_model(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeployModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4904,7 +5089,15 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/UndeployModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "UndeployModel",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports a trained, "export-able", model to a user specified Google Cloud
         /// Storage location. A model is considered export-able if and only if it has
@@ -4917,7 +5110,7 @@ pub mod auto_ml_client {
         pub async fn export_model(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportModelRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4934,7 +5127,12 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ExportModel",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new("google.cloud.automl.v1beta1.AutoMl", "ExportModel"),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Exports examples on which the model was evaluated (i.e. which were in the
         /// TEST set of the dataset the model was created from), together with their
@@ -4953,7 +5151,7 @@ pub mod auto_ml_client {
         pub async fn export_evaluated_examples(
             &mut self,
             request: impl tonic::IntoRequest<super::ExportEvaluatedExamplesRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -4970,13 +5168,24 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ExportEvaluatedExamples",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "ExportEvaluatedExamples",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a model evaluation.
         pub async fn get_model_evaluation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetModelEvaluationRequest>,
-        ) -> Result<tonic::Response<super::ModelEvaluation>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ModelEvaluation>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -4990,13 +5199,21 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/GetModelEvaluation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "GetModelEvaluation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists model evaluations.
         pub async fn list_model_evaluations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListModelEvaluationsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListModelEvaluationsResponse>,
             tonic::Status,
         > {
@@ -5013,7 +5230,15 @@ pub mod auto_ml_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.automl.v1beta1.AutoMl/ListModelEvaluations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.automl.v1beta1.AutoMl",
+                        "ListModelEvaluations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

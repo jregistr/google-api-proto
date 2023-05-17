@@ -990,11 +990,30 @@ pub mod notebook_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists instances in a given project and location.
         pub async fn list_instances(
             &mut self,
             request: impl tonic::IntoRequest<super::ListInstancesRequest>,
-        ) -> Result<tonic::Response<super::ListInstancesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListInstancesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1008,13 +1027,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/ListInstances",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "ListInstances",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Instance.
         pub async fn get_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::GetInstanceRequest>,
-        ) -> Result<tonic::Response<super::Instance>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Instance>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1028,13 +1055,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/GetInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "GetInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Instance in a given project and location.
         pub async fn create_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1051,7 +1086,15 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/CreateInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "CreateInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Registers an existing legacy notebook instance to the Notebooks API server.
         /// Legacy instances are instances created with the legacy Compute Engine
@@ -1060,7 +1103,7 @@ pub mod notebook_service_client {
         pub async fn register_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::RegisterInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1077,13 +1120,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/RegisterInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "RegisterInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the guest accelerators of a single Instance.
         pub async fn set_instance_accelerator(
             &mut self,
             request: impl tonic::IntoRequest<super::SetInstanceAcceleratorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1100,13 +1151,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/SetInstanceAccelerator",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "SetInstanceAccelerator",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the machine type of a single Instance.
         pub async fn set_instance_machine_type(
             &mut self,
             request: impl tonic::IntoRequest<super::SetInstanceMachineTypeRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1123,13 +1182,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/SetInstanceMachineType",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "SetInstanceMachineType",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the labels of an Instance.
         pub async fn set_instance_labels(
             &mut self,
             request: impl tonic::IntoRequest<super::SetInstanceLabelsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1146,13 +1213,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/SetInstanceLabels",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "SetInstanceLabels",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Instance.
         pub async fn delete_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1169,13 +1244,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/DeleteInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "DeleteInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Starts a notebook instance.
         pub async fn start_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::StartInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1192,13 +1275,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/StartInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "StartInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Stops a notebook instance.
         pub async fn stop_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::StopInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1215,13 +1306,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/StopInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "StopInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Resets a notebook instance.
         pub async fn reset_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::ResetInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1238,7 +1337,15 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/ResetInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "ResetInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Allows notebook instances to
         /// report their latest instance information to the Notebooks
@@ -1247,7 +1354,7 @@ pub mod notebook_service_client {
         pub async fn report_instance_info(
             &mut self,
             request: impl tonic::IntoRequest<super::ReportInstanceInfoRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1264,14 +1371,22 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/ReportInstanceInfo",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "ReportInstanceInfo",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Check if a notebook instance is upgradable.
         /// Deprecated. Please consider using v1.
         pub async fn is_instance_upgradeable(
             &mut self,
             request: impl tonic::IntoRequest<super::IsInstanceUpgradeableRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::IsInstanceUpgradeableResponse>,
             tonic::Status,
         > {
@@ -1288,14 +1403,22 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/IsInstanceUpgradeable",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "IsInstanceUpgradeable",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Upgrades a notebook instance to the latest version.
         /// Deprecated. Please consider using v1.
         pub async fn upgrade_instance(
             &mut self,
             request: impl tonic::IntoRequest<super::UpgradeInstanceRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1312,7 +1435,15 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/UpgradeInstance",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "UpgradeInstance",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Allows notebook instances to
         /// call this endpoint to upgrade themselves. Do not use this method directly.
@@ -1320,7 +1451,7 @@ pub mod notebook_service_client {
         pub async fn upgrade_instance_internal(
             &mut self,
             request: impl tonic::IntoRequest<super::UpgradeInstanceInternalRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1337,13 +1468,24 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/UpgradeInstanceInternal",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "UpgradeInstanceInternal",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists environments in a project.
         pub async fn list_environments(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEnvironmentsRequest>,
-        ) -> Result<tonic::Response<super::ListEnvironmentsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListEnvironmentsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1357,13 +1499,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/ListEnvironments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "ListEnvironments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets details of a single Environment.
         pub async fn get_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEnvironmentRequest>,
-        ) -> Result<tonic::Response<super::Environment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Environment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1377,13 +1527,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/GetEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "GetEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new Environment.
         pub async fn create_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateEnvironmentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1400,13 +1558,21 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/CreateEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "CreateEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes a single Environment.
         pub async fn delete_environment(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteEnvironmentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -1423,7 +1589,15 @@ pub mod notebook_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.notebooks.v1beta1.NotebookService/DeleteEnvironment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.notebooks.v1beta1.NotebookService",
+                        "DeleteEnvironment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

@@ -356,11 +356,30 @@ pub mod advisory_notifications_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Lists notifications under a given parent.
         pub async fn list_notifications(
             &mut self,
             request: impl tonic::IntoRequest<super::ListNotificationsRequest>,
-        ) -> Result<tonic::Response<super::ListNotificationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListNotificationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -374,13 +393,21 @@ pub mod advisory_notifications_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.advisorynotifications.v1.AdvisoryNotificationsService/ListNotifications",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.advisorynotifications.v1.AdvisoryNotificationsService",
+                        "ListNotifications",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a notification.
         pub async fn get_notification(
             &mut self,
             request: impl tonic::IntoRequest<super::GetNotificationRequest>,
-        ) -> Result<tonic::Response<super::Notification>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Notification>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -394,7 +421,15 @@ pub mod advisory_notifications_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.advisorynotifications.v1.AdvisoryNotificationsService/GetNotification",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.advisorynotifications.v1.AdvisoryNotificationsService",
+                        "GetNotification",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

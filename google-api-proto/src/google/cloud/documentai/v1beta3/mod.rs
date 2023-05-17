@@ -1,3 +1,175 @@
+/// The schema defines the output of the processed document by a processor.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentSchema {
+    /// Display name to show to users.
+    #[prost(string, tag = "1")]
+    pub display_name: ::prost::alloc::string::String,
+    /// Description of the schema.
+    #[prost(string, tag = "2")]
+    pub description: ::prost::alloc::string::String,
+    /// Entity types of the schema.
+    #[prost(message, repeated, tag = "3")]
+    pub entity_types: ::prost::alloc::vec::Vec<document_schema::EntityType>,
+    /// Metadata of the schema.
+    #[prost(message, optional, tag = "4")]
+    pub metadata: ::core::option::Option<document_schema::Metadata>,
+}
+/// Nested message and enum types in `DocumentSchema`.
+pub mod document_schema {
+    /// EntityType is the wrapper of a label of the corresponding model with
+    /// detailed attributes and limitations for entity-based processors. Multiple
+    /// types can also compose a dependency tree to represent nested types.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct EntityType {
+        /// User defined name for the type.
+        #[prost(string, tag = "13")]
+        pub display_name: ::prost::alloc::string::String,
+        /// Name of the type. It must be unique within the schema file and
+        /// cannot be a 'Common Type'.  Besides that we use the following naming
+        /// conventions:
+        ///
+        /// - *use `snake_casing`*
+        /// - name matching is case-sensitive
+        /// - Maximum 64 characters.
+        /// - Must start with a letter.
+        /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
+        ///    compatibility internal infrastructure and tooling can handle any ascii
+        ///    character)
+        /// - The `/` is sometimes used to denote a property of a type.  For example
+        ///    `line_item/amount`.  This convention is deprecated, but will still be
+        ///    honored for backward compatibility.
+        #[prost(string, tag = "1")]
+        pub name: ::prost::alloc::string::String,
+        /// The entity type that this type is derived from.  For now, one and only
+        /// one should be set.
+        #[prost(string, repeated, tag = "2")]
+        pub base_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        /// Describing the nested structure, or composition of an entity.
+        #[prost(message, repeated, tag = "6")]
+        pub properties: ::prost::alloc::vec::Vec<entity_type::Property>,
+        #[prost(oneof = "entity_type::ValueSource", tags = "14")]
+        pub value_source: ::core::option::Option<entity_type::ValueSource>,
+    }
+    /// Nested message and enum types in `EntityType`.
+    pub mod entity_type {
+        /// Defines the a list of enum values.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct EnumValues {
+            /// The individual values that this enum values type can include.
+            #[prost(string, repeated, tag = "1")]
+            pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+        }
+        /// Defines properties that can be part of the entity type.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct Property {
+            /// The name of the property.  Follows the same guidelines as the
+            /// EntityType name.
+            #[prost(string, tag = "1")]
+            pub name: ::prost::alloc::string::String,
+            /// A reference to the value type of the property.  This type is subject
+            /// to the same conventions as the `Entity.base_types` field.
+            #[prost(string, tag = "2")]
+            pub value_type: ::prost::alloc::string::String,
+            /// Occurrence type limits the number of instances an entity type appears
+            /// in the document.
+            #[prost(enumeration = "property::OccurrenceType", tag = "3")]
+            pub occurrence_type: i32,
+        }
+        /// Nested message and enum types in `Property`.
+        pub mod property {
+            /// Types of occurrences of the entity type in the document.  Note: this
+            /// represents the number of instances of an entity types, not number of
+            /// mentions of a given entity instance.
+            #[derive(
+                Clone,
+                Copy,
+                Debug,
+                PartialEq,
+                Eq,
+                Hash,
+                PartialOrd,
+                Ord,
+                ::prost::Enumeration
+            )]
+            #[repr(i32)]
+            pub enum OccurrenceType {
+                /// Unspecified occurrence type.
+                Unspecified = 0,
+                /// There will be zero or one instance of this entity type.
+                OptionalOnce = 1,
+                /// The entity type will appear zero or multiple times.
+                OptionalMultiple = 2,
+                /// The entity type will only appear exactly once.
+                RequiredOnce = 3,
+                /// The entity type will appear once or more times.
+                RequiredMultiple = 4,
+            }
+            impl OccurrenceType {
+                /// String value of the enum field names used in the ProtoBuf definition.
+                ///
+                /// The values are not transformed in any way and thus are considered stable
+                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+                pub fn as_str_name(&self) -> &'static str {
+                    match self {
+                        OccurrenceType::Unspecified => "OCCURRENCE_TYPE_UNSPECIFIED",
+                        OccurrenceType::OptionalOnce => "OPTIONAL_ONCE",
+                        OccurrenceType::OptionalMultiple => "OPTIONAL_MULTIPLE",
+                        OccurrenceType::RequiredOnce => "REQUIRED_ONCE",
+                        OccurrenceType::RequiredMultiple => "REQUIRED_MULTIPLE",
+                    }
+                }
+                /// Creates an enum from field names used in the ProtoBuf definition.
+                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+                    match value {
+                        "OCCURRENCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
+                        "OPTIONAL_ONCE" => Some(Self::OptionalOnce),
+                        "OPTIONAL_MULTIPLE" => Some(Self::OptionalMultiple),
+                        "REQUIRED_ONCE" => Some(Self::RequiredOnce),
+                        "REQUIRED_MULTIPLE" => Some(Self::RequiredMultiple),
+                        _ => None,
+                    }
+                }
+            }
+        }
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Oneof)]
+        pub enum ValueSource {
+            /// If specified, lists all the possible values for this entity.  This
+            /// should not be more than a handful of values.  If the number of values
+            /// is >10 or could change frequently use the `EntityType.value_ontology`
+            /// field and specify a list of all possible values in a value ontology
+            /// file.
+            #[prost(message, tag = "14")]
+            EnumValues(EnumValues),
+        }
+    }
+    /// Metadata for global schema behavior.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Metadata {
+        /// If true, a `document` entity type can be applied to subdocument (
+        /// splitting). Otherwise, it can only be applied to the entire document
+        /// (classification).
+        #[prost(bool, tag = "1")]
+        pub document_splitter: bool,
+        /// If true, on a given page, there can be multiple `document` annotations
+        /// covering it.
+        #[prost(bool, tag = "2")]
+        pub document_allow_multiple_labels: bool,
+        /// If set, all the nested entities must be prefixed with the parents.
+        #[prost(bool, tag = "6")]
+        pub prefixed_naming_on_properties: bool,
+        /// If set, we will skip the naming format validation in the schema. So the
+        /// string values in `DocumentSchema.EntityType.name` and
+        /// `DocumentSchema.EntityType.Property.name` will not be checked.
+        #[prost(bool, tag = "7")]
+        pub skip_naming_validation: bool,
+    }
+}
 /// Gives a short summary of an evaluation, and links to the evaluation itself.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -197,156 +369,6 @@ pub mod evaluation {
         }
     }
 }
-/// Payload message of raw document content (bytes).
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct RawDocument {
-    /// Inline document content.
-    #[prost(bytes = "bytes", tag = "1")]
-    pub content: ::prost::bytes::Bytes,
-    /// An IANA MIME type (RFC6838) indicating the nature and format of the
-    /// \[content][google.cloud.documentai.v1beta3.RawDocument.content\].
-    #[prost(string, tag = "2")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Specifies a document stored on Cloud Storage.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsDocument {
-    /// The Cloud Storage object uri.
-    #[prost(string, tag = "1")]
-    pub gcs_uri: ::prost::alloc::string::String,
-    /// An IANA MIME type (RFC6838) of the content.
-    #[prost(string, tag = "2")]
-    pub mime_type: ::prost::alloc::string::String,
-}
-/// Specifies a set of documents on Cloud Storage.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsDocuments {
-    /// The list of documents.
-    #[prost(message, repeated, tag = "1")]
-    pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
-}
-/// Specifies all documents on Cloud Storage with a common prefix.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct GcsPrefix {
-    /// The URI prefix.
-    #[prost(string, tag = "1")]
-    pub gcs_uri_prefix: ::prost::alloc::string::String,
-}
-/// The common config to specify a set of documents used as input.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct BatchDocumentsInputConfig {
-    /// The source.
-    #[prost(oneof = "batch_documents_input_config::Source", tags = "1, 2")]
-    pub source: ::core::option::Option<batch_documents_input_config::Source>,
-}
-/// Nested message and enum types in `BatchDocumentsInputConfig`.
-pub mod batch_documents_input_config {
-    /// The source.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Source {
-        /// The set of documents that match the specified Cloud Storage `gcs_prefix`.
-        #[prost(message, tag = "1")]
-        GcsPrefix(super::GcsPrefix),
-        /// The set of documents individually specified on Cloud Storage.
-        #[prost(message, tag = "2")]
-        GcsDocuments(super::GcsDocuments),
-    }
-}
-/// Config that controls the output of documents. All documents will be written
-/// as a JSON file.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentOutputConfig {
-    /// The destination of the results.
-    #[prost(oneof = "document_output_config::Destination", tags = "1")]
-    pub destination: ::core::option::Option<document_output_config::Destination>,
-}
-/// Nested message and enum types in `DocumentOutputConfig`.
-pub mod document_output_config {
-    /// The configuration used when outputting documents.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct GcsOutputConfig {
-        /// The Cloud Storage uri (a directory) of the output.
-        #[prost(string, tag = "1")]
-        pub gcs_uri: ::prost::alloc::string::String,
-        /// Specifies which fields to include in the output documents.
-        /// Only supports top level document and pages field so it must be in the
-        /// form of `{document_field_name}` or `pages.{page_field_name}`.
-        #[prost(message, optional, tag = "2")]
-        pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
-        /// Specifies the sharding config for the output document.
-        #[prost(message, optional, tag = "3")]
-        pub sharding_config: ::core::option::Option<gcs_output_config::ShardingConfig>,
-    }
-    /// Nested message and enum types in `GcsOutputConfig`.
-    pub mod gcs_output_config {
-        /// The sharding config for the output document.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct ShardingConfig {
-            /// The number of pages per shard.
-            #[prost(int32, tag = "1")]
-            pub pages_per_shard: i32,
-            /// The number of overlapping pages between consecutive shards.
-            #[prost(int32, tag = "2")]
-            pub pages_overlap: i32,
-        }
-    }
-    /// The destination of the results.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Destination {
-        /// Output config to write the results to Cloud Storage.
-        #[prost(message, tag = "1")]
-        GcsOutputConfig(GcsOutputConfig),
-    }
-}
-/// Config for Document OCR.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct OcrConfig {
-    /// Hints for the OCR model.
-    #[prost(message, optional, tag = "2")]
-    pub hints: ::core::option::Option<ocr_config::Hints>,
-    /// Enables special handling for PDFs with existing text information. Results
-    /// in better text extraction quality in such PDF inputs.
-    #[prost(bool, tag = "3")]
-    pub enable_native_pdf_parsing: bool,
-    /// Enables intelligent document quality scores after OCR. Can help with
-    /// diagnosing why OCR responses are of poor quality for a given input.
-    /// Adds additional latency comparable to regular OCR to the process call.
-    #[prost(bool, tag = "4")]
-    pub enable_image_quality_scores: bool,
-    /// A list of advanced OCR options to further fine-tune OCR behavior.
-    #[prost(string, repeated, tag = "5")]
-    pub advanced_ocr_options: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// Includes symbol level OCR information if set to true.
-    #[prost(bool, tag = "6")]
-    pub enable_symbol: bool,
-}
-/// Nested message and enum types in `OcrConfig`.
-pub mod ocr_config {
-    /// Hints for OCR Engine
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Hints {
-        /// List of BCP-47 language codes to use for OCR. In most cases, not
-        /// specifying it yields the best results since it enables automatic language
-        /// detection. For languages based on the Latin alphabet, setting hints is
-        /// not needed. In rare cases, when the language of the text in the
-        /// image is known, setting a hint will help get better results (although it
-        /// will be a significant hindrance if the hint is wrong).
-        #[prost(string, repeated, tag = "1")]
-        pub language_hints: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    }
-}
 /// Encodes the detailed information of a barcode.
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -392,218 +414,6 @@ pub struct Barcode {
     /// For example: `'MEBKM:TITLE:Google;URL:<https://www.google.com;;'`.>
     #[prost(string, tag = "3")]
     pub raw_value: ::prost::alloc::string::String,
-}
-/// A processor type is responsible for performing a certain document
-/// understanding task on a certain type of document.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct ProcessorType {
-    /// The resource name of the processor type.
-    /// Format: `projects/{project}/processorTypes/{processor_type}`
-    #[prost(string, tag = "1")]
-    pub name: ::prost::alloc::string::String,
-    /// The processor type, e.g., `OCR_PROCESSOR`, `INVOICE_PROCESSOR`, etc.
-    #[prost(string, tag = "2")]
-    pub r#type: ::prost::alloc::string::String,
-    /// The processor category, used by UI to group processor types.
-    #[prost(string, tag = "3")]
-    pub category: ::prost::alloc::string::String,
-    /// The locations in which this processor is available.
-    #[prost(message, repeated, tag = "4")]
-    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
-    /// Whether the processor type allows creation. If true, users can create a
-    /// processor of this processor type. Otherwise, users need to request access.
-    #[prost(bool, tag = "6")]
-    pub allow_creation: bool,
-    /// Launch stage of the processor type
-    #[prost(enumeration = "super::super::super::api::LaunchStage", tag = "8")]
-    pub launch_stage: i32,
-    /// A set of Cloud Storage URIs of sample documents for this processor.
-    #[prost(string, repeated, tag = "9")]
-    pub sample_document_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-}
-/// Nested message and enum types in `ProcessorType`.
-pub mod processor_type {
-    /// The location information about where the processor is available.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct LocationInfo {
-        /// The location id, currently must be one of [us, eu].
-        #[prost(string, tag = "1")]
-        pub location_id: ::prost::alloc::string::String,
-    }
-}
-/// The schema defines the output of the processed document by a processor.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct DocumentSchema {
-    /// Display name to show to users.
-    #[prost(string, tag = "1")]
-    pub display_name: ::prost::alloc::string::String,
-    /// Description of the schema.
-    #[prost(string, tag = "2")]
-    pub description: ::prost::alloc::string::String,
-    /// Entity types of the schema.
-    #[prost(message, repeated, tag = "3")]
-    pub entity_types: ::prost::alloc::vec::Vec<document_schema::EntityType>,
-    /// Metadata of the schema.
-    #[prost(message, optional, tag = "4")]
-    pub metadata: ::core::option::Option<document_schema::Metadata>,
-}
-/// Nested message and enum types in `DocumentSchema`.
-pub mod document_schema {
-    /// EntityType is the wrapper of a label of the corresponding model with
-    /// detailed attributes and limitations for entity-based processors. Multiple
-    /// types can also compose a dependency tree to represent nested types.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct EntityType {
-        /// User defined name for the type.
-        #[prost(string, tag = "13")]
-        pub display_name: ::prost::alloc::string::String,
-        /// Name of the type. It must be unique within the schema file and
-        /// cannot be a 'Common Type'.  Besides that we use the following naming
-        /// conventions:
-        ///
-        /// - *use `snake_casing`*
-        /// - name matching is case-sensitive
-        /// - Maximum 64 characters.
-        /// - Must start with a letter.
-        /// - Allowed characters: ASCII letters `\[a-z0-9_-\]`.  (For backward
-        ///    compatibility internal infrastructure and tooling can handle any ascii
-        ///    character)
-        /// - The `/` is sometimes used to denote a property of a type.  For example
-        ///    `line_item/amount`.  This convention is deprecated, but will still be
-        ///    honored for backward compatibility.
-        #[prost(string, tag = "1")]
-        pub name: ::prost::alloc::string::String,
-        /// The entity type that this type is derived from.  For now, one and only
-        /// one should be set.
-        #[prost(string, repeated, tag = "2")]
-        pub base_types: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        /// Describing the nested structure, or composition of an entity.
-        #[prost(message, repeated, tag = "6")]
-        pub properties: ::prost::alloc::vec::Vec<entity_type::Property>,
-        #[prost(oneof = "entity_type::ValueSource", tags = "14")]
-        pub value_source: ::core::option::Option<entity_type::ValueSource>,
-    }
-    /// Nested message and enum types in `EntityType`.
-    pub mod entity_type {
-        /// Defines the a list of enum values.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct EnumValues {
-            /// The individual values that this enum values type can include.
-            #[prost(string, repeated, tag = "1")]
-            pub values: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-        }
-        /// Defines properties that can be part of the entity type.
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Message)]
-        pub struct Property {
-            /// The name of the property.  Follows the same guidelines as the
-            /// EntityType name.
-            #[prost(string, tag = "1")]
-            pub name: ::prost::alloc::string::String,
-            /// A reference to the value type of the property.  This type is subject
-            /// to the same conventions as the `Entity.base_types` field.
-            #[prost(string, tag = "2")]
-            pub value_type: ::prost::alloc::string::String,
-            /// Occurrence type limits the number of instances an entity type appears
-            /// in the document.
-            #[prost(enumeration = "property::OccurrenceType", tag = "3")]
-            pub occurrence_type: i32,
-        }
-        /// Nested message and enum types in `Property`.
-        pub mod property {
-            /// Types of occurrences of the entity type in the document.  Note: this
-            /// represents the number of instances of an entity types, not number of
-            /// mentions of a given entity instance.
-            #[derive(
-                Clone,
-                Copy,
-                Debug,
-                PartialEq,
-                Eq,
-                Hash,
-                PartialOrd,
-                Ord,
-                ::prost::Enumeration
-            )]
-            #[repr(i32)]
-            pub enum OccurrenceType {
-                /// Unspecified occurrence type.
-                Unspecified = 0,
-                /// There will be zero or one instance of this entity type.
-                OptionalOnce = 1,
-                /// The entity type will appear zero or multiple times.
-                OptionalMultiple = 2,
-                /// The entity type will only appear exactly once.
-                RequiredOnce = 3,
-                /// The entity type will appear once or more times.
-                RequiredMultiple = 4,
-            }
-            impl OccurrenceType {
-                /// String value of the enum field names used in the ProtoBuf definition.
-                ///
-                /// The values are not transformed in any way and thus are considered stable
-                /// (if the ProtoBuf definition does not change) and safe for programmatic use.
-                pub fn as_str_name(&self) -> &'static str {
-                    match self {
-                        OccurrenceType::Unspecified => "OCCURRENCE_TYPE_UNSPECIFIED",
-                        OccurrenceType::OptionalOnce => "OPTIONAL_ONCE",
-                        OccurrenceType::OptionalMultiple => "OPTIONAL_MULTIPLE",
-                        OccurrenceType::RequiredOnce => "REQUIRED_ONCE",
-                        OccurrenceType::RequiredMultiple => "REQUIRED_MULTIPLE",
-                    }
-                }
-                /// Creates an enum from field names used in the ProtoBuf definition.
-                pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
-                    match value {
-                        "OCCURRENCE_TYPE_UNSPECIFIED" => Some(Self::Unspecified),
-                        "OPTIONAL_ONCE" => Some(Self::OptionalOnce),
-                        "OPTIONAL_MULTIPLE" => Some(Self::OptionalMultiple),
-                        "REQUIRED_ONCE" => Some(Self::RequiredOnce),
-                        "REQUIRED_MULTIPLE" => Some(Self::RequiredMultiple),
-                        _ => None,
-                    }
-                }
-            }
-        }
-        #[allow(clippy::derive_partial_eq_without_eq)]
-        #[derive(Clone, PartialEq, ::prost::Oneof)]
-        pub enum ValueSource {
-            /// If specified, lists all the possible values for this entity.  This
-            /// should not be more than a handful of values.  If the number of values
-            /// is >10 or could change frequently use the `EntityType.value_ontology`
-            /// field and specify a list of all possible values in a value ontology
-            /// file.
-            #[prost(message, tag = "14")]
-            EnumValues(EnumValues),
-        }
-    }
-    /// Metadata for global schema behavior.
-    #[allow(clippy::derive_partial_eq_without_eq)]
-    #[derive(Clone, PartialEq, ::prost::Message)]
-    pub struct Metadata {
-        /// If true, a `document` entity type can be applied to subdocument (
-        /// splitting). Otherwise, it can only be applied to the entire document
-        /// (classification).
-        #[prost(bool, tag = "1")]
-        pub document_splitter: bool,
-        /// If true, on a given page, there can be multiple `document` annotations
-        /// covering it.
-        #[prost(bool, tag = "2")]
-        pub document_allow_multiple_labels: bool,
-        /// If set, all the nested entities must be prefixed with the parents.
-        #[prost(bool, tag = "6")]
-        pub prefixed_naming_on_properties: bool,
-        /// If set, we will skip the naming format validation in the schema. So the
-        /// string values in `DocumentSchema.EntityType.name` and
-        /// `DocumentSchema.EntityType.Property.name` will not be checked.
-        #[prost(bool, tag = "7")]
-        pub skip_naming_validation: bool,
-    }
 }
 /// A vertex represents a 2D point in the image.
 /// NOTE: the vertex coordinates are in the same scale as the original image.
@@ -1872,6 +1682,196 @@ pub mod common_operation_metadata {
                 _ => None,
             }
         }
+    }
+}
+/// Payload message of raw document content (bytes).
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct RawDocument {
+    /// Inline document content.
+    #[prost(bytes = "bytes", tag = "1")]
+    pub content: ::prost::bytes::Bytes,
+    /// An IANA MIME type (RFC6838) indicating the nature and format of the
+    /// \[content][google.cloud.documentai.v1beta3.RawDocument.content\].
+    #[prost(string, tag = "2")]
+    pub mime_type: ::prost::alloc::string::String,
+}
+/// Specifies a document stored on Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDocument {
+    /// The Cloud Storage object uri.
+    #[prost(string, tag = "1")]
+    pub gcs_uri: ::prost::alloc::string::String,
+    /// An IANA MIME type (RFC6838) of the content.
+    #[prost(string, tag = "2")]
+    pub mime_type: ::prost::alloc::string::String,
+}
+/// Specifies a set of documents on Cloud Storage.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsDocuments {
+    /// The list of documents.
+    #[prost(message, repeated, tag = "1")]
+    pub documents: ::prost::alloc::vec::Vec<GcsDocument>,
+}
+/// Specifies all documents on Cloud Storage with a common prefix.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct GcsPrefix {
+    /// The URI prefix.
+    #[prost(string, tag = "1")]
+    pub gcs_uri_prefix: ::prost::alloc::string::String,
+}
+/// The common config to specify a set of documents used as input.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BatchDocumentsInputConfig {
+    /// The source.
+    #[prost(oneof = "batch_documents_input_config::Source", tags = "1, 2")]
+    pub source: ::core::option::Option<batch_documents_input_config::Source>,
+}
+/// Nested message and enum types in `BatchDocumentsInputConfig`.
+pub mod batch_documents_input_config {
+    /// The source.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Source {
+        /// The set of documents that match the specified Cloud Storage `gcs_prefix`.
+        #[prost(message, tag = "1")]
+        GcsPrefix(super::GcsPrefix),
+        /// The set of documents individually specified on Cloud Storage.
+        #[prost(message, tag = "2")]
+        GcsDocuments(super::GcsDocuments),
+    }
+}
+/// Config that controls the output of documents. All documents will be written
+/// as a JSON file.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DocumentOutputConfig {
+    /// The destination of the results.
+    #[prost(oneof = "document_output_config::Destination", tags = "1")]
+    pub destination: ::core::option::Option<document_output_config::Destination>,
+}
+/// Nested message and enum types in `DocumentOutputConfig`.
+pub mod document_output_config {
+    /// The configuration used when outputting documents.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct GcsOutputConfig {
+        /// The Cloud Storage uri (a directory) of the output.
+        #[prost(string, tag = "1")]
+        pub gcs_uri: ::prost::alloc::string::String,
+        /// Specifies which fields to include in the output documents.
+        /// Only supports top level document and pages field so it must be in the
+        /// form of `{document_field_name}` or `pages.{page_field_name}`.
+        #[prost(message, optional, tag = "2")]
+        pub field_mask: ::core::option::Option<::prost_types::FieldMask>,
+        /// Specifies the sharding config for the output document.
+        #[prost(message, optional, tag = "3")]
+        pub sharding_config: ::core::option::Option<gcs_output_config::ShardingConfig>,
+    }
+    /// Nested message and enum types in `GcsOutputConfig`.
+    pub mod gcs_output_config {
+        /// The sharding config for the output document.
+        #[allow(clippy::derive_partial_eq_without_eq)]
+        #[derive(Clone, PartialEq, ::prost::Message)]
+        pub struct ShardingConfig {
+            /// The number of pages per shard.
+            #[prost(int32, tag = "1")]
+            pub pages_per_shard: i32,
+            /// The number of overlapping pages between consecutive shards.
+            #[prost(int32, tag = "2")]
+            pub pages_overlap: i32,
+        }
+    }
+    /// The destination of the results.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Oneof)]
+    pub enum Destination {
+        /// Output config to write the results to Cloud Storage.
+        #[prost(message, tag = "1")]
+        GcsOutputConfig(GcsOutputConfig),
+    }
+}
+/// Config for Document OCR.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct OcrConfig {
+    /// Hints for the OCR model.
+    #[prost(message, optional, tag = "2")]
+    pub hints: ::core::option::Option<ocr_config::Hints>,
+    /// Enables special handling for PDFs with existing text information. Results
+    /// in better text extraction quality in such PDF inputs.
+    #[prost(bool, tag = "3")]
+    pub enable_native_pdf_parsing: bool,
+    /// Enables intelligent document quality scores after OCR. Can help with
+    /// diagnosing why OCR responses are of poor quality for a given input.
+    /// Adds additional latency comparable to regular OCR to the process call.
+    #[prost(bool, tag = "4")]
+    pub enable_image_quality_scores: bool,
+    /// A list of advanced OCR options to further fine-tune OCR behavior.
+    #[prost(string, repeated, tag = "5")]
+    pub advanced_ocr_options: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// Includes symbol level OCR information if set to true.
+    #[prost(bool, tag = "6")]
+    pub enable_symbol: bool,
+}
+/// Nested message and enum types in `OcrConfig`.
+pub mod ocr_config {
+    /// Hints for OCR Engine
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct Hints {
+        /// List of BCP-47 language codes to use for OCR. In most cases, not
+        /// specifying it yields the best results since it enables automatic language
+        /// detection. For languages based on the Latin alphabet, setting hints is
+        /// not needed. In rare cases, when the language of the text in the
+        /// image is known, setting a hint will help get better results (although it
+        /// will be a significant hindrance if the hint is wrong).
+        #[prost(string, repeated, tag = "1")]
+        pub language_hints: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    }
+}
+/// A processor type is responsible for performing a certain document
+/// understanding task on a certain type of document.
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ProcessorType {
+    /// The resource name of the processor type.
+    /// Format: `projects/{project}/processorTypes/{processor_type}`
+    #[prost(string, tag = "1")]
+    pub name: ::prost::alloc::string::String,
+    /// The processor type, e.g., `OCR_PROCESSOR`, `INVOICE_PROCESSOR`, etc.
+    #[prost(string, tag = "2")]
+    pub r#type: ::prost::alloc::string::String,
+    /// The processor category, used by UI to group processor types.
+    #[prost(string, tag = "3")]
+    pub category: ::prost::alloc::string::String,
+    /// The locations in which this processor is available.
+    #[prost(message, repeated, tag = "4")]
+    pub available_locations: ::prost::alloc::vec::Vec<processor_type::LocationInfo>,
+    /// Whether the processor type allows creation. If true, users can create a
+    /// processor of this processor type. Otherwise, users need to request access.
+    #[prost(bool, tag = "6")]
+    pub allow_creation: bool,
+    /// Launch stage of the processor type
+    #[prost(enumeration = "super::super::super::api::LaunchStage", tag = "8")]
+    pub launch_stage: i32,
+    /// A set of Cloud Storage URIs of sample documents for this processor.
+    #[prost(string, repeated, tag = "9")]
+    pub sample_document_uris: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+/// Nested message and enum types in `ProcessorType`.
+pub mod processor_type {
+    /// The location information about where the processor is available.
+    #[allow(clippy::derive_partial_eq_without_eq)]
+    #[derive(Clone, PartialEq, ::prost::Message)]
+    pub struct LocationInfo {
+        /// The location id, currently must be one of [us, eu].
+        #[prost(string, tag = "1")]
+        pub location_id: ::prost::alloc::string::String,
     }
 }
 /// A processor version is an implementation of a processor. Each processor
@@ -3215,11 +3215,30 @@ pub mod document_processor_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Processes a single document.
         pub async fn process_document(
             &mut self,
             request: impl tonic::IntoRequest<super::ProcessRequest>,
-        ) -> Result<tonic::Response<super::ProcessResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ProcessResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3233,14 +3252,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ProcessDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ProcessDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// LRO endpoint to batch process many documents. The output is written
         /// to Cloud Storage as JSON in the [Document] format.
         pub async fn batch_process_documents(
             &mut self,
             request: impl tonic::IntoRequest<super::BatchProcessRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3257,14 +3284,25 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/BatchProcessDocuments",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "BatchProcessDocuments",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Fetches processor types. Note that we do not use ListProcessorTypes here
         /// because it is not paginated.
         pub async fn fetch_processor_types(
             &mut self,
             request: impl tonic::IntoRequest<super::FetchProcessorTypesRequest>,
-        ) -> Result<tonic::Response<super::FetchProcessorTypesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::FetchProcessorTypesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3278,13 +3316,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/FetchProcessorTypes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "FetchProcessorTypes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists the processor types that exist.
         pub async fn list_processor_types(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProcessorTypesRequest>,
-        ) -> Result<tonic::Response<super::ListProcessorTypesResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListProcessorTypesResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3298,13 +3347,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ListProcessorTypes",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ListProcessorTypes",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a processor type detail.
         pub async fn get_processor_type(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProcessorTypeRequest>,
-        ) -> Result<tonic::Response<super::ProcessorType>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::ProcessorType>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3318,13 +3375,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/GetProcessorType",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "GetProcessorType",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all processors which belong to this project.
         pub async fn list_processors(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProcessorsRequest>,
-        ) -> Result<tonic::Response<super::ListProcessorsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListProcessorsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3338,13 +3406,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ListProcessors",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ListProcessors",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a processor detail.
         pub async fn get_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProcessorRequest>,
-        ) -> Result<tonic::Response<super::Processor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Processor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3358,7 +3434,15 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/GetProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "GetProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Trains a new processor version.
         /// Operation metadata is returned as
@@ -3366,7 +3450,7 @@ pub mod document_processor_service_client {
         pub async fn train_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::TrainProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3383,13 +3467,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/TrainProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "TrainProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Gets a processor version detail.
         pub async fn get_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::GetProcessorVersionRequest>,
-        ) -> Result<tonic::Response<super::ProcessorVersion>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ProcessorVersion>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3403,13 +3498,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/GetProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "GetProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Lists all versions of a processor.
         pub async fn list_processor_versions(
             &mut self,
             request: impl tonic::IntoRequest<super::ListProcessorVersionsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListProcessorVersionsResponse>,
             tonic::Status,
         > {
@@ -3426,14 +3529,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ListProcessorVersions",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ListProcessorVersions",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the processor version, all artifacts under the processor version
         /// will be deleted.
         pub async fn delete_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3450,13 +3561,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/DeleteProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "DeleteProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deploys the processor version.
         pub async fn deploy_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::DeployProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3473,13 +3592,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/DeployProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "DeployProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Undeploys the processor version.
         pub async fn undeploy_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::UndeployProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3496,14 +3623,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/UndeployProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "UndeployProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a processor from the type processor that the user chose.
         /// The processor will be at "ENABLED" state by default after its creation.
         pub async fn create_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateProcessorRequest>,
-        ) -> Result<tonic::Response<super::Processor>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Processor>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3517,14 +3652,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/CreateProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "CreateProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the processor, unloads all deployed model artifacts if it was
         /// enabled and then deletes all artifacts associated with this processor.
         pub async fn delete_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteProcessorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3541,13 +3684,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/DeleteProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "DeleteProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Enables a processor
         pub async fn enable_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::EnableProcessorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3564,13 +3715,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/EnableProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "EnableProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Disables a processor
         pub async fn disable_processor(
             &mut self,
             request: impl tonic::IntoRequest<super::DisableProcessorRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3587,7 +3746,15 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/DisableProcessor",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "DisableProcessor",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Set the default (active) version of a
         /// [Processor][google.cloud.documentai.v1beta3.Processor] that will be used in
@@ -3597,7 +3764,7 @@ pub mod document_processor_service_client {
         pub async fn set_default_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::SetDefaultProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3614,14 +3781,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/SetDefaultProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "SetDefaultProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Send a document for Human Review. The input document should be processed by
         /// the specified processor.
         pub async fn review_document(
             &mut self,
             request: impl tonic::IntoRequest<super::ReviewDocumentRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3638,14 +3813,22 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ReviewDocument",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ReviewDocument",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Evaluates a ProcessorVersion against annotated documents, producing an
         /// Evaluation.
         pub async fn evaluate_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::EvaluateProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3662,13 +3845,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/EvaluateProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "EvaluateProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a specific evaluation.
         pub async fn get_evaluation(
             &mut self,
             request: impl tonic::IntoRequest<super::GetEvaluationRequest>,
-        ) -> Result<tonic::Response<super::Evaluation>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Evaluation>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -3682,13 +3873,24 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/GetEvaluation",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "GetEvaluation",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Retrieves a set of evaluations for a given processor version.
         pub async fn list_evaluations(
             &mut self,
             request: impl tonic::IntoRequest<super::ListEvaluationsRequest>,
-        ) -> Result<tonic::Response<super::ListEvaluationsResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListEvaluationsResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -3702,13 +3904,21 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ListEvaluations",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ListEvaluations",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Imports a processor version from source processor version.
         pub async fn import_processor_version(
             &mut self,
             request: impl tonic::IntoRequest<super::ImportProcessorVersionRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::super::super::super::longrunning::Operation>,
             tonic::Status,
         > {
@@ -3725,7 +3935,15 @@ pub mod document_processor_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.documentai.v1beta3.DocumentProcessorService/ImportProcessorVersion",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.documentai.v1beta3.DocumentProcessorService",
+                        "ImportProcessorVersion",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }

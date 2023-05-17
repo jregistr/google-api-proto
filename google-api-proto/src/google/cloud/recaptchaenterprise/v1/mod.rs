@@ -1828,11 +1828,27 @@ pub mod recaptcha_enterprise_service_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_decoding_message_size(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.inner = self.inner.max_encoding_message_size(limit);
+            self
+        }
         /// Creates an Assessment of the likelihood an event is legitimate.
         pub async fn create_assessment(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateAssessmentRequest>,
-        ) -> Result<tonic::Response<super::Assessment>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Assessment>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1846,14 +1862,25 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/CreateAssessment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "CreateAssessment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Annotates a previously created Assessment to provide additional information
         /// on whether the event turned out to be authentic or fraudulent.
         pub async fn annotate_assessment(
             &mut self,
             request: impl tonic::IntoRequest<super::AnnotateAssessmentRequest>,
-        ) -> Result<tonic::Response<super::AnnotateAssessmentResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::AnnotateAssessmentResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1867,13 +1894,21 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/AnnotateAssessment",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "AnnotateAssessment",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Creates a new reCAPTCHA Enterprise key.
         pub async fn create_key(
             &mut self,
             request: impl tonic::IntoRequest<super::CreateKeyRequest>,
-        ) -> Result<tonic::Response<super::Key>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Key>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1887,13 +1922,24 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/CreateKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "CreateKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the list of all keys that belong to a project.
         pub async fn list_keys(
             &mut self,
             request: impl tonic::IntoRequest<super::ListKeysRequest>,
-        ) -> Result<tonic::Response<super::ListKeysResponse>, tonic::Status> {
+        ) -> std::result::Result<
+            tonic::Response<super::ListKeysResponse>,
+            tonic::Status,
+        > {
             self.inner
                 .ready()
                 .await
@@ -1907,7 +1953,15 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/ListKeys",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "ListKeys",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the secret key related to the specified public key.
         /// You must use the legacy secret key only in a 3rd party integration with
@@ -1915,7 +1969,7 @@ pub mod recaptcha_enterprise_service_client {
         pub async fn retrieve_legacy_secret_key(
             &mut self,
             request: impl tonic::IntoRequest<super::RetrieveLegacySecretKeyRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::RetrieveLegacySecretKeyResponse>,
             tonic::Status,
         > {
@@ -1932,13 +1986,21 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/RetrieveLegacySecretKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "RetrieveLegacySecretKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Returns the specified key.
         pub async fn get_key(
             &mut self,
             request: impl tonic::IntoRequest<super::GetKeyRequest>,
-        ) -> Result<tonic::Response<super::Key>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Key>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1952,13 +2014,21 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/GetKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "GetKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Updates the specified key.
         pub async fn update_key(
             &mut self,
             request: impl tonic::IntoRequest<super::UpdateKeyRequest>,
-        ) -> Result<tonic::Response<super::Key>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Key>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1972,13 +2042,21 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/UpdateKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "UpdateKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Deletes the specified key.
         pub async fn delete_key(
             &mut self,
             request: impl tonic::IntoRequest<super::DeleteKeyRequest>,
-        ) -> Result<tonic::Response<()>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<()>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -1992,7 +2070,15 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/DeleteKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "DeleteKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Migrates an existing key from reCAPTCHA to reCAPTCHA Enterprise.
         /// Once a key is migrated, it can be used from either product. SiteVerify
@@ -2003,7 +2089,7 @@ pub mod recaptcha_enterprise_service_client {
         pub async fn migrate_key(
             &mut self,
             request: impl tonic::IntoRequest<super::MigrateKeyRequest>,
-        ) -> Result<tonic::Response<super::Key>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Key>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2017,14 +2103,22 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/MigrateKey",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "MigrateKey",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get some aggregated metrics for a Key. This data can be used to build
         /// dashboards.
         pub async fn get_metrics(
             &mut self,
             request: impl tonic::IntoRequest<super::GetMetricsRequest>,
-        ) -> Result<tonic::Response<super::Metrics>, tonic::Status> {
+        ) -> std::result::Result<tonic::Response<super::Metrics>, tonic::Status> {
             self.inner
                 .ready()
                 .await
@@ -2038,13 +2132,21 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/GetMetrics",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "GetMetrics",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// List groups of related accounts.
         pub async fn list_related_account_groups(
             &mut self,
             request: impl tonic::IntoRequest<super::ListRelatedAccountGroupsRequest>,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListRelatedAccountGroupsResponse>,
             tonic::Status,
         > {
@@ -2061,7 +2163,15 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/ListRelatedAccountGroups",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "ListRelatedAccountGroups",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Get memberships in a group of related accounts.
         pub async fn list_related_account_group_memberships(
@@ -2069,7 +2179,7 @@ pub mod recaptcha_enterprise_service_client {
             request: impl tonic::IntoRequest<
                 super::ListRelatedAccountGroupMembershipsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::ListRelatedAccountGroupMembershipsResponse>,
             tonic::Status,
         > {
@@ -2086,7 +2196,15 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/ListRelatedAccountGroupMemberships",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "ListRelatedAccountGroupMemberships",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
         /// Search group memberships related to a given account.
         pub async fn search_related_account_group_memberships(
@@ -2094,7 +2212,7 @@ pub mod recaptcha_enterprise_service_client {
             request: impl tonic::IntoRequest<
                 super::SearchRelatedAccountGroupMembershipsRequest,
             >,
-        ) -> Result<
+        ) -> std::result::Result<
             tonic::Response<super::SearchRelatedAccountGroupMembershipsResponse>,
             tonic::Status,
         > {
@@ -2111,7 +2229,15 @@ pub mod recaptcha_enterprise_service_client {
             let path = http::uri::PathAndQuery::from_static(
                 "/google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService/SearchRelatedAccountGroupMemberships",
             );
-            self.inner.unary(request.into_request(), path, codec).await
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(
+                    GrpcMethod::new(
+                        "google.cloud.recaptchaenterprise.v1.RecaptchaEnterpriseService",
+                        "SearchRelatedAccountGroupMemberships",
+                    ),
+                );
+            self.inner.unary(req, path, codec).await
         }
     }
 }
